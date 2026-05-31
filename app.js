@@ -153,6 +153,129 @@ const CHARACTER_DETAILS = {
     }
 };
 
+const TRANSLATIONS = {
+    zh: {
+        restoreGame: "恢复上次对局",
+        apiStatusReady: "Gemini API 已就绪",
+        apiStatusOffline: "离线模式：数据已保存在本地",
+        panelSetupTitle: "对局配置与管理",
+        gatewayConfig: "AI 大脑多网关配置",
+        apiProvider: "AI 驱动厂商 (Provider)",
+        apiBaseUrl: "接口基地址 (Base URL)",
+        apiKeyLabel: "API Key (密钥)",
+        aiModel: "推理分析模型 (Model)",
+        customModelId: "自定义模型 ID (Custom Model ID)",
+        apiConfigTip: "已自动填充 Google Gemini 原生密钥，支持最新的 3.5 Flash 极速推理模型以及 3.1 Pro 深度推理模型，无需配置直接使用！",
+        initGameTitle: "新对局初始化",
+        playerCount: "玩家人数",
+        scriptSelect: "板子/剧本",
+        previewScript: "预览剧本角色表",
+        mySeat: "我的座位号",
+        myRole: "我的角色",
+        myAlignment: "我的阵营",
+        goodAlignment: "善良阵营",
+        evilAlignment: "邪恶阵营",
+        evilBluffsTitle: "说书人给的 3 个好人伪装 (Bluffs)",
+        initGameBtn: "初始化并开启新游戏",
+        playerQuickAdjust: "玩家状态快速调整",
+        resetAll: "重置所有",
+        legendGood: "好人",
+        legendEvil: "坏人",
+        legendDead: "死亡",
+        legendPoisoned: "中毒/醉酒",
+        panelMapTitle: "环形座位轨迹图",
+        timelineTitle: "局势信息流水志",
+        emptyLogs: "暂无游戏记录，在右侧控制台输入第一条局势变动吧",
+        panelAiTitle: "AI 战术副驾驶 (Tactical Copilot)",
+        consoleInputLabel: "输入本轮局势进展 (支持自然语言描述)",
+        consoleInputPlaceholder: "输入例如：\n- 5号死了。白天2号跳了厨师，说得到信息是0。\n- 4号悄悄跟我说他是共情者，信息是1。\n- 3号（我）第一晚被熊孩子锁了，今天感觉信息不对劲。",
+        clearConsole: "清空输入",
+        analyzeBtn: "发送给AI分析局势",
+        voiceInputTitle: "语音录入说明",
+        tabAnalysis: "即时分析",
+        tabWorldlines: "平行世界线",
+        tabTips: "行动建议",
+        welcomeTitle: "你好，钟楼探索者",
+        welcomeDesc: "请配置你的游戏，并在上方输入局势变动。我将通过分析座位物理相对位置、技能边界及逻辑冲突，为你生成世界线分析与战术建议。",
+        emptyWorldlines: "等待数据录入后，将在这里推演 <b>正常世界线</b>、<b>涡流世界线</b> 以及 <b>下毒世界线</b> 的逻辑合理性概率。",
+        emptyTips: "这里将为你生成本轮白天最推荐私聊的玩家、应该核对的身份，以及防止猝死或邪恶阵营直接获胜的紧急提示。",
+        popoverRole: "宣称角色 (Claimed)",
+        popoverAlive: "存活状态",
+        popoverAlignment: "推测阵营",
+        popoverGood: "善良",
+        popoverEvil: "邪恶",
+        popoverUnknown: "未知",
+        popoverPoisoned: "中毒/醉酒状态",
+        popoverNotesLabel: "私聊记录 / 备注信息",
+        popoverNotesPlaceholder: "输入例如：自称是守鸦人让我别碰他",
+        saveStatus: "保存状态",
+        townsfolkSection: "村民角色 (Townsfolk)",
+        outsidersSection: "外来者角色 (Outsiders)",
+        minionsSection: "爪牙角色 (Minions)",
+        demonsSection: "恶魔角色 (Demons)"
+    },
+    en: {
+        restoreGame: "Restore Previous Game",
+        apiStatusReady: "Gemini API Ready",
+        apiStatusOffline: "Offline Mode: Data Saved Locally",
+        panelSetupTitle: "Setup & Management",
+        gatewayConfig: "AI Engine Configuration",
+        apiProvider: "AI Provider",
+        apiBaseUrl: "API Base URL",
+        apiKeyLabel: "API Key",
+        aiModel: "Reasoning Model",
+        customModelId: "Custom Model ID",
+        apiConfigTip: "Google Gemini key pre-filled by default. Supports latest Gemini 3.5 Flash and Gemini 3.1 Pro models instantly!",
+        initGameTitle: "Initialize New Game",
+        playerCount: "Player Count",
+        scriptSelect: "Script / Board",
+        previewScript: "Preview Character Sheet",
+        mySeat: "My Seat Number",
+        myRole: "My Character",
+        myAlignment: "My Alignment",
+        goodAlignment: "Good Team",
+        evilAlignment: "Evil Team",
+        evilBluffsTitle: "3 Demon Bluffs Given by Storyteller",
+        initGameBtn: "Initialize & Start Game",
+        playerQuickAdjust: "Quick Status Adjustments",
+        resetAll: "Reset All",
+        legendGood: "Good",
+        legendEvil: "Evil",
+        legendDead: "Dead",
+        legendPoisoned: "Poisoned/Drunk",
+        panelMapTitle: "Interactive Seating Circle",
+        timelineTitle: "Game Action & Interaction Logs",
+        emptyLogs: "No game logs yet. Enter the first turn event or whisper in the console on the right.",
+        panelAiTitle: "AI Tactical Copilot",
+        consoleInputLabel: "Enter Current Turn Updates (Natural Language)",
+        consoleInputPlaceholder: "E.g.,\n- Seat 5 is dead. During day, Seat 2 claimed Chef and got a '0'.\n- Seat 4 whispered to me that they are Empath with a '1'.\n- Seat 3 (Me) got locked by Rascal on Night 1, info feels poisoned.",
+        clearConsole: "Clear Input",
+        analyzeBtn: "Send to AI for Analysis",
+        voiceInputTitle: "Voice Input Notes",
+        tabAnalysis: "Instant Analysis",
+        tabWorldlines: "Parallel Worldlines",
+        tabTips: "Tactical Tips",
+        welcomeTitle: "Hello, Clocktower Explorer",
+        welcomeDesc: "Configure your setup and enter turn details. I will analyze seat positions, skill boundaries, and logical contradictions to generate deductions and suggestions.",
+        emptyWorldlines: "Awaiting input. I will calculate normal, Vortox, and poisoned worldline probabilities here.",
+        emptyTips: "I will suggest optimal private chat targets, alignment verifications, and urgent survival warnings here.",
+        popoverRole: "Claimed Character",
+        popoverAlive: "Survival Status",
+        popoverAlignment: "Suspected Alignment",
+        popoverGood: "Good",
+        popoverEvil: "Evil",
+        popoverUnknown: "Unknown",
+        popoverPoisoned: "Drunk/Poisoned Status",
+        popoverNotesLabel: "Private Chat & Notes",
+        popoverNotesPlaceholder: "E.g., Claimed Ravenkeeper, asked me not to target him",
+        saveStatus: "Save Status",
+        townsfolkSection: "Townsfolk",
+        outsidersSection: "Outsiders",
+        minionsSection: "Minions",
+        demonsSection: "Demons"
+    }
+};
+
 const gameState = {
     apiKey: "AIzaSyATGfywDEpzV4uav_YLvVK7-HTLbO7TKrk",
     playerCount: 9,
@@ -167,7 +290,8 @@ const gameState = {
     apiModelCustom: "",
     players: [],
     logs: [],
-    selectedSeatForEdit: null
+    selectedSeatForEdit: null,
+    lang: "zh"
 };
 
 // --- DOM 元素引用 ---
@@ -222,7 +346,9 @@ const dom = {
     previewScriptBtn: document.getElementById("previewScriptBtn"),
     scriptPreviewModal: document.getElementById("scriptPreviewModal"),
     closeScriptPreviewBtn: document.getElementById("closeScriptPreviewBtn"),
-    seatingChartWatermark: document.getElementById("seatingChartWatermark")
+    seatingChartWatermark: document.getElementById("seatingChartWatermark"),
+    langToggleBtn: document.getElementById("langToggleBtn"),
+    langToggleText: document.getElementById("langToggleText")
 };
 
 // --- 初始化程序入口 ---
@@ -248,10 +374,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const hasSaved = checkSavedGame();
     if (hasSaved) {
         loadFromLocalStorage();
-        showToast("已自动为您恢复上次对局状态！");
+        const restoreMsg = gameState.lang === "en"
+            ? "Successfully recovered the last game state!"
+            : "已自动为您恢复上次对局状态！";
+        showToast(restoreMsg);
     } else {
         initGame();
     }
+    
+    // 载入保存的语言选择，默认中文
+    const savedLang = localStorage.getItem("botc_lang") || "zh";
+    setLanguage(savedLang);
     
     // 注册事件监听器
     registerEventListeners();
@@ -1651,7 +1784,8 @@ function saveToLocalStorage() {
             consoleInputDraft: dom.consoleInput ? dom.consoleInput.value : "",
             analysisBoxHtml: dom.analysisBox ? dom.analysisBox.innerHTML : "",
             worldlinesBoxHtml: dom.worldlinesBox ? dom.worldlinesBox.innerHTML : "",
-            tipsBoxHtml: dom.tipsBox ? dom.tipsBox.innerHTML : ""
+            tipsBoxHtml: dom.tipsBox ? dom.tipsBox.innerHTML : "",
+            lang: gameState.lang
         }));
     } catch (e) {
         console.error("无法保存对局数据到本地缓存:", e);
@@ -1684,6 +1818,10 @@ function loadFromLocalStorage() {
         gameState.apiModelCustom = data.apiModelCustom || "";
         gameState.players = data.players;
         gameState.logs = data.logs;
+        gameState.lang = data.lang || "zh";
+
+        // Sync i18n
+        setLanguage(gameState.lang);
 
         // 同步 UI 控件状态
         dom.playerCountSelect.value = gameState.playerCount;
@@ -1740,7 +1878,10 @@ function loadFromLocalStorage() {
             dom.restoreGameBtn.classList.add("hidden");
         }
 
-        gameState.logs.push(`对局已成功从本地浏览器缓存恢复！继续推演分析吧。`);
+        const restoreLog = gameState.lang === "en" 
+            ? "Game state successfully recovered from local browser cache! Continue analysis."
+            : "对局已成功从本地浏览器缓存恢复！继续推演分析吧。";
+        gameState.logs.push(restoreLog);
         renderTimelineLogs();
 
         return true;
@@ -1748,4 +1889,70 @@ function loadFromLocalStorage() {
         console.error("加载本地缓存对局失败:", e);
         return false;
     }
+}
+
+// --- 极简多语言切换引擎 (Client-Side Translation Engine) ---
+function setLanguage(lang) {
+    gameState.lang = lang;
+    localStorage.setItem("botc_lang", lang);
+    
+    // 切换按钮指示文字 (Switch toggle text)
+    if (dom.langToggleText) {
+        dom.langToggleText.textContent = lang === "zh" ? "English" : "简体中文";
+    }
+    
+    // 更新所有带有 data-i18n 的静态文本节点 (Process all elements with data-i18n)
+    const elements = document.querySelectorAll("[data-i18n]");
+    elements.forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+            el.textContent = TRANSLATIONS[lang][key];
+        }
+    });
+    
+    // 更新所有输入框的 placeholder (Process placeholders)
+    const placeholders = document.querySelectorAll("[data-i18n-placeholder]");
+    placeholders.forEach(el => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+            el.placeholder = TRANSLATIONS[lang][key];
+        }
+    });
+    
+    // 更新所有悬浮文字提示 title (Process titles)
+    const titles = document.querySelectorAll("[data-i18n-title]");
+    titles.forEach(el => {
+        const key = el.getAttribute("data-i18n-title");
+        if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+            el.title = TRANSLATIONS[lang][key];
+        }
+    });
+    
+    // 如果对局已初始化，同步更新动态生成的玩家列表与日志状态 (Sync dynamic data views)
+    if (gameState.players && gameState.players.length > 0) {
+        // 同步“我”的显示名字
+        gameState.players.forEach(p => {
+            const isMe = (p.seat === gameState.mySeat);
+            if (isMe) {
+                p.name = lang === "en" ? "Me" : "我";
+            } else if (p.name === "我" || p.name === "Me") {
+                p.name = lang === "en" ? "Me" : "我";
+            } else if (p.name.startsWith("玩家") || p.name.startsWith("Player")) {
+                p.name = lang === "en" ? `Player ${p.seat}` : `玩家 ${p.seat}`;
+            }
+        });
+        
+        renderPlayerList();
+        renderSeatingChart();
+        renderTimelineLogs();
+    }
+    
+    // 更新剧本角色对照表的表头分类 (Update scripts preview UI headers)
+    populateScriptPreview();
+    
+    // 更新 AI 驱动厂商对应的提示词 (Update provider option tip)
+    updateApiModelOptions();
+    
+    // 自动刷新保存缓存
+    saveToLocalStorage();
 }
