@@ -1104,6 +1104,17 @@ textarea {
         font-size: 13px !important;
         border-radius: 10px !important;
     }
+    
+    /* Avoid squeezing left config sections when both are expanded */
+    .control-panel {
+        height: auto !important;
+        min-height: 540px !important;
+    }
+    
+    .control-panel .player-list-scroll {
+        max-height: 380px !important;
+        overflow-y: auto !important;
+    }
 }
 
 @media (max-width: 480px) {
