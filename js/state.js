@@ -14,7 +14,7 @@ import {
 } from './ui.js';
 
 export const gameState = {
-    apiKey: "AIzaSyATGfywDEpzV4uav_YLvVK7-HTLbO7TKrk",
+    apiKey: "",
     playerCount: 9,
     scriptName: "wushang",
     mySeat: 3,
