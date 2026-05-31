@@ -292,31 +292,30 @@ export const CHARACTER_DETAILS_EN = {
 };
 
 export const CORE_LOGIC_RULES = `
-=== 血染钟楼核心推理钢性法则 (Deduction Axioms) ===
-1. 伪装排他律 (Demon Bluffs Exclusivity)：
-   首夜分配给恶魔的 3 个 Bluffs 角色在魔典中 [0 存在]。起跳 Bluffs 者其身份必为伪报（邪恶穿衣、洗脑疯狂、畸形秀自保、酒鬼/疯子，或好人高级战术挡刀）。
-2. 邪恶共知律 (Evil Mutual Recognition & PG Rule)：
-   邪恶默认首夜互认。若未相认，判定 [罂粟种植者] 必然在场。在其当夜死亡结算前，邪恶绝对不可私下对暗号认亲。
-3. 座位收缩律 (Seating Contraction)：
-   死亡玩家在邻座计算时物理消除，存活两侧直接并拢。配合共情者、茶艺师、诺达鲺等，死人前后的数据变动可直接进行算术差值求解，精准锁定阵营。
-4. 涡流反转律 (Vortox Absolute Lie Constraint)：
-   若恶魔为 [涡流]，所有镇民（Townsfolk）的技能信息 [100% 必须为假]。任何镇民得到真话则恶魔必非涡流；若是涡流局，将所有镇民信息完全取反即可 100% 还原真实魔典。此外，白天无人被处决则邪恶直接获胜，需强行处决续命。外来者不受此限。
-5. 角色唯一律 (Good Character Uniqueness)：
-   初始对局中每个善良角色唯一。非外来者起跳撞衫（且无洗脑疯狂、麻脸巫婆转化或酒鬼干扰），则二人中必有一人为邪恶或酒鬼/疯子。
-6. 疯狂雷击律 (Madness Thunderstruck)：
-   畸形秀自证外来者，或洗脑受害者违背疯狂言论，会被说书人当场非提名处决。白天无提名突然死亡，优先定位洗脑师/畸形秀与洗脑目标。
-7. 恶魔承袭律 (Demon Lineage Succession)：
-   若活人 >= 5 人时小恶魔自刀，或恶魔被意外处决，爪牙必有一人当夜转变为新小恶魔，或红唇女郎自动承袭王位晋升恶魔。
+=== 血染钟楼核心推理知识库 (AI-Deduction-Axioms) ===
+[约束格式：IF(条件) -> THEN(必然结果) | NOT(绝对不可能)]
+1. 伪装排他: IF (角色 ∈ 恶魔首夜获得的3个Bluffs) -> THEN (场上真实在场数=0). 任何起跳Bluffs者 = [邪恶/洗脑/酒鬼疯子/挡刀].
+2. 邪恶共知: 默认首夜互认. IF (邪恶互不认识) -> THEN (罂粟种植者必存活在场).
+3. 座位收缩: 结算邻座(如共情者/茶艺师/诺达鲺)时，绝对忽略死亡玩家，物理位置向两边存活者收缩靠拢.
+4. 涡流强干涉: IF (恶魔=涡流) -> THEN (所有镇民信息=100%假) && (白天无人被处决 -> 邪恶立刻获胜). IF (某镇民信息被证真) -> THEN (恶魔!=涡流). 外来者信息不受涡流影响.
+5. 唯一互斥: 镇民角色全局唯一. IF (多人起跳同一镇民) -> THEN (至少1人是邪恶/酒鬼疯子/被麻脸巫婆转化/受洗脑).
+6. 疯狂处决: IF (白天未经过提名且非连带死亡而有人暴毙) -> THEN (死因=违背洗脑师疯狂 / 畸形秀自证外来者 / 走私者 / 猎手开枪).
+7. 王位传承: IF (恶魔死亡 && 存活人数>=5) -> THEN (若小恶魔自刀，一爪牙变小恶魔) | (若场上有红唇女郎，她变恶魔).
+8. 醉毒机制: IF (玩家醉酒或中毒) -> THEN (技能失效，说书人可给任意假信息，且玩家本人绝对不知情).
+9. 死亡衰减: IF (玩家死亡) -> THEN (技能立刻失效，但保留阵营。仅余1票幽灵票).
 `;
 
 export const CORE_LOGIC_RULES_EN = `
-=== BOTC CORE DEDUCTION LAWS (MUST BE STRICTLY ENFORCED) ===
-1. Bluff Exclusivity: 3 Demon Bluffs = 0 in play. Claims = Evil lying, Cerenovus mad, Mutant self-protecting, Drunk/Lunatic, or advanced good bluff.
-2. Evil Co-cognition & PG: Evil players recognize each other on Night 1. No recognition = Poppy Grower is 100% in play. Do not communicate until PG dies.
-3. Seating Contraction: Dead players are physically bypassed for neighbor calculations (Empath, Tea Lady, No-Dashi). Post-death value shifts enable mathematical elimination.
-4. Vortox Absolute Lie: Under Vortox, ALL Townsfolk info MUST be false. Verified true info = No Vortox. If Vortox, invert Townsfolk claims 100% to find truth. Daytime execution is mandatory (no execution = Evil wins). (Outsiders are not subject to this).
-5. Uniqueness Axiom: Good roles (excl. Outsiders) are unique. Duplicates = at least one is Evil, drunk, mad, or transformed.
-6. Madness & Lightning: Mutant claiming Outsider or Cerenovus target failing to act mad = instant Storyteller daytime execution. Sudden daytime death = Cerenovus / Mutant signature.
-7. Demon Succession: Imp suicide or Demon death with >=5 alive triggers succession (Minion to Imp, or Scarlet Woman to Demon).
+=== BOTC CORE DEDUCTION AXIOMS (BOOLEAN CONSTRAINTS) ===
+[FORMAT: IF(Condition) -> THEN(Absolute Result) | NOT(Impossible)]
+1. Bluff Exclusivity: IF (Role ∈ 3 Demon Bluffs) -> THEN (Role in-play = 0). ANY claim of bluff = [Evil/Mad/Drunk/Lunatic/Good-Bluffing].
+2. Evil Co-cognition: Default = Evil knows Evil N1. IF (Evil blind) -> THEN (Poppy Grower is ALIVE in play).
+3. Seating Contraction: Dead players are physically skipped for neighbor abilities (Empath/Tea Lady/No-Dashi). Calculate using next ALIVE players.
+4. Vortox Absolute: IF (Demon = Vortox) -> THEN (ALL Townsfolk info = 100% FALSE) && (No daytime execution -> Evil wins). IF (Any Townsfolk info is PROVEN TRUE) -> THEN (Demon != Vortox). (Outsiders immune).
+5. Uniqueness: Townsfolk roles are unique. IF (Multiple claim same Townsfolk) -> THEN (>=1 is Evil/Drunk/Lunatic/Mad/Pit-Hagged).
+6. Madness Executions: IF (Sudden day death WITHOUT nomination/execution) -> THEN (Cause = Cerenovus madness break / Mutant self-claim).
+7. Demon Succession: IF (Demon dies && Alive >= 5) -> THEN (If Imp killed self, Minion becomes Imp) | (If Scarlet Woman alive, she becomes Demon).
+8. Drunk/Poisoning: IF (Player Drunk/Poisoned) -> THEN (Ability fails, Storyteller MAY give false info. Player DOES NOT know they are Drunk/Poisoned).
+9. Death Rules: IF (Player dies) -> THEN (Ability lost immediately [unless specified], alignment kept, only 1 ghost vote remains).
 `;
 
