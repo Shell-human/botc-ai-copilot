@@ -534,8 +534,8 @@ input:checked + .slider::before {
 
 .seating-chart-wrapper {
     position: relative;
-    width: 360px;
-    height: 360px;
+    width: 480px;
+    height: 480px;
     display: flex;
     align-items: center;
     justify-content: center;

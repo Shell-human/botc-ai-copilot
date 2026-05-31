@@ -11,11 +11,11 @@ import { openPopover } from './popoverModal.js';
 // --- 渲染环形座位轨迹图 ---
 export function renderSeatingChart() {
     dom.seatingNodesContainer.innerHTML = "";
-    const width = 360;
-    const height = 360;
+    const width = 480;
+    const height = 480;
     const centerX = width / 2;
     const centerY = height / 2;
-    const radius = 130; // 环形半径
+    const radius = 180; // 环形半径
     const count = gameState.playerCount;
 
     // 动态更新圆桌中心的剧本背景水印与高贵霓虹呼吸灯效果
