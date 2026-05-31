@@ -292,30 +292,70 @@ export const CHARACTER_DETAILS_EN = {
 };
 
 export const CORE_LOGIC_RULES = `
-=== 血染钟楼核心推理知识库 (AI-Deduction-Axioms) ===
+=== 血染钟楼核心推理知识库 (Deduction Axioms v3.0) ===
 [约束格式：IF(条件) -> THEN(必然结果) | NOT(绝对不可能)]
-1. 伪装排他: IF (角色 ∈ 恶魔首夜获得的3个Bluffs) -> THEN (场上真实在场数=0). 任何起跳Bluffs者 = [邪恶/洗脑/酒鬼疯子/挡刀].
-2. 邪恶共知: 默认首夜互认. IF (邪恶互不认识) -> THEN (罂粟种植者必存活在场).
-3. 座位收缩: 结算邻座(如共情者/茶艺师/诺达鲺)时，绝对忽略死亡玩家，物理位置向两边存活者收缩靠拢.
-4. 涡流强干涉: IF (恶魔=涡流) -> THEN (所有镇民信息=100%假) && (白天无人被处决 -> 邪恶立刻获胜). IF (某镇民信息被证真) -> THEN (恶魔!=涡流). 外来者信息不受涡流影响.
-5. 唯一互斥: 镇民角色全局唯一. IF (多人起跳同一镇民) -> THEN (至少1人是邪恶/酒鬼疯子/被麻脸巫婆转化/受洗脑).
-6. 疯狂处决: IF (白天未经过提名且非连带死亡而有人暴毙) -> THEN (死因=违背洗脑师疯狂 / 畸形秀自证外来者 / 走私者 / 猎手开枪).
-7. 王位传承: IF (恶魔死亡 && 存活人数>=5) -> THEN (若小恶魔自刀，一爪牙变小恶魔) | (若场上有红唇女郎，她变恶魔).
-8. 醉毒机制: IF (玩家醉酒或中毒) -> THEN (技能失效，说书人可给任意假信息，且玩家本人绝对不知情).
-9. 死亡衰减: IF (玩家死亡) -> THEN (技能立刻失效，但保留阵营。仅余1票幽灵票).
+
+1. 伪装与物理实体 (Bluff & Token Constraints)
+   - 伪装排他: IF (角色 ∈ 恶魔的3个Bluffs) -> THEN (物理卡牌不在场中 && 任何起跳者必假).
+   - 酒鬼排假: IF (角色 ∈ 恶魔的3个Bluffs) -> THEN (角色 != 酒鬼以为的镇民) [因酒鬼标识牌在场内].
+   - 木偶特例: IF (提线木偶在场) -> THEN (恶魔3个Bluffs中，有1个是木偶所持有的真实镇民卡牌).
+   - 微局零假: IF (玩家数 <= 6 && 玩具匠不在场) -> THEN (恶魔Bluffs = 0).
+
+2. 涡流真值干涉 (Vortox Truth Interference)
+   - 涡流绝对假: IF (恶魔 = 涡流) -> THEN (所有镇民信息必为假) && (白天无处决 -> 邪恶胜). 
+   - 醉毒覆盖: IF (恶魔 = 涡流 && 镇民醉酒/中毒) -> THEN (镇民信息依然必为假) [涡流拥有全局最高优先级].
+   - 身份锚定: IF (恶魔 = 涡流) -> THEN (外来者/爪牙的真实身份信息可为真，如酒鬼/木偶). IF (镇民利用哲学家/食人族获得外来者技能) -> THEN (其信息仍必为假) [依据原始卡牌类型判定].
+
+3. 醉毒与被动失效 (Droisoning & Passive Fails)
+   - 即死/胜负失效: IF (圣徒 / 莽夫 / 哥布林 在醉酒/中毒时死于处决或发动技能) -> THEN (其导致游戏直接结束的特殊胜负判定完全失效).
+   - 贞洁者物理标签: IF (贞洁者健康) -> THEN (即使提名者处于醉酒/中毒，只要其原始卡牌为镇民，依然触发闪电处决). IF (贞洁者醉毒) -> THEN (提名无事发生，且首次触发额度永久消耗).
+   - 一次性能力损耗: IF (杀手/猎手在醉酒/中毒时发动技能) -> THEN (技能无效且永久消耗).
+
+4. 邪恶共知与隔离 (Evil Co-cognition & Isolation)
+   - 罂粟隔离: 默认首夜互认. IF (邪恶互不认识) -> THEN (罂粟种植者必存活在场). IF (罂粟死时处于醉毒) -> THEN (当夜邪恶依然无法相认).
+   - 魔术师防窥: IF (间谍/寡妇查看魔典 && 魔术师在场) -> THEN (说书人必须同时隐去恶魔与魔术师标识以掩护魔术师).
+
+5. 物理座位与重组 (Physical Seating & Contraction)
+   - 座位折叠: 结算邻座(共情者/茶艺师/诺达鲺)时，死亡玩家物理折叠，两侧存活玩家直接并拢.
+   - 巫婆互斥: IF (麻脸巫婆试图将玩家变成场上已存活的善良角色) -> THEN (技能直接失效，什么都不发生).
+
+6. 恶魔传承与奇点结算 (Demon Lineage & Singularities)
+   - 物理尸体败局: IF (恶魔将身份传递给已死玩家，如维戈莫提斯杀爪牙或传给死红唇女郎) -> THEN (因场上无存活恶魔，邪恶立刻战败).
+   - 宿主挂起: IF (吸血鬼处于醉毒态 && 宿主死亡) -> THEN (吸血鬼暂时不死) && (一旦吸血鬼解毒恢复健康 -> 立即死亡战败).
+   - 嵌套反转: IF (异端分子在场 && 邪恶双子在场 && 恶魔被处决) -> THEN (双子阻断好人胜 -> 异端分子将“好人未胜”反转为“邪恶直接胜利”结束游戏).
 `;
 
 export const CORE_LOGIC_RULES_EN = `
-=== BOTC CORE DEDUCTION AXIOMS (BOOLEAN CONSTRAINTS) ===
+=== BOTC CORE DEDUCTION AXIOMS (BOOLEAN CONSTRAINTS v3.0) ===
 [FORMAT: IF(Condition) -> THEN(Absolute Result) | NOT(Impossible)]
-1. Bluff Exclusivity: IF (Role ∈ 3 Demon Bluffs) -> THEN (Role in-play = 0). ANY claim of bluff = [Evil/Mad/Drunk/Lunatic/Good-Bluffing].
-2. Evil Co-cognition: Default = Evil knows Evil N1. IF (Evil blind) -> THEN (Poppy Grower is ALIVE in play).
-3. Seating Contraction: Dead players are physically skipped for neighbor abilities (Empath/Tea Lady/No-Dashi). Calculate using next ALIVE players.
-4. Vortox Absolute: IF (Demon = Vortox) -> THEN (ALL Townsfolk info = 100% FALSE) && (No daytime execution -> Evil wins). IF (Any Townsfolk info is PROVEN TRUE) -> THEN (Demon != Vortox). (Outsiders immune).
-5. Uniqueness: Townsfolk roles are unique. IF (Multiple claim same Townsfolk) -> THEN (>=1 is Evil/Drunk/Lunatic/Mad/Pit-Hagged).
-6. Madness Executions: IF (Sudden day death WITHOUT nomination/execution) -> THEN (Cause = Cerenovus madness break / Mutant self-claim).
-7. Demon Succession: IF (Demon dies && Alive >= 5) -> THEN (If Imp killed self, Minion becomes Imp) | (If Scarlet Woman alive, she becomes Demon).
-8. Drunk/Poisoning: IF (Player Drunk/Poisoned) -> THEN (Ability fails, Storyteller MAY give false info. Player DOES NOT know they are Drunk/Poisoned).
-9. Death Rules: IF (Player dies) -> THEN (Ability lost immediately [unless specified], alignment kept, only 1 ghost vote remains).
+
+1. Bluff & Token Physics
+   - Bluff Exclusivity: IF (Role ∈ 3 Demon Bluffs) -> THEN (Token is NOT in play && Claim is 100% FALSE).
+   - Drunk Exclusion: IF (Role ∈ 3 Demon Bluffs) -> THEN (Role != Drunk's assumed Townsfolk) [since Drunk's real token is in play].
+   - Marionette Exception: IF (Marionette in play) -> THEN (1 of 3 Demon Bluffs = Marionette's real nominal Townsfolk card).
+   - Teensyville Rules: IF (Players <= 6 AND Toymaker NOT in play) -> THEN (Demon Bluffs = 0).
+
+2. Vortox Truth Manipulation
+   - Vortox Force-False: IF (Demon = Vortox) -> THEN (ALL Townsfolk info = 100% FALSE) && (No daytime execution -> Evil wins).
+   - Priority Override: IF (Demon = Vortox AND Townsfolk is Drunk/Poisoned) -> THEN (Townsfolk info MUST still be false) [Vortox global override].
+   - Core Card Anchor: IF (Demon = Vortox) -> THEN (Outsider/Minion info [e.g., Drunk/Marionette] CAN be true). IF (Townsfolk obtains Outsider ability via Philosopher/Cannibal) -> THEN (Info MUST still be false) [checked by original nominal card type].
+
+3. Droisoning & Passive Fails
+   - Instant Win/Lose Fails: IF (Saint / Klutz / Goblin is executed/dies while Drunk/Poisoned) -> THEN (Their game-ending win/loss abilities DO NOT trigger).
+   - Virgin Verification: IF (Virgin is sober) -> THEN (Execution triggers even if nominator is a Drunk/Poisoned Townsfolk). IF (Virgin is Drunk/Poisoned) -> THEN (Nomination does nothing, and the 'first time' trigger is permanently consumed).
+   - One-Time Ability Burn: IF (Slayer / Slayer-equivalent fires shot while Drunk/Poisoned) -> THEN (Shot fails and is wasted permanently).
+
+4. Evil Recognition & Isolation
+   - Poppy Grower: Default = Evil knows Evil N1. IF (Evil blind) -> THEN (Poppy Grower is ALIVE in play). IF (Poppy Grower dies while Drunk/Poisoned) -> THEN (Evil players still DO NOT learn each other tonight).
+   - Magician Cover: IF (Spy/Widow views Grimoire AND Magician in play) -> THEN (Storyteller MUST hide both Demon and Magician tokens).
+
+5. Physical Contraction & Seating
+   - Seating Collapse: Dead players are physically skipped for neighbor checks (Empath/Tea Lady/No-Dashi). Connect next alive players directly.
+   - Pit-Hag Exclusivity: IF (Pit-Hag attempts to transform a player into an in-play alive good role) -> THEN (Ability fails and nothing happens).
+
+6. Succession & Singularities
+   - Dead Demon Defeat: IF (Demon passes role to a dead player [e.g. dead Minion or dead Scarlet Woman via Vigormortis]) -> THEN (No alive Demon exists -> Evil loses immediately).
+   - Lleech Delay: IF (Lleech is Drunk/Poisoned AND Host dies) -> THEN (Lleech temporarily survives) && (As soon as Lleech recovers sanity/soberness -> Lleech dies immediately).
+   - Nested Inversion: IF (Heretic in play AND Evil Twin in play AND Demon executed) -> THEN (Twin blocks Good victory -> Heretic inverts 'Good not winning' -> Evil wins immediately).
 `;
 
