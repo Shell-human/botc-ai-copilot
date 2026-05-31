@@ -1211,6 +1211,16 @@ function registerEventListeners() {
 
     // 发送至 AI 分析
     dom.analyzeBtn.addEventListener("click", handleAiAnalysis);
+
+    // 语言切换监听
+    if (dom.langToggleBtn) {
+        dom.langToggleBtn.addEventListener("click", () => {
+            const nextLang = gameState.lang === "zh" ? "en" : "zh";
+            setLanguage(nextLang);
+            const msg = nextLang === "zh" ? "已切换至简体中文" : "Switched to English";
+            showToast(msg);
+        });
+    }
 }
 
 // ==========================================================================
@@ -1526,31 +1536,121 @@ function constructGeminiPrompt(consoleText) {
     const demonDesc = currentScript.demon.map(r => `- ${r}: ${scriptDetails[r] || ''}`).join('\n');
     
     // 玩家数据结构化描述
-    const playerStatuses = gameState.players.map(p => {
-        return `- [座位 ${p.seat}] 姓名: ${p.name}, 状态: ${p.alive ? '存活' : '❌ 死亡'}, 宣称身份: ${p.claim}, 判定阵营: ${p.alignment}, 中毒标记: ${p.poisoned ? '是' : '否'}, 备注: ${p.note || '无'}`;
-    }).join('\n');
+    let playerStatuses = "";
+    if (gameState.lang === "en") {
+        playerStatuses = gameState.players.map(p => {
+            const statusStr = p.alive ? 'Alive' : '❌ Dead';
+            const poisonStr = p.poisoned ? 'Yes' : 'No';
+            const alignmentStr = p.alignment === 'good' ? 'Good' : (p.alignment === 'evil' ? 'Evil' : 'Unknown');
+            return `- [Seat ${p.seat}] Name: ${p.name}, Status: ${statusStr}, Claimed Character: ${p.claim || 'None'}, Suspected Alignment: ${alignmentStr}, Drunk/Poisoned: ${poisonStr}, Notes: ${p.note || 'None'}`;
+        }).join('\n');
+    } else {
+        playerStatuses = gameState.players.map(p => {
+            return `- [座位 ${p.seat}] 姓名: ${p.name}, 状态: ${p.alive ? '存活' : '❌ 死亡'}, 宣称身份: ${p.claim}, 判定阵营: ${p.alignment}, 中毒标记: ${p.poisoned ? '是' : '否'}, 备注: ${p.note || '无'}`;
+        }).join('\n');
+    }
 
     // 日志信息描述
-    const gameLogs = gameState.logs.map((log, idx) => `[第 ${idx+1} 条事件] ${log}`).join('\n');
+    let gameLogs = "";
+    if (gameState.lang === "en") {
+        gameLogs = gameState.logs.map((log, idx) => `[Event ${idx+1}] ${log}`).join('\n');
+    } else {
+        gameLogs = gameState.logs.map((log, idx) => `[第 ${idx+1} 条事件] ${log}`).join('\n');
+    }
 
     let systemRolePrompt = "";
     let setupPrompt = "";
-    if (gameState.myAlignment === "evil") {
-        const bluffsStr = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.join('、') : "未填报";
-        systemRolePrompt = `你是一名极其资深的《血染钟楼》逻辑学家、顶尖博弈高手。你正在作为一名玩家（即玩家 ${gameState.mySeat} 号，实际身份为【邪恶阵营】的 ${gameState.myRole}）的“AI战术副驾驶”帮助他和邪恶同伴打配合、欺骗好人阵营、混淆视听并获得最终胜利。
+    if (gameState.lang === "en") {
+        if (gameState.myAlignment === "evil") {
+            const bluffsStr = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.join(', ') : "None declared";
+            systemRolePrompt = `You are an extremely experienced Blood on the Clocktower logician and strategic mastermind. You are acting as the "AI Tactical Copilot" for Player ${gameState.mySeat} (real role: ${gameState.myRole}, alignment: Evil).
+The Storyteller gave you 3 Demon Bluffs (roles definitely NOT in play): [${bluffsStr}].
+Please analyze the game from the absolute perspective of the Evil team (Demons and Minions):
+- Guide them on how to claim and utilize these 3 Bluffs to cooperate with Evil teammates.
+- Suggest strategic options for framing Good players, validating Evil teammates, and fabricating false information!
+- Deduce which claims from Good players are real, and highlight logical contradictions to exploit.`;
+            setupPrompt = `- My Real Role: ${gameState.myRole} (Evil Team)\n- 3 Demon Bluffs from Storyteller: ${bluffsStr}`;
+        } else {
+            systemRolePrompt = `You are an extremely experienced Blood on the Clocktower logician and strategic mastermind. You are acting as the "AI Tactical Copilot" for Player ${gameState.mySeat} (real role: ${gameState.myRole}, alignment: Good).
+Please analyze the game from the absolute perspective of the Good team, helping them spot logical contradictions, identify deceitful claims, and locate the hidden Demon and Minions.`;
+            setupPrompt = `- My Real Role: ${gameState.myRole} (Good Team)`;
+        }
+    } else {
+        if (gameState.myAlignment === "evil") {
+            const bluffsStr = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.join('、') : "未填报";
+            systemRolePrompt = `你是一名极其资深的《血染钟楼》逻辑学家、顶尖博弈高手。你正在作为一名玩家（即玩家 ${gameState.mySeat} 号，实际身份为【邪恶阵营】的 ${gameState.myRole}）的“AI战术副驾驶”帮助他和邪恶同伴打配合、欺骗好人阵营、混淆视听并获得最终胜利。
 说书人在首夜分配给他的 3 个【好人伪装身份 (Bluffs，场上绝对不在场的好人角色)】是：【${bluffsStr}】。
 请务必站在邪恶阵营（恶魔或爪牙）的视角进行策略分析：
 - 指导他如何巧妙地“穿”这 3 件伪装皮肤，协助他和他的邪恶队友进行高水准的身份伪装配合。
 - 提供抹黑好人、抗推好人、做高同伴身份、伪造假信息的最佳阴险战术！
 - 分析哪些好人的宣称是真实的，哪些是我们可以利用逻辑漏洞击破的！`;
-        
-        setupPrompt = `- 我的真实身份：${gameState.myRole}（【邪恶阵营】）
-- 说书人给的 3 个好人伪装 (Bluffs)：${bluffsStr}`;
-    } else {
-        systemRolePrompt = `你是一名极其资深的《血染钟楼》逻辑学家、顶尖博弈高手。你正在作为一名玩家（即玩家 ${gameState.mySeat} 号，真实身份为【善良阵营】的 ${gameState.myRole}）的“AI战术副驾驶”帮助他梳理局势、检测逻辑冲突并找出隐藏的恶魔与爪牙。
+            setupPrompt = `- 我的真实身份：${gameState.myRole}（【邪恶阵营】）\n- 说书人给的 3 个好人伪装 (Bluffs)：${bluffsStr}`;
+        } else {
+            systemRolePrompt = `你是一名极其资深的《血染钟楼》逻辑学家、顶尖博弈高手。你正在作为一名玩家（即玩家 ${gameState.mySeat} 号，真实身份为【善良阵营】的 ${gameState.myRole}）的“AI战术副驾驶”帮助他梳理局势、检测逻辑冲突并找出隐藏的恶魔与爪牙。
 请站在善良阵营的绝对立场，帮他寻找逻辑漏洞，防备邪恶阵营的欺骗！`;
-        
-        setupPrompt = `- 我的真实身份：${gameState.myRole}（善良阵营）`;
+            setupPrompt = `- 我的真实身份：${gameState.myRole}（善良阵营）`;
+        }
+    }
+
+    if (gameState.lang === "en") {
+        return `
+${systemRolePrompt}
+Current Script: "${currentScript.name || gameState.scriptName}".
+
+Character descriptions in this script (use these definitions for logical constraints):
+Townsfolk:
+${townsfolkDesc}
+
+Outsiders:
+${outsiderDesc}
+
+Minions:
+${minionDesc}
+
+Demons:
+${demonDesc}
+
+Please perform constraint solving and parallel worldline deductions based on character abilities and game state.
+
+=== Game Configuration ===
+- Total Players: ${gameState.playerCount}
+- My Seat: Player ${gameState.mySeat}
+${setupPrompt}
+
+=== Player Statuses ===
+${playerStatuses}
+
+=== Game Logs ===
+${gameLogs}
+
+---
+Please provide depth analysis based on the latest update: "${consoleText}".
+For an optimal user experience, you MUST strictly format your response using these three exact tags:
+
+=== ANALYSIS ===
+Provide instant analysis here.
+Guidelines:
+1. Analyze the new update "${consoleText}". Detail contradictions and logical clashes with previous claims.
+2. Consider spatial layout (neighbor changes due to death, Empath's new neighbors, Tea Lady protection network, etc.).
+3. Identify any logical anomalies.
+
+=== WORLDLINES ===
+Perform parallel worldline deductions. Explore at least three scenarios:
+1. [Normal Worldline]: No Vortox, no poisoning/drunkenness. If all info is true, who is the most likely Demon? Who is Evil claiming a fake role?
+2. [Vortox Worldline]: If the Demon is a Vortox, all Townsfolk information MUST be FALSE. What does this reveal? Who is most likely Vortox? (Highlight that if no one is executed by day, Vortox wins automatically).
+3. [Poisoned/Drunk Worldline]: Is a No-Dashi poisoning neighbors? Is a Poisoner/Ceranovus/Puzzlemaster active? If someone is drunk/poisoned, who is the most likely target and what info is compromised?
+
+=== TIPS ===
+Provide tactical suggestions and survival tips.
+Guidelines:
+1. Tactical Actions: I am a ${gameState.myRole} (${gameState.myAlignment === 'evil' ? 'Evil Team' : 'Good Team'}). Who should I private chat today to verify or hide alignment? What voting strategies should we pursue today, or whom should we nominate/frame?
+2. Address script-specific dynamics (e.g. how to handle the ${currentScript.demon[0]} demon, Minion-Townsfolk power struggles).
+3. Conclude with a concise one-line tactical takeaway.
+
+[CRITICAL FORMATTING REQUIREMENT]
+Do NOT merge or omit these tags. Each section must start with the exact tag (=== ANALYSIS ===, === WORLDLINES ===, === TIPS ===) on a new line!
+Render all content in premium, clean English Markdown. Use bolding and lists appropriately for readability.
+`;
     }
 
     return `
