@@ -2,6 +2,12 @@
    无上杀戮 - 血染钟楼 AI 战术助手逻辑控制系统 (Vanilla JS)
    ========================================================================== */
 
+// 全局运行时错误监听器，方便在调试时即时捕获隐藏的 JS 报错
+window.onerror = function (message, source, lineno, colno, error) {
+    alert("🚨 发现未捕获的运行时错误！\n\n错误信息: " + message + "\n出错文件: " + source + "\n出错行号: " + lineno + "\n出错列号: " + colno);
+    return false;
+};
+
 // --- 剧本/板子数据配置 ---
 const SCRIPTS_DATA = {
     wushang: {
@@ -148,7 +154,7 @@ const CHARACTER_DETAILS = {
 };
 
 const gameState = {
-    apiKey: "",
+    apiKey: "AIzaSyATGfywDEpzV4uav_YLvVK7-HTLbO7TKrk",
     playerCount: 9,
     scriptName: "wushang",
     mySeat: 3,
@@ -1079,11 +1085,21 @@ function registerEventListeners() {
 // ==========================================================================
 
 async function handleAiAnalysis() {
+    console.log("🚨 [DEBUG] === handleAiAnalysis() 开始执行 ===");
     const rawText = dom.consoleInput.value.trim();
     const apiKey = dom.apiKeyInput.value.trim() || gameState.apiKey;
     const provider = gameState.apiProvider || "gemini";
     const baseUrl = gameState.apiBaseUrl || "https://api.openai.com/v1";
     let model = gameState.aiModel || "gemini-flash-latest";
+
+    console.log("🚨 [DEBUG] 采集到的基本参数：", {
+        rawText,
+        apiKeyExists: !!apiKey,
+        apiKeyStart: apiKey ? apiKey.substring(0, 6) : "None",
+        provider,
+        baseUrl,
+        model
+    });
 
     // 优雅兼容用户拼写习惯 gemini-flash-lastest -> gemini-flash-latest
     if (model === "gemini-flash-lastest") {
@@ -1092,6 +1108,7 @@ async function handleAiAnalysis() {
 
     // 离线拦截逻辑：断网防崩溃数据安全暂存
     if (!navigator.onLine) {
+        console.log("🚨 [DEBUG] 检测到处于离线状态！数据暂存。");
         if (rawText) {
             gameState.logs.push(`白天进展陈述(暂存)："${rawText}"`);
             renderTimelineLogs();
@@ -1104,7 +1121,10 @@ async function handleAiAnalysis() {
     }
 
     const isLocalhost = baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1");
+    console.log("🚨 [DEBUG] 本地服务器判定 isLocalhost =", isLocalhost);
+    
     if (!apiKey && !isLocalhost) {
+        console.log("🚨 [DEBUG] 缺失 API Key，拦截。");
         alert("请输入有效的 API Key 以启用分析！");
         const apiKeyDetails = document.getElementById("apiKeyDetails");
         if (apiKeyDetails) apiKeyDetails.open = true;
@@ -1147,14 +1167,18 @@ async function handleAiAnalysis() {
             <p class="animate-pulse">${friendlyModelName} 正在对局势做多维度世界线推演...</p>
         </div>
     `;
+    console.log("🚨 [DEBUG] 正在将界面切换为加载态...");
     dom.analysisBox.innerHTML = loadingHtml;
     dom.worldlinesBox.innerHTML = loadingHtml;
     dom.tipsBox.innerHTML = loadingHtml;
 
     // 3. 构建 Prompt
+    console.log("🚨 [DEBUG] 正在构建 AI 提示词...");
     const prompt = constructGeminiPrompt(rawText);
+    console.log("🚨 [DEBUG] 提示词构建完毕，长度为:", prompt.length);
 
     try {
+        console.log("🚨 [DEBUG] 进入 API 请求 try 块...");
         // 更新 API 指示灯状态
         dom.apiStatusIndicator.className = "status-indicator online animate-pulse";
         dom.apiStatusText.textContent = `正在调用 ${friendlyModelName}...`;
@@ -1183,7 +1207,9 @@ async function handleAiAnalysis() {
                 reqBody.generationConfig.temperature = 0.2;
             }
 
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+            const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+            console.log("🚨 [DEBUG] 正在请求 Gemini 官方接口，URL:", targetUrl.substring(0, 100) + "...[Key Hidden]");
+            const response = await fetch(targetUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -1193,20 +1219,27 @@ async function handleAiAnalysis() {
 
             if (!response.ok) {
                 const errText = await response.text();
+                console.log("🚨 [DEBUG] Gemini 响应非 OK:", response.status, errText);
                 throw new Error(`Gemini API 错误 (${response.status}): ${errText}`);
             }
 
             const data = await response.json();
+            console.log("🚨 [DEBUG] Gemini 成功返回数据:", data);
+            
             if (!data.candidates || data.candidates.length === 0) {
                 throw new Error("Gemini API 未能返回候选内容，请核对 API 密钥是否有效。");
             }
 
             const parts = data.candidates[0].content.parts;
+            console.log("🚨 [DEBUG] Gemini 候选正文部件 parts count:", parts.length);
+            
             const finalParts = parts.filter(p => !p.thought);
             reply = finalParts.map(p => p.text).join('\n');
+            console.log("🚨 [DEBUG] 拼接后最终 reply 长度为:", reply.length);
 
             const thoughtPart = parts.find(p => p.thought);
             if (thoughtPart && thoughtPart.text.trim()) {
+                console.log("🚨 [DEBUG] 发现思考链 thoughtPart 长度:", thoughtPart.text.trim().length);
                 thoughtHtml = buildThoughtHtml(thoughtPart.text.trim(), friendlyModelName);
             }
 
@@ -1317,6 +1350,9 @@ async function handleAiAnalysis() {
         
         dom.apiStatusIndicator.className = "status-indicator error";
         dom.apiStatusText.textContent = "API 调用失败";
+
+        // 弹窗提示具体报错，方便本地调试定位问题所在
+        alert("🚨 AI 调试错误提示：\n" + error.message + "\n\n请检查网络、API Key 格式及接口地址是否正确。");
 
         const errorHtml = `
             <div class="ai-welcome" style="color: var(--color-evil);">
@@ -1446,6 +1482,9 @@ ${gameLogs}
 
 // --- 解析并分发 Gemini API 响应 ---
 function distributeAiResponse(text, thoughtHtml = "") {
+    console.log("🚨 [DEBUG] === distributeAiResponse() 开始执行 ===");
+    console.log("🚨 [DEBUG] 原始返回文本长度:", text ? text.length : 0);
+    
     let analysisPart = "";
     let worldlinesPart = "";
     let tipsPart = "";
@@ -1459,6 +1498,12 @@ function distributeAiResponse(text, thoughtHtml = "") {
     const analysisMatch = text.match(analysisRegex);
     const worldlinesMatch = text.match(worldlinesRegex);
     const tipsMatch = text.match(tipsRegex);
+
+    console.log("🚨 [DEBUG] 正则强匹配结果：", {
+        analysisMatched: !!analysisMatch,
+        worldlinesMatched: !!worldlinesMatch,
+        tipsMatched: !!tipsMatch
+    });
 
     if (analysisMatch && worldlinesMatch && tipsMatch) {
         const analysisIdx = analysisMatch.index;
@@ -1488,8 +1533,10 @@ function distributeAiResponse(text, thoughtHtml = "") {
         worldlinesPart = getSectionContent("worldlines");
         tipsPart = getSectionContent("tips");
     } else {
+        console.log("🚨 [DEBUG] 正则强匹配失败，进入 split 兼容模式分割...");
         // 兼容性兜底正则分割（忽略大小写）
         const parts = text.split(/===\s*[a-zA-Z]+\s*===/i);
+        console.log("🚨 [DEBUG] split 拆分出的 parts.length =", parts.length);
         
         if (parts.length < 4) {
             analysisPart = text;
@@ -1503,6 +1550,12 @@ function distributeAiResponse(text, thoughtHtml = "") {
         }
     }
 
+    console.log("🚨 [DEBUG] 最终段落字符长度：", {
+        analysisPartLength: analysisPart.length,
+        worldlinesPartLength: worldlinesPart.length,
+        tipsPartLength: tipsPart.length
+    });
+
     // 终极防空逻辑：若某一部分解析出来确实没有内容，显示友好的状态，而非留白
     if (!analysisPart.trim()) {
         analysisPart = `<div class="empty-tab-state"><p>AI 未能正常生成本轮即时局势分析。</p></div>`;
@@ -1515,9 +1568,24 @@ function distributeAiResponse(text, thoughtHtml = "") {
     }
 
     // 渲染 Markdown
+    console.log("🚨 [DEBUG] 正在将解析出的 HTML 渲染写入 DOM 元素中...");
     dom.analysisBox.innerHTML = thoughtHtml + parseMarkdown(analysisPart.trim());
     dom.worldlinesBox.innerHTML = parseMarkdown(worldlinesPart.trim());
     dom.tipsBox.innerHTML = parseMarkdown(tipsPart.trim());
+
+    console.log("🚨 [DEBUG] DOM 写入完毕，数据核验：", {
+        analysisBoxHtmlLength: dom.analysisBox.innerHTML.length,
+        worldlinesBoxHtmlLength: dom.worldlinesBox.innerHTML.length,
+        tipsBoxHtmlLength: dom.tipsBox.innerHTML.length
+    });
+
+    console.log("🚨 [DEBUG] 正在获取 DOM 物理渲染高度（若为 0 说明容器高度塌陷被 CSS 裁剪隐藏）：", {
+        analysisBoxHeight: dom.analysisBox.offsetHeight,
+        analysisBoxParentHeight: dom.analysisBox.parentElement ? dom.analysisBox.parentElement.offsetHeight : "No Parent",
+        tipsBoxHeight: dom.tipsBox.offsetHeight,
+        tipsBoxParentHeight: dom.tipsBox.parentElement ? dom.tipsBox.parentElement.offsetHeight : "No Parent",
+        tabContentContainerHeight: document.querySelector(".tab-content-container") ? document.querySelector(".tab-content-container").offsetHeight : "No Container"
+    });
 
     lucide.createIcons();
 }
@@ -1644,13 +1712,15 @@ function loadFromLocalStorage() {
         if (dom.consoleInput && data.consoleInputDraft) {
             dom.consoleInput.value = data.consoleInputDraft;
         }
-        if (dom.analysisBox && data.analysisBoxHtml) {
+        if (dom.analysisBox && data.analysisBoxHtml && data.analysisBoxHtml.trim()) {
             dom.analysisBox.innerHTML = data.analysisBoxHtml;
+        } else {
+            resetAnalysisBoxes();
         }
-        if (dom.worldlinesBox && data.worldlinesBoxHtml) {
+        if (dom.worldlinesBox && data.worldlinesBoxHtml && data.worldlinesBoxHtml.trim()) {
             dom.worldlinesBox.innerHTML = data.worldlinesBoxHtml;
         }
-        if (dom.tipsBox && data.tipsBoxHtml) {
+        if (dom.tipsBox && data.tipsBoxHtml && data.tipsBoxHtml.trim()) {
             dom.tipsBox.innerHTML = data.tipsBoxHtml;
         }
 
