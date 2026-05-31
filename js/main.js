@@ -16,21 +16,14 @@ import {
     loadFromLocalStorage
 } from './state.js';
 
-import {
-    dom,
-    updateMyRoleOptions,
-    updateApiModelOptions,
-    populateScriptPreview,
-    renderSeatingChart,
-    renderPlayerList,
-    renderTimelineLogs,
-    resetAnalysisBoxes,
-    setLanguage,
-    showToast,
-    closePopover,
-    savePopoverData,
-    useEnOrZh
-} from './ui.js';
+import { dom } from './dom.js';
+import { updateMyRoleOptions, updateApiModelOptions, resetAnalysisBoxes, setLanguage, useEnOrZh } from './i18n.js';
+import { showToast } from './utils.js';
+import { populateScriptPreview } from './components/scriptPreview.js';
+import { renderSeatingChart } from './components/seatingChart.js';
+import { renderPlayerList } from './components/playerList.js';
+import { renderTimelineLogs } from './components/timelineLogs.js';
+import { closePopover, savePopoverData } from './components/popoverModal.js';
 
 import { handleAiAnalysis } from './api.js';
 

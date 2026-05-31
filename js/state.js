@@ -2,16 +2,11 @@
    state.js - 全局运行时状态机管理与持久化本地缓存核心
    ========================================================================== */
 
-import {
-    renderSeatingChart,
-    renderPlayerList,
-    renderTimelineLogs,
-    setLanguage,
-    updateMyRoleOptions,
-    updateApiModelOptions,
-    resetAnalysisBoxes,
-    dom
-} from './ui.js';
+import { dom } from './dom.js';
+import { setLanguage, updateMyRoleOptions, updateApiModelOptions, resetAnalysisBoxes } from './i18n.js';
+import { renderSeatingChart } from './components/seatingChart.js';
+import { renderPlayerList } from './components/playerList.js';
+import { renderTimelineLogs } from './components/timelineLogs.js';
 
 export const gameState = {
     apiKey: "",

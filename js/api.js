@@ -15,13 +15,10 @@ import {
     saveToLocalStorage
 } from './state.js';
 
-import {
-    dom,
-    renderTimelineLogs,
-    resetAnalysisBoxes,
-    getLocalizedLog,
-    parseMarkdown
-} from './ui.js';
+import { dom } from './dom.js';
+import { getLocalizedLog, resetAnalysisBoxes } from './i18n.js';
+import { parseMarkdown } from './utils.js';
+import { renderTimelineLogs } from './components/timelineLogs.js';
 
 export async function handleAiAnalysis() {
     console.log("🚨 [DEBUG] === handleAiAnalysis() 开始执行 ===");
