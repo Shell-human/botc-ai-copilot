@@ -1434,9 +1434,9 @@ ${gameLogs}
 === TIPS ===
 这里提供【行动建议与防猝死提示】。
 分析要点：
-1. 战术行动：我（共情者）白天最应该去私聊哪个位置核对身份？或者我们今天最应该把票挂在谁头上做测试？
-2. 针对我们玩的《无上杀戮》的特定特色角色（如熊孩子、皮克希、精神病患者等），指出本局对好人阵营而言最危急的爪牙防守漏洞。
-3. 给出一个简洁的防猝死一句话建议。
+1. 战术行动：我（真实角色为【${gameState.myRole}】，当前阵营为【${gameState.myAlignment === 'evil' ? '邪恶阵营' : '善良阵营'}】）在白天最应该去私聊场上的哪些玩家以达到核对或掩盖身份的目的？在投票环节中，我们今天最应该采取何种投票策略，或是应该诱导大家将票挂在谁头上？
+2. 针对我们正在玩的《${currentScript.name}》剧本角色（如 ${currentScript.demon[0]} 恶魔，以及爪牙与村民的博弈关系），指出本局本轮次对我们而言最紧迫的防守或进攻漏洞。
+3. 给出一个简洁的一句话战术行动总结建议。
 
 【重要格式要求】
 不要合并或者漏掉以上标签。每一块内容必须以 === ANALYSIS ===, === WORLDLINES ===, === TIPS === 这三个大写标签单独占一行开启！
@@ -1450,16 +1450,68 @@ function distributeAiResponse(text, thoughtHtml = "") {
     let worldlinesPart = "";
     let tipsPart = "";
 
-    const parts = text.split(/=== [A-Z]+ ===/);
-    
-    if (parts.length < 4) {
-        analysisPart = text;
-        worldlinesPart = `<div class="empty-tab-state"><p>AI 未能正常输出标签块。完整分析已渲染在第一页中。</p></div>`;
-        tipsPart = `<div class="empty-tab-state"><p>请在“即时分析”中查看全部推演信息。</p></div>`;
+    // 极其稳健的正则表达式，匹配可能带有多级标题、星号或空格的标签段
+    // 例如：### === ANALYSIS ===, **=== ANALYSIS ===**, === Worldlines ===
+    const analysisRegex = /(?:###\s*)?(?:\*\*)?===\s*ANALYSIS\s*===(?:\*\*)?/i;
+    const worldlinesRegex = /(?:###\s*)?(?:\*\*)?===\s*WORLDLINES\s*===(?:\*\*)?/i;
+    const tipsRegex = /(?:###\s*)?(?:\*\*)?===\s*TIPS\s*===(?:\*\*)?/i;
+
+    const analysisMatch = text.match(analysisRegex);
+    const worldlinesMatch = text.match(worldlinesRegex);
+    const tipsMatch = text.match(tipsRegex);
+
+    if (analysisMatch && worldlinesMatch && tipsMatch) {
+        const analysisIdx = analysisMatch.index;
+        const worldlinesIdx = worldlinesMatch.index;
+        const tipsIdx = tipsMatch.index;
+
+        // 整理匹配项的物理范围并排序，以防AI颠倒顺序输出
+        const sections = [
+            { name: "analysis", start: analysisIdx, end: analysisIdx + analysisMatch[0].length },
+            { name: "worldlines", start: worldlinesIdx, end: worldlinesIdx + worldlinesMatch[0].length },
+            { name: "tips", start: tipsIdx, end: tipsIdx + tipsMatch[0].length }
+        ];
+        
+        sections.sort((a, b) => a.start - b.start);
+
+        const getSectionContent = (sectName) => {
+            const currentIdx = sections.findIndex(s => s.name === sectName);
+            if (currentIdx === -1) return "";
+            const current = sections[currentIdx];
+            const next = sections[currentIdx + 1];
+            const startPos = current.end;
+            const endPos = next ? next.start : text.length;
+            return text.substring(startPos, endPos).trim();
+        };
+
+        analysisPart = getSectionContent("analysis");
+        worldlinesPart = getSectionContent("worldlines");
+        tipsPart = getSectionContent("tips");
     } else {
-        analysisPart = parts[1] || "";
-        worldlinesPart = parts[2] || "";
-        tipsPart = parts[3] || "";
+        // 兼容性兜底正则分割（忽略大小写）
+        const parts = text.split(/===\s*[a-zA-Z]+\s*===/i);
+        
+        if (parts.length < 4) {
+            analysisPart = text;
+            worldlinesPart = `<div class="empty-tab-state"><p>AI 未能完全按照标签格式输出。完整的局势推演与分析已全部渲染在第一页中，您可以直接前往通读。</p></div>`;
+            tipsPart = `<div class="empty-tab-state"><p>请在【即时分析】页面中查看包含全部战术提示在内的完整推演信息。</p></div>`;
+        } else {
+            // 第一个分隔符之前可能有引导语，因此顺延
+            analysisPart = parts[1] || "";
+            worldlinesPart = parts[2] || "";
+            tipsPart = parts[3] || "";
+        }
+    }
+
+    // 终极防空逻辑：若某一部分解析出来确实没有内容，显示友好的状态，而非留白
+    if (!analysisPart.trim()) {
+        analysisPart = `<div class="empty-tab-state"><p>AI 未能正常生成本轮即时局势分析。</p></div>`;
+    }
+    if (!worldlinesPart.trim()) {
+        worldlinesPart = `<div class="empty-tab-state"><p>AI 未能正常生成本轮平行世界线分析。</p></div>`;
+    }
+    if (!tipsPart.trim()) {
+        tipsPart = `<div class="empty-tab-state"><p>AI 未能生成本轮的具体行动建议。建议您阅读【即时分析】页面的全局逻辑推演。</p></div>`;
     }
 
     // 渲染 Markdown
