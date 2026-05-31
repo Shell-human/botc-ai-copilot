@@ -25,6 +25,7 @@ export const gameState = {
     apiModelCustom: "",
     players: [],
     logs: [],
+    aiOutputs: [],
     selectedSeatForEdit: null,
     lang: "zh"
 };
@@ -44,6 +45,7 @@ export function saveToLocalStorage() {
         apiModelCustom: gameState.apiModelCustom,
         players: gameState.players,
         logs: gameState.logs,
+        aiOutputs: gameState.aiOutputs || [],
         consoleInputDraft: dom.consoleInput ? dom.consoleInput.value : "",
         analysisBoxHtml: dom.analysisBox ? dom.analysisBox.innerHTML : "",
         worldlinesBoxHtml: dom.worldlinesBox ? dom.worldlinesBox.innerHTML : "",
@@ -76,6 +78,7 @@ export function loadFromLocalStorage() {
         gameState.apiModelCustom = data.apiModelCustom || "";
         gameState.players = data.players;
         gameState.logs = data.logs;
+        gameState.aiOutputs = data.aiOutputs || [];
         gameState.lang = data.lang || "zh";
 
         // Sync i18n
@@ -183,6 +186,9 @@ export function initGame() {
             note: isMe ? "这是我的底牌角色" : ""
         });
     }
+
+    // 重置 AI 历史输出与记忆
+    gameState.aiOutputs = [];
 
     // 重置日志流水
     if (gameState.lang === "en") {

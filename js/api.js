@@ -287,11 +287,22 @@ export async function handleAiAnalysis() {
         // 4. 解析 AI 回复并分发到不同选项卡
         distributeResponse(reply, thoughtHtml);
 
+        // 将 AI 本次输出存入本地缓存的历史记录中（用于掉线重连或连续轮次推演时提供前后连贯记忆）
+        if (!gameState.aiOutputs) {
+            gameState.aiOutputs = [];
+        }
+        gameState.aiOutputs.push({
+            type: isChatMode ? "chat" : "analysis",
+            input: rawText,
+            output: reply,
+            timestamp: Date.now()
+        });
+
         // 恢复状态指示灯
         dom.apiStatusIndicator.className = "status-indicator online";
         dom.apiStatusText.textContent = `${friendlyModelName} 已就绪`;
 
-        // 保存对局进度至本地 (包含最新的 AI 分析结果)
+        // 保存对局进度至本地 (包含最新的 AI 分析结果和 AI 历史记忆)
         saveToLocalStorage();
 
     } catch (error) {
@@ -371,6 +382,25 @@ export function constructPrompt(consoleText, isChat = false) {
         gameLogs = gameState.logs.map((log, idx) => `[Event ${idx+1}] ${getLocalizedLog(log, "en")}`).join('\n');
     } else {
         gameLogs = gameState.logs.map((log, idx) => `[第 ${idx+1} 条事件] ${getLocalizedLog(log, "zh")}`).join('\n');
+    }
+
+    // AI 历史输出及对话记忆描述 (仅包含最后 6 次交互，防 Token 溢出，保障响应速度)
+    let aiHistoryPrompt = "";
+    if (gameState.aiOutputs && gameState.aiOutputs.length > 0) {
+        const historyToInclude = gameState.aiOutputs.slice(-6);
+        if (gameState.lang === "en") {
+            aiHistoryPrompt = "\n=== PREVIOUS AI ASSISTANT OUTPUTS & CONVERSATION HISTORY ===\n" + 
+                historyToInclude.map((item, idx) => {
+                    const typeStr = item.type === "chat" ? "Direct Q&A Chat" : "Round Seating Deduction";
+                    return `[Memory ${idx+1}] Interaction Type: ${typeStr}\n- User Input: "${item.input}"\n- Your Previous Response:\n${item.output}\n---`;
+                }).join('\n\n') + "\n\n(Use the above history to maintain consistency, memory, and flow. Do not contradict your previous statements unless new hard evidence disproves them.)\n";
+        } else {
+            aiHistoryPrompt = "\n=== 历史 AI 战术副驾驶推演与对话记忆 ===\n" + 
+                historyToInclude.map((item, idx) => {
+                    const typeStr = item.type === "chat" ? "自由提问对话" : "局势进展推演";
+                    return `[历史记忆 ${idx+1}] 交互类型: ${typeStr}\n- 用户输入: "${item.input}"\n- 你当时的回复输出:\n${item.output}\n---`;
+                }).join('\n\n') + "\n\n（请务必参考上述历史输出，保持战术建议与前序推演的一致性与连贯性。除非出现硬性的新证据或局势剧变，否则请不要否定自己之前的结论。）\n";
+        }
     }
 
     let systemRolePrompt = "";
@@ -467,6 +497,7 @@ ${playerStatuses}
 
 === Game Logs ===
 ${gameLogs}
+${aiHistoryPrompt}
 
 ---
 【USER DIRECT QUERY】: "${consoleText}"
@@ -503,6 +534,7 @@ ${playerStatuses}
 
 === 截至目前发生的事件日志记录 ===
 ${gameLogs}
+${aiHistoryPrompt}
 
 ---
 【用户直接对话提问】："${consoleText}"
@@ -544,6 +576,7 @@ ${playerStatuses}
 
 === Game Logs ===
 ${gameLogs}
+${aiHistoryPrompt}
 
 ---
 Please provide depth analysis based on the latest update: "${consoleText}".
@@ -607,6 +640,7 @@ ${playerStatuses}
 
 === 截至目前发生的事件日志记录 ===
 ${gameLogs}
+${aiHistoryPrompt}
 
 ---
 请帮我根据最新的变化“${consoleText}”，输出三个模块的分析。
