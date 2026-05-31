@@ -1,11 +1,10 @@
 /* ==========================================================================
-   popoverModal.js - 玩家座位状态编辑浮窗 Modal 组件
+   popoverModal.js - 玩家座位状态编辑浮窗 Modal 组件 (Component)
    ========================================================================== */
 
-import { ROLE_TRANSLATIONS, TRANSLATIONS } from '../constants.js';
+import { ROLE_TRANSLATIONS, TRANSLATIONS } from '../data/translations.js';
 import { gameState, saveToLocalStorage } from '../state.js';
 import { dom } from '../dom.js';
-import { getLocalizedRole } from '../i18n.js';
 
 import { renderSeatingChart } from './seatingChart.js';
 import { renderPlayerList } from './playerList.js';
@@ -92,4 +91,14 @@ export function savePopoverData() {
     
     // 保存状态到本地
     saveToLocalStorage();
+}
+
+// 自我初始化事件绑定，高内聚低耦合
+export function initPopoverEvents() {
+    if (dom.closePopoverBtn) {
+        dom.closePopoverBtn.addEventListener("click", closePopover);
+    }
+    if (dom.savePopoverBtn) {
+        dom.savePopoverBtn.addEventListener("click", savePopoverData);
+    }
 }

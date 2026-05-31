@@ -1,5 +1,5 @@
 /* ==========================================================================
-   state.js - 全局运行时状态机管理与持久化本地缓存核心
+   state.js - 全局运行时状态机管理与视图层同步协调中心 (State Model)
    ========================================================================== */
 
 import { dom } from './dom.js';
@@ -7,6 +7,9 @@ import { setLanguage, updateMyRoleOptions, updateApiModelOptions, resetAnalysisB
 import { renderSeatingChart } from './components/seatingChart.js';
 import { renderPlayerList } from './components/playerList.js';
 import { renderTimelineLogs } from './components/timelineLogs.js';
+import { SCRIPTS_DATA, SCRIPTS_DATA_EN } from './data/rules.js';
+import { ROLE_TRANSLATIONS, TRANSLATIONS } from './data/translations.js';
+import { saveGameState, loadGameState, hasSavedGame } from './services/storage.js';
 
 export const gameState = {
     apiKey: "",
@@ -26,36 +29,31 @@ export const gameState = {
     lang: "zh"
 };
 
-// --- LocalStorage 本地自动持久化存储 ---
+// --- 对局本地自动持久化存储代理 ---
 export function saveToLocalStorage() {
-    try {
-        localStorage.setItem("botc_game_state", JSON.stringify({
-            playerCount: gameState.playerCount,
-            scriptName: gameState.scriptName,
-            mySeat: gameState.mySeat,
-            myRole: gameState.myRole,
-            myAlignment: gameState.myAlignment,
-            evilBluffs: gameState.evilBluffs,
-            apiProvider: gameState.apiProvider,
-            apiBaseUrl: gameState.apiBaseUrl,
-            aiModel: gameState.aiModel,
-            apiModelCustom: gameState.apiModelCustom,
-            players: gameState.players,
-            logs: gameState.logs,
-            consoleInputDraft: dom.consoleInput ? dom.consoleInput.value : "",
-            analysisBoxHtml: dom.analysisBox ? dom.analysisBox.innerHTML : "",
-            worldlinesBoxHtml: dom.worldlinesBox ? dom.worldlinesBox.innerHTML : "",
-            tipsBoxHtml: dom.tipsBox ? dom.tipsBox.innerHTML : "",
-            lang: gameState.lang
-        }));
-    } catch (e) {
-        console.error("无法保存对局数据到本地缓存:", e);
-    }
+    saveGameState({
+        playerCount: gameState.playerCount,
+        scriptName: gameState.scriptName,
+        mySeat: gameState.mySeat,
+        myRole: gameState.myRole,
+        myAlignment: gameState.myAlignment,
+        evilBluffs: gameState.evilBluffs,
+        apiProvider: gameState.apiProvider,
+        apiBaseUrl: gameState.apiBaseUrl,
+        aiModel: gameState.aiModel,
+        apiModelCustom: gameState.apiModelCustom,
+        players: gameState.players,
+        logs: gameState.logs,
+        consoleInputDraft: dom.consoleInput ? dom.consoleInput.value : "",
+        analysisBoxHtml: dom.analysisBox ? dom.analysisBox.innerHTML : "",
+        worldlinesBoxHtml: dom.worldlinesBox ? dom.worldlinesBox.innerHTML : "",
+        tipsBoxHtml: dom.tipsBox ? dom.tipsBox.innerHTML : "",
+        lang: gameState.lang
+    });
 }
 
 export function checkSavedGame() {
-    const saved = localStorage.getItem("botc_game_state");
-    if (saved && dom.restoreGameBtn) {
+    if (hasSavedGame() && dom.restoreGameBtn) {
         dom.restoreGameBtn.classList.remove("hidden");
         return true;
     }
@@ -63,10 +61,9 @@ export function checkSavedGame() {
 }
 
 export function loadFromLocalStorage() {
-    const saved = localStorage.getItem("botc_game_state");
-    if (!saved) return false;
+    const data = loadGameState();
+    if (!data) return false;
     try {
-        const data = JSON.parse(saved);
         gameState.playerCount = data.playerCount;
         gameState.scriptName = data.scriptName;
         gameState.mySeat = data.mySeat;
@@ -150,6 +147,83 @@ export function loadFromLocalStorage() {
         console.error("加载本地缓存对局失败:", e);
         return false;
     }
+}
+
+// --- 初始化游戏核心逻辑 ---
+export function initGame() {
+    gameState.apiKey = dom.apiKeyInput.value.trim() || gameState.apiKey;
+    gameState.playerCount = parseInt(dom.playerCountSelect.value);
+    gameState.scriptName = dom.scriptSelect.value;
+    gameState.mySeat = parseInt(dom.mySeatInput.value);
+    gameState.myRole = dom.myRoleSelect.value;
+    gameState.myAlignment = dom.myAlignmentSelect.value;
+    gameState.apiProvider = dom.apiProviderSelect.value;
+    gameState.apiBaseUrl = dom.apiBaseUrlInput.value.trim();
+    gameState.aiModel = dom.aiModelSelect.value;
+    gameState.apiModelCustom = dom.apiModelCustomInput.value.trim();
+    
+    // 获取邪恶伪装身份
+    gameState.evilBluffs = [
+        dom.evilBluff1.value,
+        dom.evilBluff2.value,
+        dom.evilBluff3.value
+    ].filter(b => b !== "");
+
+    // 创建玩家数组
+    gameState.players = [];
+    for (let i = 1; i <= gameState.playerCount; i++) {
+        const isMe = (i === gameState.mySeat);
+        gameState.players.push({
+            seat: i,
+            name: isMe ? (gameState.lang === "en" ? "Me" : "我") : (gameState.lang === "en" ? `Player ${i}` : `玩家 ${i}`),
+            alive: true,
+            claim: isMe ? gameState.myRole : "未知",
+            alignment: isMe ? gameState.myAlignment : "unknown",
+            poisoned: false,
+            note: isMe ? "这是我的底牌角色" : ""
+        });
+    }
+
+    // 重置日志流水
+    if (gameState.lang === "en") {
+        const scriptNameEn = SCRIPTS_DATA_EN[gameState.scriptName]?.name || gameState.scriptName;
+        const myRoleEn = ROLE_TRANSLATIONS[gameState.myRole] || gameState.myRole;
+        const myAlignEn = gameState.myAlignment === "good" ? "Good Team" : "Evil Team";
+        gameState.logs = [
+            `Game initialized: ${gameState.playerCount}-player game, Script: "${scriptNameEn}".`,
+            `My seat is <strong>Seat ${gameState.mySeat}</strong>, Role: <strong>${myRoleEn}</strong> (${myAlignEn}).`
+        ];
+        if (gameState.myAlignment === "evil") {
+            const bluffsText = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.map(b => ROLE_TRANSLATIONS[b] || b).join(', ') : "None declared";
+            gameState.logs.push(`3 Demon Bluffs given by Storyteller: <strong>${bluffsText}</strong>.`);
+        }
+    } else {
+        gameState.logs = [
+            `对局初始化：${gameState.playerCount} 人本，板子《${SCRIPTS_DATA[gameState.scriptName].name}》。`,
+            `我的位置是 <strong>${gameState.mySeat} 号</strong>，角色是 <strong>${gameState.myRole}</strong> (${gameState.myAlignment === "good" ? "善良阵营" : "邪恶阵营"})。`
+        ];
+        if (gameState.myAlignment === "evil") {
+            const bluffsText = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.join('、') : "未填报";
+            gameState.logs.push(`说书人给的 3 个好人伪装身份：<strong>${bluffsText}</strong>。`);
+        }
+    }
+
+    // 更新界面
+    renderSeatingChart();
+    renderPlayerList();
+    renderTimelineLogs();
+
+    // 重置分析框
+    resetAnalysisBoxes();
+
+    // 初始化完成后自动折叠配置面板，腾出空间给玩家列表
+    const initGameDetails = document.getElementById("initGameDetails");
+    if (initGameDetails) {
+        initGameDetails.open = false;
+    }
+
+    // 保存状态到本地
+    saveToLocalStorage();
 }
 
 // --- 状态变动辅助函数 ---

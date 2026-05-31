@@ -1,16 +1,19 @@
 /* ==========================================================================
-   i18n.js - 极简高内聚双语国际化翻译适配核心引擎
+   i18n.js - 双语国际化翻译适配核心引擎 (Localization Controller)
    ========================================================================== */
 
 import {
     SCRIPTS_DATA,
     SCRIPTS_DATA_EN,
     CHARACTER_DETAILS,
-    CHARACTER_DETAILS_EN,
+    CHARACTER_DETAILS_EN
+} from './data/rules.js';
+
+import {
     ROLE_TRANSLATIONS,
     ROLE_TRANSLATIONS_REVERSE,
     TRANSLATIONS
-} from './constants.js';
+} from './data/translations.js';
 
 import { gameState, saveToLocalStorage } from './state.js';
 import { dom } from './dom.js';
@@ -19,6 +22,7 @@ import { renderSeatingChart } from './components/seatingChart.js';
 import { renderPlayerList } from './components/playerList.js';
 import { renderTimelineLogs } from './components/timelineLogs.js';
 import { populateScriptPreview } from './components/scriptPreview.js';
+import { saveLanguage } from './services/storage.js';
 
 export function getLocalizedRole(roleName) {
     if (gameState.lang === "en") {
@@ -172,7 +176,7 @@ export function translateDropdowns(lang) {
 
 export function setLanguage(lang) {
     gameState.lang = lang;
-    localStorage.setItem("botc_lang", lang);
+    saveLanguage(lang);
     
     if (dom.langToggleText) {
         dom.langToggleText.textContent = lang === "zh" ? "English" : "简体中文";

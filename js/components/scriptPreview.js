@@ -1,5 +1,5 @@
 /* ==========================================================================
-   scriptPreview.js - 剧本板子角色能力对照表浮层组件
+   scriptPreview.js - 剧本板子角色能力对照表浮层组件 (Component)
    ========================================================================== */
 
 import {
@@ -7,7 +7,7 @@ import {
     CHARACTER_DETAILS,
     SCRIPTS_DATA_EN,
     CHARACTER_DETAILS_EN
-} from '../constants.js';
+} from '../data/rules.js';
 
 import { gameState } from '../state.js';
 import { dom } from '../dom.js';
@@ -76,4 +76,18 @@ export function populateScriptPreview() {
     renderCards(script.outsider, "previewOutsidersContainer", "poison-border");
     renderCards(script.minion, "previewMinionsContainer", "minion-border");
     renderCards(script.demon, "previewDemonsContainer", "evil-border");
+}
+
+// 剧本角色表预览独立事件注册
+export function initScriptPreviewEvents() {
+    if (dom.previewScriptBtn && dom.scriptPreviewModal) {
+        dom.previewScriptBtn.addEventListener("click", () => {
+            dom.scriptPreviewModal.classList.remove("hidden");
+        });
+    }
+    if (dom.closeScriptPreviewBtn && dom.scriptPreviewModal) {
+        dom.closeScriptPreviewBtn.addEventListener("click", () => {
+            dom.scriptPreviewModal.classList.add("hidden");
+        });
+    }
 }

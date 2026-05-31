@@ -1,8 +1,8 @@
 /* ==========================================================================
-   seatingChart.js - 环形物理座位轨迹圆桌 SVG 图表组件
+   seatingChart.js - 环形物理座位轨迹圆桌 SVG 图表组件 (Component)
    ========================================================================== */
 
-import { SCRIPTS_DATA, SCRIPTS_DATA_EN } from '../constants.js';
+import { SCRIPTS_DATA, SCRIPTS_DATA_EN } from '../data/rules.js';
 import { gameState } from '../state.js';
 import { dom } from '../dom.js';
 import { getLocalizedRole } from '../i18n.js';

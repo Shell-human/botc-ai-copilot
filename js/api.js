@@ -4,11 +4,14 @@
 
 import {
     SCRIPTS_DATA,
-    CHARACTER_DETAILS,
     SCRIPTS_DATA_EN,
+    CHARACTER_DETAILS
+} from './data/rules.js';
+
+import {
     ROLE_TRANSLATIONS,
     TRANSLATIONS
-} from './constants.js';
+} from './data/translations.js';
 
 import {
     gameState,
