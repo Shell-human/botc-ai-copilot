@@ -5,7 +5,9 @@
 import {
     SCRIPTS_DATA,
     SCRIPTS_DATA_EN,
-    CHARACTER_DETAILS
+    CHARACTER_DETAILS,
+    CORE_LOGIC_RULES,
+    CORE_LOGIC_RULES_EN
 } from './data/rules.js';
 
 import {
@@ -398,6 +400,9 @@ Please analyze the game from the absolute perspective of the Good team, helping 
 ${systemRolePrompt}
 Current Script: "${currentScript.name || gameState.scriptName}".
 
+=== BOTC CORE DEDUCTION LAWS ===
+${CORE_LOGIC_RULES_EN}
+
 Character descriptions in this script (use these definitions for logical constraints):
 Townsfolk:
 ${townsfolkDesc}
@@ -457,6 +462,9 @@ Render all content in premium, clean English Markdown. Use bolding and lists app
     return `
 ${systemRolePrompt}
 目前我们正在进行的游戏剧本是：《${currentScript.name}》。
+
+=== 血染钟楼核心推理钢性法则 ===
+${CORE_LOGIC_RULES}
 
 该剧本包含的角色及其具体能力定义（注意：在不同的剧本中，相同角色的具体能力和配置可能有微调差异，请以此为准）：
 村民角色定义：
