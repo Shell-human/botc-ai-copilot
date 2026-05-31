@@ -2,32 +2,38 @@
 
 这是一个专为《血染钟楼》游戏**玩家**设计的纯前端单页面记录与逻辑推理辅助工具。系统通过物理座位图排布、局势信息流记录以及接入前沿 AI 接口，帮助玩家在对局中清晰记录发言逻辑、理顺座位视角，并提供策略参考。
 
+This is a pure client-side, single-page gaming visualizer and logical deduction assistant designed specifically for **players** of *Blood on the Clocktower*. By integrating structural seating charts, chronological action logs, and frontier AI reasoning models, it helps players trace verbal claims, align board perspectives, and obtain robust tactical suggestions.
+
 ![对局界面示意图](screenshot.png)
 
 ---
 
-## 🛠️ 控制面板功能与使用说明
+## 🇨🇳 中文版说明 (Chinese Documentation)
+
+### 🛠️ 控制面板功能与使用说明
 
 系统界面由三个核心功能面板组成，以下为各面板的详细结构、功能说明及操作指引。
 
-### 1. 👈 左侧面板：对局配置与管理 (Control Panel)
+#### 1. 👈 左侧面板：对局配置与管理 (Control Panel)
 左侧面板负责系统的初始设置、模型网关接入及玩家底牌状态的快速维护。
 
+* **中英双语切换 (Bilingual Toggle)**：
+  * 点击主页顶栏的 `English`/`简体中文` 按钮，可以在中文与英文页面之间实时进行无缝切换。系统还会自动将您的语言选择偏好记录到 `localStorage` 中。
 * **AI 大脑多网关配置 (AI Gateway Config)**：
   * **功能**：用于选择 API 供应厂商（支持 Gemini、ChatGPT、Claude、DeepSeek、通义千问等 9 大主流平台），并配置对应的推理模型 ID、API Key（密钥）及接口基地址 (Base URL)。
   * **使用方法**：折叠面板内默认已填入测试用 Gemini API 密钥，开箱即用。若需使用其他厂商模型，请在下拉菜单中切换并填入对应密钥与代理地址。
 * **新对局初始化 (New Game Init)**：
   * **功能**：配置本局对局的基础规则。
-  * **使用方法**：设置本局游戏的总人数（支持 7 至 15 人本），并选择当前正在进行的剧本板子（支持《无上杀戮》、《暗流涌动》、《梦殒春宵》和《瓦釜雷鸣》），点击“重新初始化对局”按钮生效。
+  * **使用方法**：设置本局游戏的总人数（支持 7 至 15 人本），并选择当前正在进行的剧本板子（支持《无上杀戮》、《暗流涌动》、《梦殒春宵》和《瓦釜雷鸣》），点击“初始化并开启新游戏”按钮生效。
 * **玩家状态快速调整 (Player Status Adjustments)**：
   * **功能**：实时展示所有玩家的座位号、当前宣称底牌角色及生存状态，并提供详细状态编辑器。
   * **使用方法**：
     * **宣称与状态**：每一行展示玩家的基本配置。点击滑块可以快速切换该玩家的“存活”与“死亡”状态。
-    * **详细编辑**：点击最右侧的“编辑（画笔）”图标，会弹出气泡悬浮窗（Popover Modal）。在弹窗中，您可以为该玩家选择具体的宣称角色底牌、判定阵营（善良/邪恶）、是否处于“中毒/醉酒”状态，以及撰写自定义备忘录（如“跳过贞洁者被推”）。
+    * **详细编辑**：点击最右侧的“编辑（画笔）”图标，会弹出气泡悬浮窗（Popover Modal）。在弹窗中，您可以为该玩家选择具体的宣称角色底牌、判定阵营（善良/邪恶）、是否处于“中毒/醉酒”状态，以及撰写自定义备忘录（如“自称是守鸦人让我别碰他”）。
 
 ---
 
-### 2. 🗺️ 中间面板：环形座位轨迹图与流水志 (Visual Board & Log)
+#### 2. 🗺️ 中间面板：环形座位轨迹图与流水志 (Visual Board & Log)
 中间面板是游戏的物理局势沙盘，负责图形化还原圆桌对局状态并按时间线记录事件。
 
 * **环形座位轨迹图 (Circular Seating Chart)**：
@@ -40,31 +46,32 @@
     * 玩家节点之间的带箭头保护线实时动态渲染。
 * **局势信息流水志 (Game Events Log)**：
   * **功能**：按时间顺序（Chronological Order）自动记录对局中发生的所有逻辑变更、玩家状态更新以及白天输入框提交的进展描述。
-  * **使用方法**：此部分为系统自动维护。该日志链会直接作为 AI 提示词（Prompt）的结构化输入上下文，确保 AI 能够基于完整的历史对局脉络进行演算。
+  * **使用方法**：此部分为系统自动维护。该日志链会直接作为 AI 提示词（Prompt）的结构化输入上下文，确保 AI 能够基于完整的历史对局脉络进行演算。当系统语言为英文时，AI 也会根据该上下文用英文做深度演算与输出。
 
 ---
 
-### 3. 👉 右侧面板：AI 战术副驾驶 (Tactical Copilot)
+#### 3. 👉 右侧面板：AI 战术副驾驶 (Tactical Copilot)
 右侧面板为基于大语言模型（LLM）的博弈推理输出终端，协助玩家分析逻辑漏洞。
 
 * **输入本轮局势进展 (Daytime Input)**：
   * **功能**：支持自然语言描述本轮发生的新信息（例如：*“5号夜里死了。8号白天跳厨师，说信息是1”*）。
   * **使用方法**：在文本域中录入最新的进展陈述，点击黄色 **【发送给AI分析局势】** 按钮。系统会清空输入框，将该进展归档至流水志，并向 AI 网关发起请求。
 * **推理输出选项卡 (Analysis Tabs)**：
-  * **即时分析 (Instant Analysis)**：分析最新陈述中的逻辑冲突。结合圆桌收缩后的邻座变化，计算共情者、茶艺师等空间限制技能的边界是否产生异常。
-  * **平行世界线 (Worldlines)**：在魔典信息真假未知的局势下，并行推演多种可能的局势走向：
+  * 当页面切换为英文状态时，系统发送给 Gemini 等 API 的系统提示词 payload 会自动转换为高度结构化的英文，使 AI 即使面对中文的输入，也会全程以纯英文输出专业的世界线推演与战术对策。
+  * **即时分析 (Instant Analysis / ANALYSIS)**：分析最新陈述中的逻辑冲突。结合圆桌收缩后的邻座变化，计算共情者、茶艺师等空间限制技能的边界是否产生异常。
+  * **平行世界线 (Worldlines / WORLDLINES)**：在魔典信息真假未知的局势下，并行推演多种可能的局势走向：
     1. *正常世界线*（无异常状态下最可能在场的恶魔与穿衣服的坏人）；
     2. *涡流世界线*（若在场恶魔为涡流，所有村民信息均为假的前提下的逆向求解）；
-    3. *下毒/异常世界线*（推演因爪牙技能导致某玩家获得错误信息时的逻辑概率）。
-  * **行动建议 (Action Advice)**：结合玩家的**真实角色**与**真实阵营立场**，为玩家提供本轮的战术行动策略（如：今天最适合私聊核对信息的玩家、投票环节的诱导挂票对象、以及一句话防死/进攻指引）。
+    3. *下毒/异常世界线*（推演因爪牙技能或醉酒导致某玩家获得错误信息时的逻辑概率）。
+  * **行动建议 (Action Advice / TIPS)**：结合玩家的**真实角色**与**真实阵营立场**，为玩家提供本轮的战术行动策略（如：今天最适合私聊核对信息的玩家、投票环节的诱导挂票对象、以及一句话防死/进攻指引）。
 
 ---
 
-## 🚀 快速上手指南
+### 🚀 快速上手指南
 
 本系统为纯前端单页面应用（SPA），数据完全保留在本地，无任何后端依赖。
 
-### 1. 本地启动
+#### 1. 本地启动
 * **方法 A（直接打开）**：双击项目根目录下的 `index.html` 即可在浏览器中运行。
 * **方法 B（本地 Web 服务器）**：在项目根目录下通过终端启动简易 Python 服务器：
   ```bash
@@ -72,19 +79,104 @@
   ```
   在浏览器访问 `http://localhost:8000`。
 
-### 2. 调试与对局开始
-1. 刷新页面（开发阶段已在 `index.html` 中加入了缓存重载参数，确保读取最新代码）。
+#### 2. 调试与对局开始
+1. 刷新页面（加载时系统会自动加载上一次的 `localStorage` 缓存偏好）。
 2. 在左侧面板的“新对局初始化”中选择人数与剧本。
 3. 在“玩家状态快速调整”中设定您的座位号与真实身份。
 4. 随着对局推进，在右侧文本域输入新发生的发言与生死变动，点击发送，等待 AI 给出战术建议。
 
 ---
 
-## 🔒 隐私与凭证安全
+### 🔒 隐私与凭证安全
 * 本工具无任何后台数据库，您的所有 API Key、对局小记与历史分析结果均仅存储在您本地浏览器的 `localStorage` 中。
 * 切换不同大模型时，若检测到前缀与当前厂商不匹配（如切换到 ChatGPT 时，输入框仍存有 Google 格式的 `AIzaSy` 密钥），系统会自动清空，杜绝密钥泄露风险。
 
 ---
 
-## 📝 许可证
-本项目基于 [MIT License](LICENSE) 协议开源。
+## 🇺🇸 English Version (English Documentation)
+
+### 🛠️ Control Panel Features & Operation
+
+The interface consists of three core panels. Below are the functional details and operating guidelines.
+
+#### 1. 👈 Left Panel: Setup & Management
+This panel manages system initialization, AI gateway configs, and player state updates.
+
+* **Bilingual Language Toggle**:
+  * Click the `English` / `简体中文` button in the top header to seamlessly switch the entire layout and controls in real time. The system automatically persists your active language selection in `localStorage`.
+* **AI Engine Configuration (AI Gateway Config)**:
+  * **Feature**: Select your API provider (supports 9 mainstream gateways: Gemini, ChatGPT, Claude, DeepSeek, Qwen, etc.) and configure your model ID, API Key, and Base URL.
+  * **Usage**: A Google Gemini API test key is pre-filled by default for instant, out-of-the-box reasoning. If using another provider, select it from the dropdown and insert your endpoint details.
+* **Initialize New Game (New Game Init)**:
+  * **Feature**: Establishes active board rules.
+  * **Usage**: Set player count (supports 7 to 15 players) and select your current script (supports *Supreme Slaughter*, *Trouble Brewing*, *Sects & Violets*, and *Bad Moon Rising*), then click "Initialize & Start Game".
+* **Quick Status Adjustments**:
+  * **Feature**: Offers a real-time list of all seat numbers, claimed characters, and survival statuses with a detail editor.
+  * **Usage**:
+    * **Claims & Status**: Stretches player records vertically. Toggle the slider to instantly alternate a player's status between "Alive" and "Dead".
+    * **Detail Edit**: Click the "Edit (Pencil)" icon on the far right to trigger a hover popover modal. Inside this popup, you can modify the player's claimed role, set their suspected alignment (Good/Evil/Unknown), flag them as "Drunk/Poisoned", and write custom private notes (e.g., "Claimed Ravenkeeper, asked me not to target him").
+
+---
+
+#### 2. 🗺️ Center Panel: Seating Circle & Action Logs
+The sandtable visualizes the physical circular layout of players and traces events chronologically.
+
+* **Interactive Seating Circle**:
+  * **Feature**: Graphic representation of players' physical seating arrangement and live markers.
+  * **First-Person View Rotation**: Input your active seat number in the "My Seat Number" field, and the circular visualizer automatically rotates to lock your seat node at the **bottom-center (6 o'clock direction)**. All other seats are arranged clockwise. This visual perspective replicates your real view of the circular table.
+  * **Status Diagrams**:
+    * Cyan rings signify a Good alignment; crimson rings signify Evil (configured via the Popover details).
+    * Semi-transparent nodes with gray borders indicate dead players.
+    * A purple neon glow ring represents that a player is currently Drunk or Poisoned.
+    * Dynamic, arrowed protection lines between nodes are rendered on the fly.
+* **Game Action & Interaction Logs (Timeline)**:
+  * **Feature**: Chronologically records all logical changes, state shifts, and daytime statements submitted from the console.
+  * **Usage**: Completely automated. This log is directly injected as structured context payload into the AI reasoning prompt, ensuring logically grounded worldline deductions.
+
+---
+
+#### 3. 👉 Right Panel: AI Tactical Copilot
+A specialized large language model (LLM) terminal designed to calculate contradictions, locate logical holes, and frame strategies.
+
+* **Enter Current Turn Updates (Daytime Input)**:
+  * **Feature**: Supports natural language entry of events (e.g., *"Seat 5 died tonight. Seat 8 claimed Chef with a '1' in the morning"*).
+  * **Usage**: Enter your statements, and click the yellow **【Send to AI for Analysis】** button. The input clears, logs the event, and queries the LLM gateway.
+* **Analysis & Deduction Tabs**:
+  * When the active language is English, the prompt payload transmitted to the Gemini API is automatically translated into structured English. This instructs the AI to reason and return all analyses strictly in English, despite the Chinese input labels.
+  * **Instant Analysis (ANALYSIS)**: Highlights logic clashes in claims. Tracks adjacency shifts as seats shrink (e.g., Empath's new targets, Tea Lady's protective bounds) to flag anomalies.
+  * **Parallel Worldlines (WORLDLINES)**: Computes logic probability distributions across at least 3 distinct worldviews:
+    1. *Normal Worldline*: Assuming no Vortox or poison. Calculates demon candidates and evil bluffs.
+    2. *Vortox Worldline*: If the active demon is a Vortox, all Townsfolk information must be **false**. Computes inverted logic clues (also warns about immediate Vortox wins if no execution occurs).
+    3. *Poison/Drunk Worldline*: Calculates active poison pathways (No Dashii, Widow, Ceranovus, or Rascal) that lead to corrupted claims.
+  * **Tactical Tips (TIPS)**: Provides actionable advice based on your **real character** and **true alignment** (e.g., optimal private chat targets to test or cover, voting strategies to push nominations, and a one-sentence warning).
+
+---
+
+### 🚀 Quick Start Guide
+
+As a pure client-side single-page application (SPA), all computations and configurations run locally in your web browser.
+
+#### 1. Running Locally
+* **Method A (Direct Run)**: Double-click the `index.html` file in your file explorer to open it in any browser.
+* **Method B (Local HTTP Web Server)**: Open your terminal in the repository root directory and start a lightweight Python server:
+  ```bash
+  python -m http.server 8000
+  ```
+  Then, navigate to `http://localhost:8000` in your web browser.
+
+#### 2. Beginning a Game
+1. Refresh the page (your language preferences and configurations will auto-restore from `localStorage`).
+2. Set your player count and script in the collapsible "Initialize New Game" panel.
+3. Configure your seat number and real character in the player grid.
+4. As the game proceeds, speak or type turn events in the right terminal console, click analyze, and explore the AI's tactical suggestions!
+
+---
+
+### 🔒 Privacy & API Credential Security
+* The application operates entirely without any remote database backend. Your API keys, game notes, and timeline histories are stored securely in your browser's private `localStorage`.
+* When switching models, the system automatically purges keys that don't match the new provider (e.g., clearing `AIzaSy` keys if switching to ChatGPT), eliminating key leak risks.
+
+---
+
+## 📝 License
+This project is open-sourced under the [MIT License](LICENSE).
