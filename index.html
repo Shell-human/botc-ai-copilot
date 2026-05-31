@@ -239,7 +239,16 @@
 
             <!-- Console Inputs -->
             <div class="console-section">
-                <label for="consoleInput" data-i18n="consoleInputLabel">输入本轮局势进展 (支持自然语言描述)</label>
+                <div class="console-header-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                    <label id="consoleInputLabel" for="consoleInput" style="margin-bottom: 0;" data-i18n="consoleInputLabel">输入本轮局势进展 (支持自然语言描述)</label>
+                    <div style="display: flex; align-items: center; gap: 6px; user-select: none;">
+                        <span style="font-size: 11px; color: var(--text-muted); font-weight: 500;" id="chatModeLabel" data-i18n="chatModeLabel">💬 对话模式</span>
+                        <label class="toggle-switch" style="width: 32px; height: 18px; margin-bottom: 0;">
+                            <input type="checkbox" id="aiChatModeToggle">
+                            <span class="slider" style="border-radius: 18px;"></span>
+                        </label>
+                    </div>
+                </div>
                 <div class="textarea-wrapper">
                     <textarea id="consoleInput" data-i18n-placeholder="consoleInputPlaceholder" placeholder="输入例如：
 - 5号死了。白天2号跳了厨师，说得到信息是0。

@@ -29,6 +29,7 @@ import { renderTimelineLogs } from './components/timelineLogs.js';
 export async function handleAiAnalysis() {
     console.log("🚨 [DEBUG] === handleAiAnalysis() 开始执行 ===");
     const rawText = dom.consoleInput.value.trim();
+    const isChatMode = dom.aiChatModeToggle && dom.aiChatModeToggle.checked;
     const apiKey = dom.apiKeyInput.value.trim() || gameState.apiKey;
     const provider = gameState.apiProvider || "gemini";
     const baseUrl = gameState.apiBaseUrl || "https://api.openai.com/v1";
@@ -77,11 +78,14 @@ export async function handleAiAnalysis() {
         return;
     }
 
-    // 1. 如果有输入输入框，先追加到日志中
-    if (rawText) {
+    // 1. 如果有输入输入框，且不是对话模式，才追加到日志中
+    if (rawText && !isChatMode) {
         gameState.logs.push(`白天进展陈述："${rawText}"`);
         renderTimelineLogs();
         dom.consoleInput.value = ""; // 清空
+        saveToLocalStorage();
+    } else if (rawText && isChatMode) {
+        dom.consoleInput.value = ""; // 对话模式直接清空输入框，但不加进事件日志
         saveToLocalStorage();
     }
 
@@ -119,7 +123,7 @@ export async function handleAiAnalysis() {
 
     // 3. 构建 Prompt
     console.log("🚨 [DEBUG] 正在构建 AI 提示词...");
-    const prompt = constructPrompt(rawText);
+    const prompt = constructPrompt(rawText, isChatMode);
     console.log("🚨 [DEBUG] 提示词构建完毕，长度为:", prompt.length);
 
     try {
@@ -328,7 +332,7 @@ export function buildThoughtHtml(thoughtText, modelName) {
 }
 
 // --- 构建 Prompt ---
-export function constructPrompt(consoleText) {
+export function constructPrompt(consoleText, isChat = false) {
     const currentScript = SCRIPTS_DATA[gameState.scriptName];
     const scriptDetails = CHARACTER_DETAILS[gameState.scriptName] || {};
     
@@ -373,7 +377,14 @@ export function constructPrompt(consoleText) {
     let setupPrompt = "";
     if (gameState.lang === "en") {
         const myRoleEn = ROLE_TRANSLATIONS[gameState.myRole] || gameState.myRole;
-        if (gameState.myAlignment === "evil") {
+        if (isChat) {
+            systemRolePrompt = `You are an extremely experienced Blood on the Clocktower logician and strategic mastermind. You are acting as the "AI Tactical Copilot" for Player ${gameState.mySeat} (real role: ${myRoleEn}, alignment: ${gameState.myAlignment === 'evil' ? 'Evil' : 'Good'}).
+【Chat Mode】IMPORTANT:
+The user is asking you a direct question / chatting with you.
+Please reply directly and conversationally in a professional strategy advisor style. **DO NOT** include the '=== ANALYSIS ===', '=== WORLDLINES ===', or '=== TIPS ===' tags in your response. Just write a comprehensive, highly strategic reply directly in Markdown.
+Focus 100% on answering the user's specific query: "${consoleText}". You have the current game config below for reference.`;
+            setupPrompt = `- My Real Role: ${myRoleEn} (${gameState.myAlignment === 'evil' ? 'Evil Team' : 'Good Team'})\n- Standard Character Distribution: ${baseDistStrEn}\n- Active Mode: Direct Chat / Q&A\n- User Query: ${consoleText}`;
+        } else if (gameState.myAlignment === "evil") {
             const bluffsStr = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.map(b => ROLE_TRANSLATIONS[b] || b).join(', ') : "None declared";
             const teammatesStr = teammates.map(t => `Seat ${t.seat} (${t.name || 'Unnamed'}, Claimed: ${ROLE_TRANSLATIONS[t.claim] || t.claim})`).join(', ') || "No teammates marked yet in the seating chart";
             systemRolePrompt = `You are an extremely experienced Blood on the Clocktower logician and strategic mastermind. You are acting as the "AI Tactical Copilot" for Player ${gameState.mySeat} (real role: ${myRoleEn}, alignment: Evil).
@@ -395,7 +406,14 @@ You should leverage the standard player count distribution (${baseDistStrEn}) co
             setupPrompt = `- My Real Role: ${myRoleEn} (Good Team)\n- Standard Character Distribution: ${baseDistStrEn}`;
         }
     } else {
-        if (gameState.myAlignment === "evil") {
+        if (isChat) {
+            systemRolePrompt = `你是一名极其资深的《血染钟楼》逻辑学家、顶尖博弈大宗师。你正在作为一名玩家（即玩家 ${gameState.mySeat} 号，实际身份为【${gameState.myAlignment === 'evil' ? '邪恶阵营' : '善良阵营'}】的 ${gameState.myRole}）的“AI战术副驾驶”帮助他解答规则问题，或者提供实时的个人角色打法与策略选择。
+【对话模式】重要限制：
+当前用户是以【对话交流/提问模式】在向你发起提问。
+请直接、自然、亲切地用第一人称对话形式来回答他的问题，**绝对不要**在回复中包含 \`=== ANALYSIS ===\`、\`=== WORLDLINES ===\`、\`=== TIPS ===\` 这三个分类标签！直接在 Markdown 中给出一份详实、深入且充满战术智慧的直接回答即可！
+回答时你可以参考下面的当前游戏配置和状态，但要100%集中于精准地解答用户的问题：“${consoleText}”。`;
+            setupPrompt = `- 我的真实身份：${gameState.myRole}（${gameState.myAlignment === 'evil' ? '【邪恶阵营】' : '善良阵营'}）\n- 游戏人数角色标准分布：${baseDistStrZh}\n- 当前处于：与 AI 自由提问对话模式\n- 用户对话问题：${consoleText}`;
+        } else if (gameState.myAlignment === "evil") {
             const bluffsStr = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.join('、') : "未填报";
             const teammatesStr = teammates.map(t => `${t.seat}号玩家 (${t.name || '未命名'}, 宣称: ${t.claim})`).join('、') || "暂未在座位图中标记其他邪恶队友";
             systemRolePrompt = `你是一名极其资深的《血染钟楼》逻辑学家、顶尖博弈高手。你正在作为一名玩家（即玩家 ${gameState.mySeat} 号，实际身份为【邪恶阵营】的 ${gameState.myRole}）的“AI战术副驾驶”帮助他和邪恶同伴打配合、欺骗好人阵营、混淆视听并获得最终胜利。
@@ -414,6 +432,82 @@ You should leverage the standard player count distribution (${baseDistStrEn}) co
             systemRolePrompt = `你是一名极其资深的《血染钟楼》逻辑学家、顶尖博弈高手。你正在作为一名玩家（即玩家 ${gameState.mySeat} 号，真实身份为【善良阵营】的 ${gameState.myRole}）的“AI战术副驾驶”帮助他梳理局势、检测逻辑冲突并找出隐藏的恶魔与爪牙。
 请站在善良阵营的绝对立场，帮他寻找逻辑漏洞，防备邪恶阵营的欺骗！你可以结合该游戏人数的【标准配置人数分布（${baseDistStrZh}）】和场上起跳外来者、爪牙的数量，来进行排除法推演。`;
             setupPrompt = `- 我的真实身份：${gameState.myRole}（善良阵营）\n- 游戏人数角色标准分布：${baseDistStrZh}`;
+        }
+    }
+
+    if (isChat) {
+        if (gameState.lang === "en") {
+            return `
+${systemRolePrompt}
+Current Script: "${currentScript.name || gameState.scriptName}".
+
+=== BOTC CORE DEDUCTION LAWS ===
+${CORE_LOGIC_RULES_EN}
+
+Character descriptions in this script (use these definitions for logical constraints):
+Townsfolk:
+${townsfolkDesc}
+
+Outsiders:
+${outsiderDesc}
+
+Minions:
+${minionDesc}
+
+Demons:
+${demonDesc}
+
+=== Game Configuration ===
+- Total Players: ${gameState.playerCount}
+- My Seat: Player ${gameState.mySeat}
+${setupPrompt}
+
+=== Player Statuses ===
+${playerStatuses}
+
+=== Game Logs ===
+${gameLogs}
+
+---
+【USER DIRECT QUERY】: "${consoleText}"
+Please answer my question directly and conversationally in Markdown. Feel free to use lists, bold text, and clear formatting. Do NOT output any tags like === ANALYSIS === or similar.
+`;
+        } else {
+            return `
+${systemRolePrompt}
+目前我们正在进行的游戏剧本是：《${currentScript.name}》。
+
+=== 血染钟楼核心推理钢性法则 ===
+${CORE_LOGIC_RULES}
+
+该剧本包含的角色及其具体能力定义：
+村民角色定义：
+${townsfolkDesc}
+
+外来者角色定义：
+${outsiderDesc}
+
+爪牙角色定义：
+${minionDesc}
+
+恶魔角色定义：
+${demonDesc}
+
+=== 当前游戏基础配置 ===
+- 玩家总人数：${gameState.playerCount} 人
+- 我的座位：${gameState.mySeat} 号
+${setupPrompt}
+
+=== 当前场上所有玩家状态信息 ===
+${playerStatuses}
+
+=== 截至目前发生的事件日志记录 ===
+${gameLogs}
+
+---
+【用户直接对话提问】："${consoleText}"
+请针对我的提问给予直接、深度、充满战术博弈智慧的详细解答。请直接用精美的 Markdown 格式输出，可以使用列表、粗体、分割线和图标。绝对不要输出任何形如 === ANALYSIS === 的分隔标签！
+`;
         }
     }
 
@@ -603,8 +697,14 @@ export function distributeResponse(text, thoughtHtml = "") {
         
         if (parts.length < 4) {
             analysisPart = text;
-            worldlinesPart = `<div class="empty-tab-state"><p>AI 未能完全按照标签格式输出。完整的局势推演与分析已全部渲染在第一页中，您可以直接前往通读。</p></div>`;
-            tipsPart = `<div class="empty-tab-state"><p>请在【即时分析】页面中查看包含全部战术提示在内的完整推演信息。</p></div>`;
+            const isChatMode = dom.aiChatModeToggle && dom.aiChatModeToggle.checked;
+            if (isChatMode) {
+                worldlinesPart = `<div class="empty-tab-state"><p>💬 您正处于与 AI 的<b>【对话交流模式】</b>中。<br>此模式下只进行直接对话问答，如需对局局势推理，请关闭对话开关并输入局势进展。</p></div>`;
+                tipsPart = `<div class="empty-tab-state"><p>💬 您正处于与 AI 的<b>【对话交流模式】</b>中。<br>常规战术行动建议未触发。如需对局局势推理，请关闭对话开关并输入局势进展。</p></div>`;
+            } else {
+                worldlinesPart = `<div class="empty-tab-state"><p>AI 未能完全按照标签格式输出。完整的局势推演与分析已全部渲染在第一页中，您可以直接前往通读。</p></div>`;
+                tipsPart = `<div class="empty-tab-state"><p>请在【即时分析】页面中查看包含全部战术提示在内的完整推演信息。</p></div>`;
+            }
         } else {
             // 第一个分隔符之前可能有引导语，因此顺延
             analysisPart = parts[1] || "";

@@ -4,7 +4,7 @@
 
 import { dom } from './dom.js';
 import { gameState, initGame, saveToLocalStorage, loadFromLocalStorage } from './state.js';
-import { updateMyRoleOptions, updateApiModelOptions, setLanguage, useEnOrZh } from './i18n.js';
+import { updateMyRoleOptions, updateApiModelOptions, setLanguage, useEnOrZh, updateConsoleUI } from './i18n.js';
 import { showToast } from './utils.js';
 import { populateScriptPreview } from './components/scriptPreview.js';
 import { handleAiAnalysis } from './api.js';
@@ -182,6 +182,21 @@ export function initCoreEvents() {
             setLanguage(nextLang);
             const msg = nextLang === "zh" ? "已切换至简体中文" : "Switched to English";
             showToast(msg);
+        });
+    }
+
+    // 16. AI 对话模式切换监听
+    if (dom.aiChatModeToggle) {
+        dom.aiChatModeToggle.addEventListener("change", () => {
+            updateConsoleUI();
+            saveToLocalStorage();
+            if (dom.aiChatModeToggle.checked) {
+                // Auto switch to the "Instant Analysis" tab (where Chat is rendered) for premium interactive flow
+                const analysisTabBtn = document.querySelector('.tab-btn[data-tab="tab-analysis"]');
+                if (analysisTabBtn) {
+                    analysisTabBtn.click();
+                }
+            }
         });
     }
 }

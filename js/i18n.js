@@ -234,6 +234,7 @@ export function setLanguage(lang) {
         resetAnalysisBoxes();
     }
     
+    updateConsoleUI();
     saveToLocalStorage();
 }
 
@@ -464,4 +465,55 @@ export function resetAnalysisBoxes() {
         </div>
     `;
     lucide.createIcons();
+}
+
+// --- 动态更新控制台对话/局势录入模式 UI 文本 ---
+export function updateConsoleUI() {
+    if (!dom.aiChatModeToggle) return;
+    const isChat = dom.aiChatModeToggle.checked;
+    const lang = gameState.lang;
+    
+    if (isChat) {
+        if (dom.consoleInputLabel) {
+            dom.consoleInputLabel.textContent = lang === "zh" 
+                ? TRANSLATIONS.zh.consoleInputLabelChat 
+                : TRANSLATIONS.en.consoleInputLabelChat;
+            dom.consoleInputLabel.setAttribute("data-i18n", "consoleInputLabelChat");
+        }
+        
+        if (dom.consoleInput) {
+            dom.consoleInput.placeholder = lang === "zh" 
+                ? TRANSLATIONS.zh.consoleInputPlaceholderChat 
+                : TRANSLATIONS.en.consoleInputPlaceholderChat;
+            dom.consoleInput.setAttribute("data-i18n-placeholder", "consoleInputPlaceholderChat");
+        }
+        
+        if (dom.analyzeBtn) {
+            const btnText = lang === "zh" ? TRANSLATIONS.zh.analyzeBtnChat : TRANSLATIONS.en.analyzeBtnChat;
+            dom.analyzeBtn.innerHTML = `<i data-lucide="message-square"></i> <span>${btnText}</span>`;
+        }
+    } else {
+        if (dom.consoleInputLabel) {
+            dom.consoleInputLabel.textContent = lang === "zh" 
+                ? TRANSLATIONS.zh.consoleInputLabel 
+                : TRANSLATIONS.en.consoleInputLabel;
+            dom.consoleInputLabel.setAttribute("data-i18n", "consoleInputLabel");
+        }
+        
+        if (dom.consoleInput) {
+            dom.consoleInput.placeholder = lang === "zh" 
+                ? TRANSLATIONS.zh.consoleInputPlaceholder 
+                : TRANSLATIONS.en.consoleInputPlaceholder;
+            dom.consoleInput.setAttribute("data-i18n-placeholder", "consoleInputPlaceholder");
+        }
+        
+        if (dom.analyzeBtn) {
+            const btnText = lang === "zh" ? TRANSLATIONS.zh.analyzeBtn : TRANSLATIONS.en.analyzeBtn;
+            dom.analyzeBtn.innerHTML = `<i data-lucide="wand-2"></i> <span>${btnText}</span>`;
+        }
+    }
+    
+    if (typeof lucide !== "undefined" && lucide.createIcons) {
+        lucide.createIcons();
+    }
 }
