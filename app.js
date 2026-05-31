@@ -1106,21 +1106,36 @@ function initGame() {
 
 // --- 重置分析输出框 ---
 function resetAnalysisBoxes() {
+    const isEn = gameState.lang === "en";
+    
+    const welcomeTitle = isEn ? "Hello, Clocktower Explorer" : "你好，钟楼探索者";
+    const welcomeDesc = isEn 
+        ? "Game successfully initialized! Please enter the first round of night or day updates in the console on the right, and I will analyze the match for you using our logical solver and parallel world algorithms."
+        : "对局已成功初始化！请在右侧控制台输入第一轮夜晚或白天的信息，我将通过逻辑求解器与平行世界算法为您演算战局。";
+        
+    const worldlinesDesc = isEn
+        ? "Waiting for data. Later, this section will calculate the logic probabilities of <b>Normal Worldline</b>, <b>Vortox Worldline</b>, and <b>Drunk/Poisoned Worldline</b>."
+        : "等待局势录入中。稍后这里会推演 <b>正常世界线</b>、<b>涡流世界线</b> 以及 <b>中毒世界线</b> 的逻辑概率。";
+        
+    const tipsDesc = isEn
+        ? "Waiting for data. Later, this section will generate recommended players to chat with and emergency warnings."
+        : "等待局势录入中。稍后将为你生成本轮最推荐私聊的玩家以及防死警告。";
+
     dom.analysisBox.innerHTML = `
         <div class="ai-welcome">
             <i data-lucide="bot" class="welcome-icon"></i>
-            <h3>你好，钟楼探索者</h3>
-            <p>对局已成功初始化！请在右侧控制台输入第一轮夜晚或白天的信息，我将通过逻辑求解器与平行世界算法为您演算战局。</p>
+            <h3>${welcomeTitle}</h3>
+            <p>${welcomeDesc}</p>
         </div>
     `;
     dom.worldlinesBox.innerHTML = `
         <div class="empty-tab-state">
-            <p>等待局势录入中。稍后这里会推演 <b>正常世界线</b>、<b>涡流世界线</b> 以及 <b>中毒世界线</b> 的逻辑概率。</p>
+            <p>${worldlinesDesc}</p>
         </div>
     `;
     dom.tipsBox.innerHTML = `
         <div class="empty-tab-state">
-            <p>等待局势录入中。稍后将为你生成本轮最推荐私聊的玩家以及防死警告。</p>
+            <p>${tipsDesc}</p>
         </div>
     `;
     lucide.createIcons();
@@ -2521,6 +2536,11 @@ function setLanguage(lang) {
     
     // 更新 AI 驱动厂商对应的提示词 (Update provider option tip)
     updateApiModelOptions();
+    
+    // 如果目前处于初始迎新状态，重新渲染欢迎语的语言
+    if (dom.analysisBox && dom.analysisBox.querySelector(".ai-welcome")) {
+        resetAnalysisBoxes();
+    }
     
     // 自动刷新保存缓存
     saveToLocalStorage();
