@@ -1,5 +1,0 @@
-You must execute all Python scripts and pip commands inside the local Miniforge environment.
-- Python: /opt/homebrew/Caskroom/miniforge/base/envs/science/bin/python
-- Pip: /opt/homebrew/Caskroom/miniforge/base/envs/science/bin/pip
-CRITICAL: Always use these absolute paths instead of global 'python' or 'pip'.
-Debugging and Testing: Any debugging sessions, test runs (e.g. pytest), or interactive execution (e.g. ipython) must be launched using this environment's binaries or by explicitly activating 'science'.
