@@ -292,34 +292,31 @@ export const CHARACTER_DETAILS_EN = {
 };
 
 export const CORE_LOGIC_RULES = `
-=== 血染钟楼核心推理钢性法则 (必须严格作为逻辑推导约束) ===
-1. 说书人好人伪装 (Demon Bluffs) 不在场定理：
-   说书人在首夜分配给恶魔的 3 个伪装身份（Bluffs）在魔典中绝对不存在。如果场上有玩家起跳这 3 个角色，则该玩家必然是在说谎（大几率是邪恶伪装，或受洗脑师疯狂、畸形秀演员自保、酒鬼等干扰）。
-2. 邪恶阵营首夜互认规则：
-   邪恶阵营玩家（爪牙与恶魔）在首夜默认互认彼此。如果开局你是恶魔或爪牙但说书人没有让你确认队友，则场上必然存在【罂粟种植者】。在它死前，绝对不能暴露狼队友。
-3. 邻座死亡收缩与共情者锁定：
-   当夹在中间的玩家死亡时，邻座关系会自动向外收缩，锁定新的存活玩家（如共情者、茶艺师、诺达鲺邻座）。共情者的信息变动结合邻座收缩，可以直接进行逻辑差值求解，锁定已死玩家和新邻座玩家的阵营。
-4. 涡流 (Vortox) 的“必须错误”绝对约束：
-   如果恶魔是【涡流】，所有镇民（Townsfolk）的技能得到的信息必须是错误的。任何镇民玩家得到真实信息，即违背规则。如果确认是涡流局，可以通过将所有镇民信息做 100% 反向理解来还原真实魔典。
-5. 唯一角色冲突推论：
-   每个善良角色在开局魔典中是唯一的。如果场上同时有两个人起跳同一个非外来者角色，且排除洗脑师、酒鬼或角色转化干扰，则两人中必有一人是邪恶的。
-6. 疯狂违背与白天雷击处决：
-   白天如果突然发生非提名导致的莫名其妙雷击处决，极大可能是【洗脑师】或【畸形秀演员】因为违背疯狂行为受到的惩罚，可以直接定位洗脑源或外来者座位。
+=== 血染钟楼核心推理钢性法则 (Deduction Axioms) ===
+1. 伪装排他律 (Demon Bluffs Exclusivity)：
+   首夜分配给恶魔的 3 个 Bluffs 角色在魔典中 [0 存在]。起跳 Bluffs 者其身份必为伪报（邪恶穿衣、洗脑疯狂、畸形秀自保、酒鬼/疯子，或好人高级战术挡刀）。
+2. 邪恶共知律 (Evil Mutual Recognition & PG Rule)：
+   邪恶默认首夜互认。若未相认，判定 [罂粟种植者] 必然在场。在其当夜死亡结算前，邪恶绝对不可私下对暗号认亲。
+3. 座位收缩律 (Seating Contraction)：
+   死亡玩家在邻座计算时物理消除，存活两侧直接并拢。配合共情者、茶艺师、诺达鲺等，死人前后的数据变动可直接进行算术差值求解，精准锁定阵营。
+4. 涡流反转律 (Vortox Absolute Lie Constraint)：
+   若恶魔为 [涡流]，所有镇民（Townsfolk）的技能信息 [100% 必须为假]。任何镇民得到真话则恶魔必非涡流；若是涡流局，将所有镇民信息完全取反即可 100% 还原真实魔典。此外，白天无人被处决则邪恶直接获胜，需强行处决续命。外来者不受此限。
+5. 角色唯一律 (Good Character Uniqueness)：
+   初始对局中每个善良角色唯一。非外来者起跳撞衫（且无洗脑疯狂、麻脸巫婆转化或酒鬼干扰），则二人中必有一人为邪恶或酒鬼/疯子。
+6. 疯狂雷击律 (Madness Thunderstruck)：
+   畸形秀自证外来者，或洗脑受害者违背疯狂言论，会被说书人当场非提名处决。白天无提名突然死亡，优先定位洗脑师/畸形秀与洗脑目标。
+7. 恶魔承袭律 (Demon Lineage Succession)：
+   若活人 >= 5 人时小恶魔自刀，或恶魔被意外处决，爪牙必有一人当夜转变为新小恶魔，或红唇女郎自动承袭王位晋升恶魔。
 `;
 
 export const CORE_LOGIC_RULES_EN = `
 === BOTC CORE DEDUCTION LAWS (MUST BE STRICTLY ENFORCED) ===
-1. Demon Bluffs (Skins) Inexistence Theorem:
-   The 3 Townsfolk/Outsider bluffs given by the Storyteller to the Demon on Night 1 are DEFINITELY not in play. If any player claims one of these bluffs, they are 100% lying (either Evil bluffing, Cerenovus mad, Mutant self-protecting, Drunk, or Lunatic).
-2. Evil Mutual Recognition on Night 1:
-   Evil players (Demon and Minions) recognize each other on Night 1 by default. If you are Evil and the Storyteller did not show you your teammates, a [Poppy Grower] is DEFINITELY in play. Do not expose teammates until they die.
-3. Seating Contraction & Empath Math:
-   When an in-between player dies, living neighbors contract immediately (for Empath, Tea Lady, No-Dashi, etc.). Empath values combined with neighbor contraction can mathematically solve and lock down exact alignments.
-4. Vortox "Must Be False" Absolute Constraint:
-   If the Demon is a [Vortox], ALL Townsfolk information MUST be false. No exceptions. If Vortox is confirmed, good team can reconstruct the Grimoire by 100% inverting all Townsfolk claims. (Outsiders are not subject to this rule).
-5. Character Uniqueness Contradiction:
-   Every good character is unique. If two players claim the same Townsfolk role (excluding Pit-Hag transformation, Cerenovus madness, or Drunk interference), at least one is definitely Evil.
-6. Madness Violations & Sudden Execution:
-   Sudden daytime executions without nominations are almost always Cerenovus or Mutant madness violations, allowing you to instantly identify the Cerenovus target or Mutant seat.
+1. Bluff Exclusivity: 3 Demon Bluffs = 0 in play. Claims = Evil lying, Cerenovus mad, Mutant self-protecting, Drunk/Lunatic, or advanced good bluff.
+2. Evil Co-cognition & PG: Evil players recognize each other on Night 1. No recognition = Poppy Grower is 100% in play. Do not communicate until PG dies.
+3. Seating Contraction: Dead players are physically bypassed for neighbor calculations (Empath, Tea Lady, No-Dashi). Post-death value shifts enable mathematical elimination.
+4. Vortox Absolute Lie: Under Vortox, ALL Townsfolk info MUST be false. Verified true info = No Vortox. If Vortox, invert Townsfolk claims 100% to find truth. Daytime execution is mandatory (no execution = Evil wins). (Outsiders are not subject to this).
+5. Uniqueness Axiom: Good roles (excl. Outsiders) are unique. Duplicates = at least one is Evil, drunk, mad, or transformed.
+6. Madness & Lightning: Mutant claiming Outsider or Cerenovus target failing to act mad = instant Storyteller daytime execution. Sudden daytime death = Cerenovus / Mutant signature.
+7. Demon Succession: Imp suicide or Demon death with >=5 alive triggers succession (Minion to Imp, or Scarlet Woman to Demon).
 `;
 
