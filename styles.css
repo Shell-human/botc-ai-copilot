@@ -1050,15 +1050,142 @@ textarea {
 @media (max-width: 1024px) {
     .app-container {
         grid-template-columns: 280px 1fr;
-        grid-template-rows: 1fr 1fr;
-        height: auto;
-        overflow-y: auto;
+        grid-template-rows: auto;
+        height: calc(100vh - 60px) !important;
+        overflow-y: auto !important;
     }
     .panel {
-        height: 500px;
+        height: 520px;
     }
     .ai-panel {
         grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        padding: 0 16px !important;
+    }
+    .header-logo h1 .subtitle {
+        display: none !important;
+    }
+    
+    .app-container {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto !important;
+        height: calc(100vh - 60px) !important;
+        overflow-y: auto !important;
+        padding: 12px !important;
+        gap: 12px !important;
+    }
+    
+    .panel {
+        grid-column: span 1 !important;
+        width: 100% !important;
+        height: 540px !important;
+    }
+    
+    /* Input and Select Mobile touch enhancement */
+    input[type="text"],
+    input[type="password"],
+    input[type="number"],
+    select,
+    textarea {
+        font-size: 14px !important;
+        padding: 10px 14px !important;
+    }
+    
+    label {
+        font-size: 11.5px !important;
+    }
+    
+    .btn {
+        padding: 12px 20px !important;
+        font-size: 13px !important;
+        border-radius: 10px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-header {
+        padding: 0 12px !important;
+    }
+    
+    .header-logo h1 {
+        font-size: 15px !important;
+    }
+    
+    .status-text {
+        display: none !important;
+    }
+    
+    .api-status {
+        padding: 4px 6px !important;
+    }
+    
+    .seating-chart-container {
+        padding: 12px !important;
+    }
+    
+    /* Dynamically downscale the seating chart circle to fit small screens */
+    .seating-chart-wrapper {
+        transform: scale(0.82) !important;
+        transform-origin: center center !important;
+    }
+    
+    /* Player list optimization to prevent overflows */
+    .player-name-text {
+        max-width: 70px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+    
+    .player-claim-badge {
+        max-width: 75px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        font-size: 9px !important;
+        padding: 1px 4px !important;
+    }
+    
+    .player-actions-toggles {
+        gap: 6px !important;
+    }
+    
+    .player-item-row {
+        padding: 6px 8px !important;
+    }
+    
+    /* Modal mobile optimization */
+    .popover-modal {
+        width: 92% !important;
+        max-width: 340px !important;
+    }
+    
+    /* Script modal spacing */
+    #scriptPreviewModal {
+        width: 95% !important;
+        height: 85vh !important;
+    }
+    
+    .popover-body {
+        padding: 12px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .seating-chart-wrapper {
+        transform: scale(0.72) !important;
+    }
+    
+    .player-name-text {
+        max-width: 55px !important;
+    }
+    
+    .player-claim-badge {
+        max-width: 60px !important;
     }
 }
 
