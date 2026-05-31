@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>无上杀戮 - 血染钟楼 AI 战术助手</title>
+    <meta name="description" content="专为血染钟楼玩家量身定制的AI战术分析助手，支持座位轨迹图、状态机管理、平行世界推理与逻辑冲突检测。">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Icons (Lucide Icons via CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-logo">
+            <i data-lucide="skull" class="logo-icon animate-pulse"></i>
+            <h1>无上杀戮 <span class="subtitle">血染钟楼 AI 战术助手</span></h1>
+        </div>
+        <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+            <button class="btn btn-secondary btn-sm hidden" id="restoreGameBtn" style="padding: 4px 10px; font-size: 10px; height: 26px; border-radius: 8px;">
+                <i data-lucide="rotate-ccw" style="width: 12px; height: 12px; margin-right: 2px;"></i> 恢复上次对局
+            </button>
+            <div class="api-status">
+                <span class="status-indicator online" id="apiStatusIndicator"></span>
+                <span class="status-text" id="apiStatusText">Gemini API 已就绪</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <!-- LEFT PANEL: Configuration & Manual Controls -->
+        <section class="panel control-panel glass" id="leftPanel">
+            <div class="panel-header">
+                <i data-lucide="sliders" class="panel-icon"></i>
+                <h2>对局配置与管理</h2>
+            </div>
+            
+            <!-- API Key config (collapsible) -->
+            <details class="config-section" id="apiKeyDetails">
+                <summary>
+                    <span><i data-lucide="cpu" class="icon-sm"></i> AI 大脑多网关配置</span>
+                    <i data-lucide="chevron-down" class="chevron-icon"></i>
+                </summary>
+                <div class="details-content">
+                    <div class="form-group">
+                        <label for="apiProviderSelect">AI 驱动厂商 (Provider)</label>
+                        <select id="apiProviderSelect">
+                            <option value="gemini" selected>Google Gemini</option>
+                            <option value="chatgpt">OpenAI ChatGPT</option>
+                            <option value="claude">Anthropic Claude</option>
+                            <option value="deepseek">DeepSeek</option>
+                            <option value="qwen">阿里通义千问 (Qwen)</option>
+                            <option value="zhipu">智谱清言 (GLM)</option>
+                            <option value="doubao">字节跳动火山引擎 (Doubao)</option>
+                            <option value="kimi">月之暗面 (Kimi)</option>
+                            <option value="baidu">百度文心一言 (ERNIE)</option>
+                            <option value="custom">自定义 / 其他兼容协议 (Custom)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group hidden" id="apiBaseUrlContainer" style="margin-top: 10px;">
+                        <label for="apiBaseUrlInput">接口基地址 (Base URL)</label>
+                        <input type="text" id="apiBaseUrlInput" value="https://api.openai.com/v1" placeholder="例如: https://api.deepseek.com/v1">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="apiKeyInput" id="apiKeyLabel">Gemini API Key (密钥)</label>
+                        <input type="password" id="apiKeyInput" value="" placeholder="请输入 API Key">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="aiModelSelect">推理分析模型 (Model)</label>
+                        <select id="aiModelSelect">
+                            <!-- Loaded dynamically in app.js -->
+                        </select>
+                    </div>
+
+                    <div class="form-group hidden" id="apiModelCustomContainer" style="margin-top: 10px;">
+                        <label for="apiModelCustomInput">自定义模型 ID (Custom Model ID)</label>
+                        <input type="text" id="apiModelCustomInput" placeholder="请输入模型名称，例如: deepseek-chat">
+                    </div>
+
+                    <p class="input-tip" id="apiConfigTip">已自动填充 Google Gemini 原生密钥，支持最新的 3.5 Flash 极速推理模型以及 3.1 Pro 深度推理模型，无需配置直接使用！</p>
+                </div>
+            </details>
+
+            <!-- Game Setup (collapsible) -->
+            <details class="config-section" open id="initGameDetails">
+                <summary>
+                    <span><i data-lucide="gamepad-2" class="icon-sm"></i> 新对局初始化</span>
+                    <i data-lucide="chevron-down" class="chevron-icon"></i>
+                </summary>
+                <div class="details-content">
+                    <div class="form-group">
+                        <label for="playerCountSelect">玩家人数</label>
+                        <select id="playerCountSelect">
+                            <option value="7">7 人本 (5村民 / 1外来 / 1爪牙 / 1恶魔)</option>
+                            <option value="8">8 人本 (5村民 / 1外来 / 1爪牙 / 1恶魔) *气球等+1</option>
+                            <option value="9" selected>9 人本 (5村民 / 2外来 / 1爪牙 / 1恶魔)</option>
+                            <option value="10">10 人本 (7村民 / 0外来 / 2爪牙 / 1恶魔)</option>
+                            <option value="11">11 人本 (7村民 / 1外来 / 2爪牙 / 1恶魔)</option>
+                            <option value="12">12 人本 (7村民 / 2外来 / 2爪牙 / 1恶魔)</option>
+                            <option value="13">13 人本 (9村民 / 0外来 / 3爪牙 / 1恶魔)</option>
+                            <option value="14">14 人本 (9村民 / 1外来 / 3爪牙 / 1恶魔)</option>
+                            <option value="15">15 人本 (9村民 / 2外来 / 3爪牙 / 1恶魔)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <label for="scriptSelect" style="margin-bottom: 0;">板子/剧本</label>
+                            <button type="button" class="btn-text" id="previewScriptBtn" style="font-size: 11px; display: flex; align-items: center; gap: 4px; color: var(--color-good); padding: 0; background: none; border: none; cursor: pointer;">
+                                <i data-lucide="eye" style="width: 12px; height: 12px;"></i> 预览剧本角色表
+                            </button>
+                        </div>
+                        <select id="scriptSelect">
+                            <option value="wushang" selected>无上杀戮 (自定义强交互板)</option>
+                            <option value="anliu">暗流涌动 (经典新手板)</option>
+                            <option value="mengyun">梦殒春宵 (经典进阶板)</option>
+                            <option value="wafuleiming">瓦釜雷鸣 (经典进阶板)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mySeatInput">我的座位号</label>
+                        <input type="number" id="mySeatInput" value="3" min="1" max="15">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="myRoleSelect">我的角色</label>
+                            <select id="myRoleSelect" class="character-select">
+                                <!-- Dynamically loaded -->
+                            </select>
+                        </div>
+                        <div class="form-group half">
+                            <label for="myAlignmentSelect">我的阵营</label>
+                            <select id="myAlignmentSelect">
+                                <option value="good" selected>善良阵营</option>
+                                <option value="evil">邪恶阵营</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Evil Bluffs inputs (hidden by default, shown when myAlignmentSelect is 'evil') -->
+                    <div id="evilBluffsContainer" class="form-group hidden" style="border-top: 1px dashed var(--border-color); padding-top: 10px; margin-top: 10px;">
+                        <label style="display: flex; align-items: center; gap: 4px; color: var(--color-evil); font-weight: 600;"><i data-lucide="info" class="icon-sm"></i> 说书人给的 3 个好人伪装 (Bluffs)</label>
+                        <div class="form-row" style="margin-top: 6px; gap: 6px;">
+                            <div class="form-group third" style="flex: 1; margin-bottom: 0;">
+                                <select id="evilBluff1" class="character-select-good">
+                                    <!-- Loaded dynamically -->
+                                </select>
+                            </div>
+                            <div class="form-group third" style="flex: 1; margin-bottom: 0;">
+                                <select id="evilBluff2" class="character-select-good">
+                                    <!-- Loaded dynamically -->
+                                </select>
+                            </div>
+                            <div class="form-group third" style="flex: 1; margin-bottom: 0;">
+                                <select id="evilBluff3" class="character-select-good">
+                                    <!-- Loaded dynamically -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary w-full" id="initGameBtn">
+                        <i data-lucide="sparkles"></i> 初始化并开启新游戏
+                    </button>
+                </div>
+            </details>
+
+            <!-- Manual Control & Player List -->
+            <div class="config-section flex-grow" id="playerListSection">
+                <div class="section-header-row">
+                    <h3><i data-lucide="users" class="icon-sm"></i> 玩家状态快速调整</h3>
+                    <button class="btn-text" id="resetPlayersBtn">重置所有</button>
+                </div>
+                <div class="player-list-scroll" id="playerListContainer">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- CENTER PANEL: Interactive Seating Circle & Action Logs -->
+        <section class="panel map-panel glass" id="centerPanel">
+            <div class="panel-header">
+                <i data-lucide="circle-dot" class="panel-icon"></i>
+                <h2>环形座位轨迹图</h2>
+                <div class="map-legend">
+                    <span class="legend-item"><span class="dot good"></span>好人</span>
+                    <span class="legend-item"><span class="dot evil"></span>坏人</span>
+                    <span class="legend-item"><span class="dot dead"></span>死亡</span>
+                    <span class="legend-item"><span class="dot poisoned"></span>中毒/醉酒</span>
+                </div>
+            </div>
+
+            <!-- Visual Seating Map -->
+            <div class="seating-chart-container">
+                <div class="seating-chart-wrapper">
+                    <!-- SVG for drawing links,下毒线,茶艺师保护圈 etc. -->
+                    <svg class="seating-svg-connections" id="seatingSvg"></svg>
+                    <!-- Center brand watermark -->
+                    <div class="seating-chart-center-watermark" id="seatingChartWatermark">无上杀戮</div>
+                    <!-- Floating circular seat nodes -->
+                    <div class="seating-nodes-container" id="seatingNodesContainer"></div>
+                </div>
+            </div>
+
+            <!-- Timeline Logs -->
+            <div class="timeline-container">
+                <div class="timeline-header">
+                    <h3><i data-lucide="history" class="icon-sm"></i> 局势信息流水志</h3>
+                    <span class="log-count" id="logCountText">共 0 条信息</span>
+                </div>
+                <div class="timeline-logs" id="timelineLogsContainer">
+                    <div class="empty-state">
+                        <i data-lucide="clipboard-list" class="empty-icon"></i>
+                        <p>暂无游戏记录，在右侧控制台输入第一条局势变动吧</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL: AI Copilot Console & Analytical Worldlines -->
+        <section class="panel ai-panel glass" id="rightPanel">
+            <div class="panel-header">
+                <i data-lucide="cpu" class="panel-icon"></i>
+                <h2>AI 战术副驾驶 (Tactical Copilot)</h2>
+            </div>
+
+            <!-- Console Inputs -->
+            <div class="console-section">
+                <label for="consoleInput">输入本轮局势进展 (支持自然语言描述)</label>
+                <div class="textarea-wrapper">
+                    <textarea id="consoleInput" placeholder="输入例如：
+- 5号死了。白天2号跳了厨师，说得到信息是0。
+- 4号悄悄跟我说他是共情者，信息是1。
+- 3号（我）第一晚被熊孩子锁了，今天感觉信息不对劲。"></textarea>
+                    <button class="btn-voice" id="voiceInputBtn" title="语音录入说明">
+                        <i data-lucide="mic"></i>
+                    </button>
+                </div>
+                <div class="console-actions">
+                    <button class="btn btn-secondary" id="clearConsoleBtn">清空输入</button>
+                    <button class="btn btn-accent" id="analyzeBtn">
+                        <i data-lucide="wand-2"></i> 发送给AI分析局势
+                    </button>
+                </div>
+            </div>
+
+            <!-- AI Analyses & Worldviews Output -->
+            <div class="analysis-results flex-grow">
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="tab-analysis">
+                        <i data-lucide="file-search"></i> 即时分析
+                    </button>
+                    <button class="tab-btn" data-tab="tab-worldlines">
+                        <i data-lucide="git-branch"></i> 平行世界线
+                    </button>
+                    <button class="tab-btn" data-tab="tab-tips">
+                        <i data-lucide="compass"></i> 行动建议
+                    </button>
+                </div>
+
+                <div class="tab-content-container">
+                    <!-- Tab 1: Instant Analysis -->
+                    <div class="tab-content active" id="tab-analysis">
+                        <div class="ai-box" id="analysisBox">
+                            <div class="ai-welcome">
+                                <i data-lucide="bot" class="welcome-icon"></i>
+                                <h3>你好，钟楼探索者</h3>
+                                <p>请配置你的游戏，并在上方输入局势变动。我将通过分析座位物理相对位置、技能边界及逻辑冲突，为你生成世界线分析与战术建议。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Worldlines -->
+                    <div class="tab-content" id="tab-worldlines">
+                        <div class="ai-box" id="worldlinesBox">
+                            <div class="empty-tab-state">
+                                <p>等待数据录入后，将在这里推演 <b>正常世界线</b>、<b>涡流世界线</b> 以及 <b>下毒世界线</b> 的逻辑合理性概率。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Tactical Tips -->
+                    <div class="tab-content" id="tab-tips">
+                        <div class="ai-box" id="tipsBox">
+                            <div class="empty-tab-state">
+                                <p>这里将为你生成本轮白天最推荐私聊的玩家、应该核对的身份，以及防止猝死或邪恶阵营直接获胜的紧急提示。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Dynamic Popover Modal for quick seat updates -->
+        <div class="popover-modal hidden" id="seatPopoverModal">
+            <div class="popover-header">
+                <h4 id="popoverPlayerTitle">玩家 3 状态更新</h4>
+                <button class="btn-close" id="closePopoverBtn"><i data-lucide="x" class="icon-xs"></i></button>
+            </div>
+            <div class="popover-body">
+                <div class="form-group">
+                    <label for="popoverRoleSelect">宣称角色 (Claimed)</label>
+                    <select id="popoverRoleSelect" class="character-select">
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half checkbox-group">
+                        <label class="toggle-container">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="popoverAliveCheckbox" checked>
+                                <span class="slider"></span>
+                            </span>
+                            <span class="toggle-label-text">存活状态</span>
+                        </label>
+                    </div>
+                    <div class="form-group half">
+                        <label for="popoverAlignmentSelect">推测阵营</label>
+                        <select id="popoverAlignmentSelect">
+                            <option value="good">善良</option>
+                            <option value="evil">邪恶</option>
+                            <option value="unknown" selected>未知</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group checkbox-group">
+                    <label class="toggle-container">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="popoverPoisonCheckbox">
+                            <span class="slider purple"></span>
+                        </span>
+                        <span class="toggle-label-text">中毒/醉酒状态</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="popoverNoteInput">私聊记录 / 备注信息</label>
+                    <input type="text" id="popoverNoteInput" placeholder="输入例如：自称是守鸦人让我别碰他">
+                </div>
+                <button class="btn btn-primary w-full" id="savePopoverBtn">保存状态</button>
+            </div>
+        </div>
+
+    <!-- Script Preview Modal (Supreme Slaughter) -->
+    <div class="popover-modal hidden" id="scriptPreviewModal" style="width: 90%; max-width: 680px; z-index: 1000; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 80vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+        <div class="popover-header" style="flex-shrink: 0; padding: 16px 20px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="scroll" style="color: var(--color-good);"></i>
+                <h4 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-primary);">《无上杀戮》剧本角色对照表</h4>
+            </div>
+            <button class="btn-close" id="closeScriptPreviewBtn"><i data-lucide="x" class="icon-xs"></i></button>
+        </div>
+        
+        <!-- Categorized Character Grid -->
+        <div class="popover-body" style="flex-grow: 1; overflow-y: auto; padding: 20px; min-height: 0;">
+            <!-- Townsfolk Section -->
+            <div style="margin-bottom: 20px;">
+                <h5 style="color: var(--color-good); border-left: 3px solid var(--color-good); padding-left: 8px; margin: 0 0 10px 0; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
+                    <span>村民角色 (Townsfolk)</span>
+                    <span style="font-size: 10px; opacity: 0.6; font-weight: normal;">共 15 个</span>
+                </h5>
+                <div class="character-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px;" id="previewTownsfolkContainer"></div>
+            </div>
+            
+            <!-- Outsiders Section -->
+            <div style="margin-bottom: 20px;">
+                <h5 style="color: var(--color-poison); border-left: 3px solid var(--color-poison); padding-left: 8px; margin: 0 0 10px 0; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
+                    <span>外来者角色 (Outsiders)</span>
+                    <span style="font-size: 10px; opacity: 0.6; font-weight: normal;">共 5 个</span>
+                </h5>
+                <div class="character-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px;" id="previewOutsidersContainer"></div>
+            </div>
+            
+            <!-- Minions Section -->
+            <div style="margin-bottom: 20px;">
+                <h5 style="color: #ff9d00; border-left: 3px solid #ff9d00; padding-left: 8px; margin: 0 0 10px 0; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
+                    <span>爪牙角色 (Minions)</span>
+                    <span style="font-size: 10px; opacity: 0.6; font-weight: normal;">共 5 个</span>
+                </h5>
+                <div class="character-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px;" id="previewMinionsContainer"></div>
+            </div>
+            
+            <!-- Demons Section -->
+            <div>
+                <h5 style="color: var(--color-evil); border-left: 3px solid var(--color-evil); padding-left: 8px; margin: 0 0 10px 0; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
+                    <span>恶魔角色 (Demons)</span>
+                    <span style="font-size: 10px; opacity: 0.6; font-weight: normal;">共 4 个</span>
+                </h5>
+                <div class="character-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px;" id="previewDemonsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>

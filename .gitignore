@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+.env
+.system_generated/
+scratch/
+AIAPI.html
