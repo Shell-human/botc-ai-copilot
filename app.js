@@ -153,8 +153,355 @@ const CHARACTER_DETAILS = {
     }
 };
 
+// --- English Scripts and Character Details Data ---
+const SCRIPTS_DATA_EN = {
+    wushang: {
+        name: "Supreme Slaughter",
+        townsfolk: ["Noble", "Chef", "Empath", "Poppy Grower", "Savant", "Tea Lady", "Town Crier", "Snake Charmer", "Undertaker", "Rascal", "Preacher", "Sailor", "Bounty Hunter", "Alchemist", "Balloonist"],
+        outsider: ["Mutant", "Golem", "Politician", "Plague Doctor", "Barber"],
+        minion: ["Psychopath", "Pixie", "Cerenovus", "Summoner", "Godfather"],
+        demon: ["Vortox", "Kazali", "No-Dashi", "Al-Hadikhia"]
+    },
+    anliu: {
+        name: "Trouble Brewing",
+        townsfolk: ["Washerwoman", "Librarian", "Investigator", "Chef", "Empath", "Fortune Teller", "Undertaker", "Monk", "Ravenkeeper", "Virgin", "Slayer", "Soldier", "Mayor"],
+        outsider: ["Butler", "Drunk", "Recluse", "Saint"],
+        minion: ["Poisoner", "Spy", "Baron", "Scarlet Woman"],
+        demon: ["Imp"]
+    },
+    mengyun: {
+        name: "Sects & Violets",
+        townsfolk: ["Clockmaker", "Dreamer", "Snake Charmer", "Mathematician", "Flowergirl", "Town Crier", "Oracle", "Juggler", "Savant", "Seamstress", "Philosopher", "Artist", "Sage"],
+        outsider: ["Mutant", "Barber", "Sweetheart", "Klutz"],
+        minion: ["Witch", "Cerenovus", "Pit-Hag", "Evil Twin"],
+        demon: ["Fang Gu", "No-Dashi", "Vigormortis", "Vortox"]
+    },
+    wafuleiming: {
+        name: "Laissez un Faire",
+        townsfolk: ["Investigator", "Chef", "Grandma", "Fortune Teller", "Balloonist", "Dreamer", "Snake Charmer", "Gambler", "Savant", "Philosopher", "Ravenkeeper", "Amnesiac", "Cannibal"],
+        outsider: ["Drunk", "Recluse", "Mutant", "Sweetheart", "Lunatic"],
+        minion: ["Godfather", "Pit-Hag", "Cerenovus", "Widow"],
+        demon: ["Imp", "Vigormortis", "Fang Gu"]
+    }
+};
+
+const CHARACTER_DETAILS_EN = {
+    wushang: {
+        "Noble": "On your first night, you learn 3 players. Exactly one is evil.",
+        "Chef": "On your first night, you learn the number of pairs of adjacent evil players.",
+        "Empath": "Each night, you learn how many of your 2 alive neighbors are evil.",
+        "Poppy Grower": "Minions & Demons do not know each other on the first night. When you die, they learn each other.",
+        "Savant": "Each day, you may visit the Storyteller to learn 2 statements: 1 is true & 1 is false.",
+        "Tea Lady": "If both of your 2 alive neighbors are good, they cannot die.",
+        "Town Crier": "Each night*, you learn if a Minion nominated today.",
+        "Snake Charmer": "Each night, choose a player: if they are the Demon, you become the Demon and are poisoned, and they become the poisoned Snake Charmer.",
+        "Undertaker": "Each night*, you learn which character died by execution today.",
+        "Rascal": "Each night, choose a Townsfolk character: until next dusk, their ability yields incorrect information.",
+        "Preacher": "Each night, choose a player: if they are a Minion, they permanently lose their ability.",
+        "Sailor": "Each night, choose a player: either you or they are drunk until next night. You cannot die at night.",
+        "Bounty Hunter": "On your first night, you learn 1 evil player. [+1 Evil Townsfolk]",
+        "Alchemist": "You have a Minion ability in play, but you might be drunk.",
+        "Balloonist": "Each night, you learn 1 player of a specific alignment who is alive. [+0 or +1 Outsider]",
+        "Mutant": "If you are 'mad' about being an Outsider, you might be executed.",
+        "Golem": "Once per game, during the day, you may nominate. If they are not the Demon, they die immediately.",
+        "Politician": "If your team wins but you voted/supported the other team, you might win with them.",
+        "Plague Doctor": "If you die, the Storyteller gains a Minion ability in play.",
+        "Barber": "If you die, the Demon may swap the characters of 2 players tonight.",
+        "Psychopath": "Each day, you may openly duel a player at Rock-Paper-Scissors. If you win, they die. You cannot die by execution.",
+        "Pixie": "On your first night, you learn 1 out-of-play Townsfolk character. If you claim to be them, you gain their ability.",
+        "Cerenovus": "Each night, choose a player and a good character: they must be mad about being that character tomorrow, or they might be executed.",
+        "Summoner": "Do not act on nights 1-3. On night 3, create a new Demon.",
+        "Godfather": "On your first night, you learn the number of Outsiders in play. Each night*, if someone was executed today, you can kill a player. [+1 or -1 Outsider]",
+        "Vortox": "Each night*, choose a player: they die. All Townsfolk information must be false. If no one is executed by day, Evil wins.",
+        "Kazali": "On your first night, choose good players to become your Minions. Each night*, choose a player: they die. [- or + any number of Outsiders]",
+        "No-Dashi": "Each night*, choose a player: they die. Your 2 alive good neighbors are permanently poisoned.",
+        "Al-Hadikhia": "Each night*, choose 3 players (all players learn who): they secretly decide whether to live or die. If all choose to live, they all die. Dead players can be resurrected by this."
+    },
+    anliu: {
+        "Washerwoman": "On your first night, you learn 2 players and 1 Townsfolk character: 1 of those players is that character.",
+        "Librarian": "On your first night, you learn 2 players and 1 Outsider character: 1 of those players is that character (or that there are no Outsiders).",
+        "Investigator": "On your first night, you learn 2 players and 1 Minion character: 1 of those players is that character (or that there are no Minions).",
+        "Chef": "On your first night, you learn the number of pairs of adjacent evil players.",
+        "Empath": "Each night, you learn how many of your 2 alive neighbors are evil.",
+        "Fortune Teller": "Each night, choose 2 players: you learn if at least 1 is a Demon. 1 good player is registered as a Demon to you.",
+        "Undertaker": "Each night*, you learn which character died by execution today.",
+        "Monk": "Each night*, choose a player other than yourself: they are safe from the Demon tonight.",
+        "Ravenkeeper": "If you die at night, you are woken to choose a player: you learn their character.",
+        "Virgin": "The first time you are nominated, if the nominator is a Townsfolk, they are executed immediately.",
+        "Slayer": "Once per game, during the day, choose a player: if they are the Demon, they die.",
+        "Soldier": "You are safe from the Demon's ability.",
+        "Mayor": "If only 3 players are alive & no execution occurs, your team wins. If you die at night, another player might die instead.",
+        "Butler": "Each night, choose a player: tomorrow, you can only vote if they vote.",
+        "Drunk": "You do not know you are the Drunk. You think you are a Townsfolk, but you are not.",
+        "Recluse": "You might register as evil, a Minion, or a Demon, even if dead.",
+        "Saint": "If you die by execution, your team loses.",
+        "Poisoner": "Each night, choose a player: they are poisoned tonight and tomorrow.",
+        "Spy": "Each night, you may look at the Grimoire. You might register as good, a Townsfolk, or an Outsider, even if dead.",
+        "Baron": "There are extra Outsiders in play. [+2 Outsiders]",
+        "Scarlet Woman": "If there are 5 or more players alive (excluding Travelers) and the Demon dies, you become the Demon.",
+        "Imp": "Each night*, choose a player: they die. If you kill yourself, a Minion becomes the Imp."
+    },
+    mengyun: {
+        "Clockmaker": "On your first night, you learn the distance from the Demon to the nearest Minion.",
+        "Dreamer": "Each night, choose a player other than yourself or Travelers: you learn 1 good & 1 evil character, and 1 is their real character.",
+        "Snake Charmer": "Each night, choose a player: if they are the Demon, you become the Demon and are poisoned, and they become the poisoned Snake Charmer.",
+        "Mathematician": "Each night, you learn how many players' abilities did not work correctly due to other abilities since dawn.",
+        "Flowergirl": "Each night*, you learn if the Demon voted today.",
+        "Town Crier": "Each night*, you learn if a Minion nominated today.",
+        "Oracle": "Each night*, you learn how many dead players are evil.",
+        "Juggler": "On your first day, you may publicly guess up to 5 players' characters. Tonight, you learn how many guesses were correct.",
+        "Savant": "Each day, you may visit the Storyteller to learn 2 statements: 1 is true & 1 is false.",
+        "Seamstress": "Once per game, at night, choose 2 players other than yourself: you learn if they are of the same alignment.",
+        "Philosopher": "Once per game, at night, choose a good character: you gain their ability. If that character is in play, they are drunk.",
+        "Artist": "Once per game, during the day, you may privately ask the Storyteller any yes/no question.",
+        "Sage": "If the Demon kills you, you wake tonight and learn 2 players: 1 is the Demon.",
+        "Mutant": "If you are 'mad' about being an Outsider, you might be executed.",
+        "Barber": "If you die, the Demon may swap the characters of 2 players tonight.",
+        "Sweetheart": "When you die, one player becomes drunk permanently.",
+        "Klutz": "When you learn you died, publicly choose an alive player: if they are evil, your team loses.",
+        "Witch": "Each night, choose a player: if they nominate tomorrow, they die. If only 3 players are alive, you lose this ability.",
+        "Cerenovus": "Each night, choose a player and a good character: they must be mad about being that character tomorrow, or they might be executed.",
+        "Pit-Hag": "Each night*, choose a player and a character: if that character is not in play, they become that character. If a Demon is created, night deaths are decided by the Storyteller.",
+        "Evil Twin": "You and an opposing alignment player know each other's characters. If the good twin is executed, Evil wins. While both live, Good cannot win.",
+        "Fang Gu": "Each night*, choose a player: they die. The first Outsider killed becomes the evil Fang Gu instead, and you die. [+1 Outsider]",
+        "No-Dashi": "Each night*, choose a player: they die. Your 2 alive good neighbors are permanently poisoned.",
+        "Vigormortis": "Each night*, choose a player: they die. Minions killed by you retain their ability, and 1 of their neighbors is poisoned. [-1 Outsider]",
+        "Vortox": "Each night*, choose a player: they die. All Townsfolk information must be false. If no one is executed by day, Evil wins."
+    },
+    wafuleiming: {
+        "Investigator": "On your first night, you learn 2 players and 1 Minion character: 1 of those players is that character (or that there are no Minions).",
+        "Chef": "On your first night, you learn the number of pairs of adjacent evil players.",
+        "Grandma": "On your first night, you learn 1 good player and their character. If the Demon kills them, you die too.",
+        "Fortune Teller": "Each night, choose 2 players: you learn if at least 1 is a Demon. 1 good player is registered as a Demon to you.",
+        "Balloonist": "Each night, you learn 1 player of a specific alignment who is alive. [+1 Outsider]",
+        "Dreamer": "Each night, choose a player other than yourself or Travelers: you learn 1 good & 1 evil character, and 1 is their real character.",
+        "Snake Charmer": "Each night, choose a player: if they are the Demon, you become the Demon and are poisoned, and they become the poisoned Snake Charmer.",
+        "Gambler": "Each night*, choose a player and guess their character: if you guess wrong, you die tonight.",
+        "Savant": "Each day, you may visit the Storyteller to learn 2 statements: 1 is true & 1 is false.",
+        "Philosopher": "Once per game, at night, choose a good character: you gain their ability. If that character is in play, they are drunk.",
+        "Ravenkeeper": "If you die at night, you are woken to choose a player: you learn their character.",
+        "Amnesiac": "You do not know what your ability is. Each day, you may guess your ability to the Storyteller: they tell you how accurate you are.",
+        "Cannibal": "You have the ability of the last player executed. If they were evil, you are poisoned until next execution.",
+        "Drunk": "You do not know you are the Drunk. You think you are a Townsfolk, but you are not.",
+        "Recluse": "You might register as evil, a Minion, or a Demon, even if dead.",
+        "Mutant": "If you are 'mad' about being an Outsider, you might be executed.",
+        "Sweetheart": "When you die, one player becomes drunk permanently.",
+        "Lunatic": "You think you are the Demon, but you are not. You act as the Demon, but the real Demon knows who you are and what you chose.",
+        "Godfather": "On your first night, you learn the number of Outsiders in play. Each night*, if someone was executed today, you can kill a player. [+1 or -1 Outsider]",
+        "Pit-Hag": "Each night*, choose a player and a character: if that character is not in play, they become that character. If a Demon is created, night deaths are decided by the Storyteller.",
+        "Cerenovus": "Each night, choose a player and a good character: they must be mad about being that character tomorrow, or they might be executed.",
+        "Widow": "On your first night, you look at the Grimoire and choose a player to poison. One good player learns that a Widow is in play.",
+        "Imp": "Each night*, choose a player: they die. If you kill yourself, a Minion becomes the Imp.",
+        "Vigormortis": "Each night*, choose a player: they die. Minions killed by you retain their ability, and 1 of their neighbors is poisoned. [-1 Outsider]",
+        "Fang Gu": "Each night*, choose a player: they die. The first Outsider killed becomes the evil Fang Gu instead, and you die. [+1 Outsider]"
+    }
+};
+
+// Bidirectional translations for all role names in play
+const ROLE_TRANSLATIONS = {
+    // Townsfolk
+    "贵族": "Noble",
+    "厨师": "Chef",
+    "共情者": "Empath",
+    "罂粟种植者": "Poppy Grower",
+    "博学者": "Savant",
+    "茶艺师": "Tea Lady",
+    "城镇公告员": "Town Crier",
+    "舞蛇人": "Snake Charmer",
+    "送葬者": "Undertaker",
+    "熊孩子": "Rascal",
+    "传教士": "Preacher",
+    "水手": "Sailor",
+    "赏金猎人": "Bounty Hunter",
+    "炼金术士": "Alchemist",
+    "气球驾驶员": "Balloonist",
+    "洗衣妇": "Washerwoman",
+    "图书管理员": "Librarian",
+    "调查员": "Investigator",
+    "占卜师": "Fortune Teller",
+    "僧侣": "Monk",
+    "守鸦人": "Ravenkeeper",
+    "贞洁者": "Virgin",
+    "猎手": "Slayer",
+    "士兵": "Soldier",
+    "镇长": "Mayor",
+    "钟表匠": "Clockmaker",
+    "筑梦师": "Dreamer",
+    "数学家": "Mathematician",
+    "卖花女孩": "Flowergirl",
+    "神谕者": "Oracle",
+    "杂耍艺人": "Juggler",
+    "女裁缝": "Seamstress",
+    "哲学家": "Philosopher",
+    "艺术家": "Artist",
+    "贤者": "Sage",
+    "祖母": "Grandma",
+    "赌徒": "Gambler",
+    "失忆者": "Amnesiac",
+    "食人族": "Cannibal",
+
+    // Outsiders
+    "畸形秀演员": "Mutant",
+    "魔像": "Golem",
+    "政客": "Politician",
+    "瘟疫医生": "Plague Doctor",
+    "理发师": "Barber",
+    "管家": "Butler",
+    "酒鬼": "Drunk",
+    "陌客": "Recluse",
+    "圣徒": "Saint",
+    "心上人": "Sweetheart",
+    "呆瓜": "Klutz",
+    "疯子": "Lunatic",
+
+    // Minions
+    "精神病患者": "Psychopath",
+    "皮克希": "Pixie",
+    "洗脑师": "Cerenovus",
+    "召唤师": "Summoner",
+    "教父": "Godfather",
+    "投毒者": "Poisoner",
+    "间谍": "Spy",
+    "男爵": "Baron",
+    "红唇女郎": "Scarlet Woman",
+    "女巫": "Witch",
+    "麻脸巫婆": "Pit-Hag",
+    "镜像双子": "Evil Twin",
+    "寡妇": "Widow",
+
+    // Demons
+    "涡流": "Vortox",
+    "卡扎力": "Kazali",
+    "诺达鲺": "No-Dashi",
+    "哈迪寂亚": "Al-Hadikhia",
+    "小恶魔": "Imp",
+    "方吉": "Fang Gu",
+    "亡骨魔": "Vigormortis"
+};
+
+const ROLE_TRANSLATIONS_REVERSE = {};
+Object.entries(ROLE_TRANSLATIONS).forEach(([zh, en]) => {
+    ROLE_TRANSLATIONS_REVERSE[en] = zh;
+});
+
+// Helper functions for dynamic localization
+function getLocalizedRole(roleName) {
+    if (gameState.lang === "en") {
+        return ROLE_TRANSLATIONS[roleName] || roleName;
+    }
+    return roleName;
+}
+
+function getLocalizedClaim(claim) {
+    if (claim === "未知") {
+        return gameState.lang === "en" ? "Unknown" : "未知";
+    }
+    return getLocalizedRole(claim);
+}
+
+function getLocalizedLog(log, lang) {
+    let displayLog = log;
+    if (lang === "en") {
+        displayLog = displayLog
+            .replace(/对局初始化：(\d+) 人本，板子《(.*?)》。/g, (match, count, script) => {
+                const scriptEn = SCRIPTS_DATA_EN[gameState.scriptName]?.name || script;
+                return `Game initialized: ${count}-player game, Script: "${scriptEn}".`;
+            })
+            .replace(/我的位置是 <strong>(\d+) 号<\/strong>，角色是 <strong>(.*?)<\/strong> \((.*?)\)。/g, (match, seat, role, alignment) => {
+                const mappedRole = ROLE_TRANSLATIONS[role] || role;
+                const mappedAlign = alignment === "善良阵营" ? "Good Team" : "Evil Team";
+                return `My seat is <strong>Seat ${seat}</strong>, Role: <strong>${mappedRole}</strong> (${mappedAlign}).`;
+            })
+            .replace(/说书人给的 3 个好人伪装身份：<strong>(.*?)<\/strong>。/g, (match, bluffs) => {
+                const mappedBluffs = bluffs.split('、').map(b => ROLE_TRANSLATIONS[b] || b).join(', ');
+                return `3 Demon Bluffs given by Storyteller: <strong>${mappedBluffs}</strong>.`;
+            })
+            .replace(/<strong>(.*?)<\/strong> 状态更新为：存活/g, "<strong>$1</strong> status updated to: Alive")
+            .replace(/<strong>(.*?)<\/strong> 状态更新为：❌ 死亡/g, "<strong>$1</strong> status updated to: ❌ Dead")
+            .replace(/<strong>(.*?)<\/strong> 标记为：🟣 中毒\/醉酒状态/g, "<strong>$1</strong> marked as: 🟣 Drunk/Poisoned")
+            .replace(/<strong>(.*?)<\/strong> 标记为：已恢复健康状态/g, "<strong>$1</strong> marked as: Healthy")
+            .replace(/手动更新了 <strong>(.*?)<\/strong> 的状态：/g, "Manually updated <strong>$1</strong> status: ")
+            .replace(/宣称变更为 <strong>(.*?)<\/strong>/g, (match, role) => `Claim updated to <strong>${ROLE_TRANSLATIONS[role] || role}</strong>`)
+            .replace(/生命状态变更为 <strong>存活<\/strong>/g, "Life status changed to <strong>Alive</strong>")
+            .replace(/生命状态变更为 <strong>死亡<\/strong>/g, "Life status changed to <strong>Dead</strong>")
+            .replace(/推测阵营变更为 <strong>善良<\/strong>/g, "Suspected alignment changed to <strong>Good</strong>")
+            .replace(/推测阵营变更为 <strong>邪恶<\/strong>/g, "Suspected alignment changed to <strong>Evil</strong>")
+            .replace(/推测阵营变更为 <strong>未知<\/strong>/g, "Suspected alignment changed to <strong>Unknown</strong>")
+            .replace(/状态标记为 <strong>中毒\/醉酒<\/strong>/g, "Status marked as <strong>Drunk/Poisoned</strong>")
+            .replace(/状态标记为 <strong>正常<\/strong>/g, "Status marked as <strong>Normal</strong>")
+            .replace(/备注："(.*?)"/g, 'Notes: "$1"')
+            .replace(/，/g, ", ")
+            .replace(/已自动为您恢复上次对局状态！/g, "Automatically recovered the last game state!")
+            .replace(/对局已成功从本地浏览器缓存恢复！继续推演分析吧。/g, "Game state successfully recovered from local browser cache! Continue analysis.")
+            .replace(/白天进展陈述："(.*?)"/g, 'Day progress updates: "$1"')
+            .replace(/白天进展陈述\(暂存\)："(.*?)"/g, 'Day progress updates (cached): "$1"');
+
+        displayLog = displayLog
+            .replace(/<strong>我<\/strong>/g, "<strong>Me</strong>")
+            .replace(/<strong>玩家 (\d+)<\/strong>/g, "<strong>Player $1</strong>");
+    } else {
+        displayLog = displayLog
+            .replace(/Game initialized: (\d+)-player game, Script: "(.*?)"./g, (match, count, script) => {
+                const scriptNameMap = { "Supreme Slaughter": "无上杀戮", "Trouble Brewing": "暗流涌动", "Sects & Violets": "梦殒春宵", "Laissez un Faire": "瓦釜雷鸣" };
+                const cnScript = scriptNameMap[script] || script;
+                return `对局初始化：${count} 人本，板子《${cnScript}》。`;
+            })
+            .replace(/My seat is <strong>Seat (\d+)<\/strong>, Role: <strong>(.*?)<\/strong> \((.*?)\)./g, (match, seat, role, alignment) => {
+                const mappedRole = ROLE_TRANSLATIONS_REVERSE[role] || role;
+                const mappedAlign = alignment === "Good Team" ? "善良阵营" : "邪恶阵营";
+                return `我的位置是 <strong>${seat} 号</strong>，角色是 <strong>${mappedRole}</strong> (${mappedAlign})。`;
+            })
+            .replace(/3 Demon Bluffs given by Storyteller: <strong>(.*?)<\/strong>./g, (match, bluffs) => {
+                const mappedBluffs = bluffs.split(', ').map(b => ROLE_TRANSLATIONS_REVERSE[b] || b).join('、');
+                return `说书人给的 3 个好人伪装身份：<strong>${mappedBluffs}</strong>。`;
+            })
+            .replace(/<strong>Me<\/strong>/g, "<strong>我</strong>")
+            .replace(/<strong>Player (\d+)<\/strong>/g, "<strong>玩家 $1</strong>")
+            .replace(/ status updated to: Alive/g, " 状态更新为：存活")
+            .replace(/ status updated to: ❌ Dead/g, " 状态更新为：❌ 死亡")
+            .replace(/ marked as: 🟣 Drunk\/Poisoned/g, " 标记为：🟣 中毒/醉酒状态")
+            .replace(/ marked as: Healthy/g, " 标记为：已恢复健康状态")
+            .replace(/Manually updated <strong>(.*?)<\/strong> status: /g, "手动更新了 <strong>$1</strong> 的状态：")
+            .replace(/Claim updated to <strong>(.*?)<\/strong>/g, (match, role) => `宣称变更为 <strong>${ROLE_TRANSLATIONS_REVERSE[role] || role}</strong>`)
+            .replace(/Life status changed to <strong>Alive<\/strong>/g, "生命状态变更为 <strong>存活</strong>")
+            .replace(/Life status changed to <strong>Dead<\/strong>/g, "生命状态变更为 <strong>死亡</strong>")
+            .replace(/Suspected alignment changed to <strong>Good<\/strong>/g, "推测阵营变更为 <strong>善良</strong>")
+            .replace(/Suspected alignment changed to <strong>Evil<\/strong>/g, "推测阵营变更为 <strong>邪恶</strong>")
+            .replace(/Suspected alignment changed to <strong>Unknown<\/strong>/g, "推测阵营变更为 <strong>未知</strong>")
+            .replace(/Status marked as <strong>Drunk\/Poisoned<\/strong>/g, "状态标记为 <strong>中毒/醉酒</strong>")
+            .replace(/Status marked as <strong>Normal<\/strong>/g, "状态标记为 <strong>正常</strong>")
+            .replace(/Notes: "(.*?)"/g, '备注："$1"')
+            .replace(/, /g, "，")
+            .replace(/Automatically recovered the last game state!/g, "已自动为您恢复上次对局状态！")
+            .replace(/Game state successfully recovered from local browser cache! Continue analysis./g, "对局已成功从本地浏览器缓存恢复！继续推演分析吧。")
+            .replace(/Day progress updates: "(.*?)"/g, '白天进展陈述："$1"')
+            .replace(/Day progress updates \(cached\): "(.*?)"/g, '白天进展陈述(暂存)："$1"');
+    }
+    return displayLog;
+}
+
 const TRANSLATIONS = {
     zh: {
+        logoTitle: "无上杀戮",
+        logoSubtitle: "血染钟楼 AI 战术助手",
+        unknown: "未知",
+        meSelf: "我",
+        playerText: "玩家",
+        totalSuffix: "个",
+        totalPrefix: "共",
+        confirmReset: "确定要重置当前对局所有玩家的状态吗？（日志和本地缓存也会被重置）",
+        offlineAlert: "检测到您目前处于离线状态！已为您将当前白天局势安全保存在本地。等您重新连接网络后，直接点击【发送给AI分析局势】即可恢复网络并发送线上演练。",
+        apiKeyMissingAlert: "请输入有效的 API Key 以启用分析！",
+        voiceInputHelp: "语音输入支持：\n你可以使用操作系统自带的语音听写功能（Mac 快捷键：双击 Fn 或按 F5）在输入框内直接输入文字，随后点击发送分析即可！",
+        popoverPlayerTitleSuffix: "状态编辑",
+        viewThinkingProcess: "查看 {modelName} 深度逻辑推演思考链 (Reasoning Thought Process)",
+        scriptPreviewTitle: "《{scriptName}》剧本角色对照表",
+        restoredGameToast: "已自动为您恢复上次对局状态！",
+        restoredGameToastManual: "成功手动恢复上次对局！",
+        switchedLangToast: "已切换至简体中文",
+        apiReadyStatus: "AI 接口已就绪",
+        apiOfflineStatus: "离线模式 (数据已保存在本地)",
+        apiCallingStatus: "正在调用 {modelName}...",
         restoreGame: "恢复上次对局",
         apiStatusReady: "Gemini API 已就绪",
         apiStatusOffline: "离线模式：数据已保存在本地",
@@ -215,6 +562,26 @@ const TRANSLATIONS = {
         demonsSection: "恶魔角色 (Demons)"
     },
     en: {
+        logoTitle: "Supreme Slaughter",
+        logoSubtitle: "Blood on the Clocktower AI Tactical Copilot",
+        unknown: "Unknown",
+        meSelf: "Me",
+        playerText: "Player",
+        totalSuffix: " Total",
+        totalPrefix: "",
+        confirmReset: "Are you sure you want to reset the state of all players in the current game? (Logs and local cache will also be reset)",
+        offlineAlert: "You are currently offline. Your turn updates have been saved locally. Once online, click 'Send to AI' to analyze.",
+        apiKeyMissingAlert: "Please enter a valid API Key to enable analysis!",
+        voiceInputHelp: "Voice Input Support:\nYou can use your operating system's built-in dictation feature (Mac shortcut: double-click Fn or press F5) to speak directly into the input field, then click send!",
+        popoverPlayerTitleSuffix: "Status Edit",
+        viewThinkingProcess: "View {modelName} Deep Reasoning Thought Process",
+        scriptPreviewTitle: "《{scriptName}》Character Sheet",
+        restoredGameToast: "Successfully recovered the last game state!",
+        restoredGameToastManual: "Successfully recovered the last game state manually!",
+        switchedLangToast: "Switched to English",
+        apiReadyStatus: "AI Engine Ready",
+        apiOfflineStatus: "Offline Mode (Saved Locally)",
+        apiCallingStatus: "Calling {modelName}...",
         restoreGame: "Restore Previous Game",
         apiStatusReady: "Gemini API Ready",
         apiStatusOffline: "Offline Mode: Data Saved Locally",
@@ -392,36 +759,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // --- 动态填充角色下拉菜单 ---
 function updateMyRoleOptions() {
-    const script = SCRIPTS_DATA[dom.scriptSelect.value];
+    const isEn = gameState.lang === "en";
+    const script = isEn ? SCRIPTS_DATA_EN[dom.scriptSelect.value] : SCRIPTS_DATA[dom.scriptSelect.value];
     dom.myRoleSelect.innerHTML = "";
     
-    const allRoles = [...script.townsfolk, ...script.outsider, ...script.minion, ...script.demon];
-    allRoles.forEach(role => {
+    // In order to keep values as canonical Chinese keys (so internal logic doesn't break),
+    // we use Chinese script definitions for option values, but display localized names.
+    const cnScript = SCRIPTS_DATA[dom.scriptSelect.value];
+    const allRolesCn = [...cnScript.townsfolk, ...cnScript.outsider, ...cnScript.minion, ...cnScript.demon];
+    
+    allRolesCn.forEach(role => {
         const option = document.createElement("option");
         option.value = role;
-        option.textContent = role;
-        if (role === "共情者") option.selected = true;
+        option.textContent = getLocalizedRole(role);
+        if (role === gameState.myRole) option.selected = true;
         dom.myRoleSelect.appendChild(option);
     });
 
     // 同时填充弹窗里的角色选择框
-    dom.popoverRoleSelect.innerHTML = '<option value="未知">未知角色</option>';
-    allRoles.forEach(role => {
+    dom.popoverRoleSelect.innerHTML = `<option value="未知">${isEn ? "Unknown Character" : "未知角色"}</option>`;
+    allRolesCn.forEach(role => {
         const option = document.createElement("option");
         option.value = role;
-        option.textContent = role;
+        option.textContent = getLocalizedRole(role);
         dom.popoverRoleSelect.appendChild(option);
     });
 
     // 填充邪恶伪装选项 (只限村民和外来者，因为伪装一定是好人)
-    const goodRoles = [...script.townsfolk, ...script.outsider];
+    const goodRolesCn = [...cnScript.townsfolk, ...cnScript.outsider];
     [dom.evilBluff1, dom.evilBluff2, dom.evilBluff3].forEach((select, idx) => {
         if (!select) return;
-        select.innerHTML = `<option value="">-- 伪装 ${idx + 1} --</option>`;
-        goodRoles.forEach(role => {
+        select.innerHTML = `<option value="">${isEn ? `-- Bluff ${idx + 1} --` : `-- 伪装 ${idx + 1} --`}</option>`;
+        goodRolesCn.forEach(role => {
             const option = document.createElement("option");
             option.value = role;
-            option.textContent = role;
+            option.textContent = getLocalizedRole(role);
             select.appendChild(option);
         });
     });
@@ -431,94 +803,125 @@ function updateMyRoleOptions() {
 function updateApiModelOptions() {
     const provider = dom.apiProviderSelect.value;
     dom.aiModelSelect.innerHTML = "";
+    const useEnglish = gameState.lang === "en";
     
     let presets = [];
     
     if (provider === "gemini") {
         presets = [
-            { value: "gemini-flash-latest", text: "Gemini Flash 最新动态版 (当前指向 3.5 Flash)" },
-            { value: "gemini-3.5-flash", text: "Gemini 3.5 Flash (最新 2026 闪电旗舰/带推理)" },
-            { value: "gemini-3.1-pro-preview", text: "Gemini 3.1 Pro (最新 2026 深度推理Pro/带推理)" },
-            { value: "custom", text: "-- 自定义模型 ID (Custom) --" }
+            { value: "gemini-flash-latest", text: useEnglish ? "Gemini Flash Latest (Dynamic)" : "Gemini Flash 最新动态版 (当前指向 3.5 Flash)" },
+            { value: "gemini-3.5-flash", text: useEnglish ? "Gemini 3.5 Flash (Latest 2026)" : "Gemini 3.5 Flash (最新 2026 闪电旗舰/带推理)" },
+            { value: "gemini-3.1-pro-preview", text: useEnglish ? "Gemini 3.1 Pro (Reasoning)" : "Gemini 3.1 Pro (最新 2026 深度推理Pro/带推理)" },
+            { value: "custom", text: useEnglish ? "-- Custom Model ID --" : "-- 自定义模型 ID (Custom) --" }
         ];
         dom.apiBaseUrlContainer.classList.add("hidden");
-        dom.apiKeyLabel.textContent = "Gemini API Key (密钥)";
-        dom.apiConfigTip.textContent = "已自动填充 Google Gemini 原生密钥，支持最新的 3.5 Flash 极速推理模型以及 3.1 Pro 深度推理模型，无需配置直接使用！";
+        dom.apiKeyLabel.textContent = useEnOrZh("Gemini API Key (密钥)", "Gemini API Key");
+        dom.apiConfigTip.textContent = useEnOrZh(
+            "已自动填充 Google Gemini 原生密钥，支持最新的 3.5 Flash 极速推理模型以及 3.1 Pro 深度推理模型，无需配置直接使用！",
+            "Google Gemini key pre-filled by default. Supports latest Gemini 3.5 Flash and Gemini 3.1 Pro models instantly!"
+        );
     } else if (provider === "chatgpt") {
         presets = [
-            { value: "gpt-5.5", text: "GPT-5.5 Flagship (最新 2026 核心旗舰)" },
-            { value: "gpt-5.4", text: "GPT-5.4 Standard (主力高吞吐工作流模型)" },
-            { value: "gpt-5.4-mini", text: "GPT-5.4 Mini (低延迟轻量级大模型)" },
-            { value: "custom", text: "-- 自定义模型 ID (Custom) --" }
+            { value: "gpt-5.5", text: useEnglish ? "GPT-5.5 Flagship" : "GPT-5.5 Flagship (最新 2026 核心旗舰)" },
+            { value: "gpt-5.4", text: useEnglish ? "GPT-5.4 Standard" : "GPT-5.4 Standard (主力高吞吐工作流模型)" },
+            { value: "gpt-5.4-mini", text: useEnglish ? "GPT-5.4 Mini" : "GPT-5.4 Mini (低延迟轻量级大模型)" },
+            { value: "custom", text: useEnglish ? "-- Custom Model ID --" : "-- 自定义模型 ID (Custom) --" }
         ];
         dom.apiBaseUrlContainer.classList.remove("hidden");
-        dom.apiKeyLabel.textContent = "OpenAI API Key (密钥)";
-        dom.apiConfigTip.textContent = "请填入您的 OpenAI API 密钥。支持自定义中转接口 Base URL（支持各大中转代理平台）。";
+        dom.apiKeyLabel.textContent = useEnOrZh("OpenAI API Key (密钥)", "OpenAI API Key");
+        dom.apiConfigTip.textContent = useEnOrZh(
+            "请填入您的 OpenAI API 密钥。支持自定义中转接口 Base URL（支持各大中转代理平台）。",
+            "Please enter your OpenAI API Key. Custom Base URL is supported (useful for third-party proxies)."
+        );
     } else if (provider === "claude") {
         presets = [
-            { value: "claude-opus-4-8", text: "Claude Opus 4.8 (最新 2026 终极智能旗舰)" },
-            { value: "claude-sonnet-4-6", text: "Claude Sonnet 4.6 (高速度与深度推理平衡模范)" },
-            { value: "custom", text: "-- 自定义模型 ID (Custom) --" }
+            { value: "claude-opus-4-8", text: useEnglish ? "Claude Opus 4.8" : "Claude Opus 4.8 (最新 2026 终极智能旗舰)" },
+            { value: "claude-sonnet-4-6", text: useEnglish ? "Claude Sonnet 4.6" : "Claude Sonnet 4.6 (高速度与深度推理平衡模范)" },
+            { value: "custom", text: useEnglish ? "-- Custom Model ID --" : "-- 自定义模型 ID (Custom) --" }
         ];
         dom.apiBaseUrlContainer.classList.remove("hidden");
-        dom.apiKeyLabel.textContent = "Anthropic API Key / 代理密钥";
-        dom.apiConfigTip.textContent = "支持原生 Claude 密钥（直连需要本地开发或翻墙），以及各类 OpenAI 格式中转代理密钥（修改 Base URL 即可）。";
+        dom.apiKeyLabel.textContent = useEnOrZh("Anthropic API Key / 代理密钥", "Anthropic API Key");
+        dom.apiConfigTip.textContent = useEnOrZh(
+            "支持原生 Claude 密钥（直连需要本地开发或翻墙），以及各类 OpenAI 格式中转代理密钥（修改 Base URL 即可）。",
+            "Supports native Claude keys (needs local routing) and various OpenAI format proxy keys (just change Base URL)."
+        );
     } else if (provider === "deepseek") {
         presets = [
-            { value: "deepseek-v4-pro", text: "DeepSeek V4 Pro (最新 2026 深度思考旗舰)" },
-            { value: "deepseek-v4-flash", text: "DeepSeek V4 Flash (最新 2026 极速旗舰)" },
-            { value: "custom", text: "-- 自定义模型 ID (Custom) --" }
+            { value: "deepseek-v4-pro", text: useEnglish ? "DeepSeek V4 Pro" : "DeepSeek V4 Pro (最新 2026 深度思考旗舰)" },
+            { value: "deepseek-v4-flash", text: useEnglish ? "DeepSeek V4 Flash" : "DeepSeek V4 Flash (最新 2026 极速旗舰)" },
+            { value: "custom", text: useEnglish ? "-- Custom Model ID --" : "-- 自定义模型 ID (Custom) --" }
         ];
         dom.apiBaseUrlContainer.classList.remove("hidden");
-        dom.apiKeyLabel.textContent = "DeepSeek API Key (密钥)";
-        dom.apiConfigTip.textContent = "支持 DeepSeek 官方密钥（基地址为 https://api.deepseek.com/v1）或各大厂商兼容中转密钥。";
+        dom.apiKeyLabel.textContent = useEnOrZh("DeepSeek API Key (密钥)", "DeepSeek API Key");
+        dom.apiConfigTip.textContent = useEnOrZh(
+            "支持 DeepSeek 官方密钥（基地址为 https://api.deepseek.com/v1）或各大厂商兼容中转密钥。",
+            "Supports DeepSeek official keys (Base URL: https://api.deepseek.com/v1) or compatible reseller API keys."
+        );
     } else if (provider === "qwen") {
         presets = [
-            { value: "qwen3.7-max", text: "通义千问 Qwen 3.7 Max (最新 2026 商业旗舰)" },
-            { value: "custom", text: "-- 自定义模型 ID (Custom) --" }
+            { value: "qwen3.7-max", text: useEnglish ? "Qwen 3.7 Max" : "通义千问 Qwen 3.7 Max (最新 2026 商业旗舰)" },
+            { value: "custom", text: useEnglish ? "-- Custom Model ID --" : "-- 自定义模型 ID (Custom) --" }
         ];
         dom.apiBaseUrlContainer.classList.remove("hidden");
-        dom.apiKeyLabel.textContent = "阿里通义 API Key (密钥)";
-        dom.apiConfigTip.textContent = "支持阿里云 DashScope 密钥（基地址为 https://dashscope.aliyuncs.com/compatible-mode/v1）及其代理密钥。";
+        dom.apiKeyLabel.textContent = useEnOrZh("阿里通义 API Key (密钥)", "Alibaba DashScope Key");
+        dom.apiConfigTip.textContent = useEnOrZh(
+            "支持阿里云 DashScope 密钥（基地址为 https://dashscope.aliyuncs.com/compatible-mode/v1）及其代理密钥。",
+            "Supports Alibaba DashScope compatible keys (Base URL: https://dashscope.aliyuncs.com/compatible-mode/v1) and their proxies."
+        );
     } else if (provider === "zhipu") {
         presets = [
-            { value: "glm-5.1", text: "GLM-5.1 Flagship (最新 2026 本土最强 MoE 旗舰)" },
-            { value: "custom", text: "-- 自定义模型 ID (Custom) --" }
+            { value: "glm-5.1", text: useEnglish ? "GLM-5.1 Flagship" : "GLM-5.1 Flagship (最新 2026 本土最强 MoE 旗舰)" },
+            { value: "custom", text: useEnglish ? "-- Custom Model ID --" : "-- 自定义模型 ID (Custom) --" }
         ];
         dom.apiBaseUrlContainer.classList.remove("hidden");
-        dom.apiKeyLabel.textContent = "智谱 GLM API Key (密钥)";
-        dom.apiConfigTip.textContent = "支持智谱开放平台 API 密钥（基地址为 https://open.bigmodel.cn/api/paas/v4/）。";
+        dom.apiKeyLabel.textContent = useEnOrZh("智谱 GLM API Key (密钥)", "Zhipu GLM API Key");
+        dom.apiConfigTip.textContent = useEnOrZh(
+            "支持智谱开放平台 API 密钥（基地址为 https://open.bigmodel.cn/api/paas/v4/）。",
+            "Supports Zhipu open platform keys (Base URL: https://open.bigmodel.cn/api/paas/v4/)."
+        );
     } else if (provider === "doubao") {
         presets = [
-            { value: "doubao-seed-2-0-pro-260215", text: "Doubao Seed 2.0 Pro (最新 2026 字节旗舰)" },
-            { value: "custom", text: "-- 自定义模型 ID (Custom) --" }
+            { value: "doubao-seed-2-0-pro-260215", text: useEnglish ? "Doubao Seed 2.0 Pro" : "Doubao Seed 2.0 Pro (最新 2026 字节旗舰)" },
+            { value: "custom", text: useEnglish ? "-- Custom Model ID --" : "-- 自定义模型 ID (Custom) --" }
         ];
         dom.apiBaseUrlContainer.classList.remove("hidden");
-        dom.apiKeyLabel.textContent = "火山引擎 API Key (密钥)";
-        dom.apiConfigTip.textContent = "支持火山引擎大模型服务平台 API 密钥（基地址为 https://ark.cn-beijing.volces.com/api/v3）。";
+        dom.apiKeyLabel.textContent = useEnOrZh("火山引擎 API Key (密钥)", "Volcengine API Key");
+        dom.apiConfigTip.textContent = useEnOrZh(
+            "支持火山引擎大模型服务平台 API 密钥（基地址为 https://ark.cn-beijing.volces.com/api/v3）。",
+            "Supports ByteDance Volcengine ARK API keys (Base URL: https://ark.cn-beijing.volces.com/api/v3)."
+        );
     } else if (provider === "kimi") {
         presets = [
-            { value: "kimi-k2.6", text: "Kimi K2.6 (最新 2026 Agent Swarm 深度推理)" },
-            { value: "custom", text: "-- 自定义模型 ID (Custom) --" }
+            { value: "kimi-k2.6", text: useEnglish ? "Kimi K2.6" : "Kimi K2.6 (最新 2026 Agent Swarm 深度推理)" },
+            { value: "custom", text: useEnglish ? "-- Custom Model ID --" : "-- 自定义模型 ID (Custom) --" }
         ];
         dom.apiBaseUrlContainer.classList.remove("hidden");
-        dom.apiKeyLabel.textContent = "月之暗面 Kimi API Key";
-        dom.apiConfigTip.textContent = "支持月之暗面开放平台 API 密钥（基地址为 https://api.moonshot.cn/v1）。";
+        dom.apiKeyLabel.textContent = useEnOrZh("月之暗面 Kimi API Key", "Moonshot Kimi API Key");
+        dom.apiConfigTip.textContent = useEnOrZh(
+            "支持月之暗面开放平台 API 密钥（基地址为 https://api.moonshot.cn/v1）。",
+            "Supports Moonshot Kimi open platform keys (Base URL: https://api.moonshot.cn/v1)."
+        );
     } else if (provider === "baidu") {
         presets = [
-            { value: "ernie-5.1", text: "ERNIE 5.1 (最新 2026 百度中文搜索推理旗舰)" },
-            { value: "custom", text: "-- 自定义模型 ID (Custom) --" }
+            { value: "ernie-5.1", text: useEnglish ? "ERNIE 5.1" : "ERNIE 5.1 (最新 2026 百度中文搜索推理旗舰)" },
+            { value: "custom", text: useEnglish ? "-- Custom Model ID --" : "-- 自定义模型 ID (Custom) --" }
         ];
         dom.apiBaseUrlContainer.classList.remove("hidden");
-        dom.apiKeyLabel.textContent = "百度 API Key (AccessToken)";
-        dom.apiConfigTip.textContent = "支持百度文心千帆/AI Studio 开放平台 API 密钥（基地址为 https://aistudio.baidu.com/llm/lmapi/v3）。";
+        dom.apiKeyLabel.textContent = useEnOrZh("百度 API Key (AccessToken)", "Baidu Qianfan AccessToken");
+        dom.apiConfigTip.textContent = useEnOrZh(
+            "支持百度文心千帆/AI Studio 开放平台 API 密钥（基地址为 https://aistudio.baidu.com/llm/lmapi/v3）。",
+            "Supports Baidu Qianfan / AI Studio open platform keys (Base URL: https://aistudio.baidu.com/llm/lmapi/v3)."
+        );
     } else { // custom / others
         presets = [
-            { value: "custom", text: "-- 自定义模型 ID (Custom) --" }
+            { value: "custom", text: useEnglish ? "-- Custom Model ID --" : "-- 自定义模型 ID (Custom) --" }
         ];
         dom.apiBaseUrlContainer.classList.remove("hidden");
-        dom.apiKeyLabel.textContent = "API Key / 接口密钥";
-        dom.apiConfigTip.textContent = "用于对接各类未列出的模型网关协议、SiliconFlow 代理、本地 Ollama 离线部署等。";
+        dom.apiKeyLabel.textContent = useEnOrZh("API Key / 接口密钥", "API Key");
+        dom.apiConfigTip.textContent = useEnOrZh(
+            "用于对接各类未列出的模型网关协议、SiliconFlow 代理、本地 Ollama 离线部署等。",
+            "Used for other custom model integrations, SiliconFlow gateway, local Ollama endpoints, etc."
+        );
     }
     
     presets.forEach(preset => {
@@ -551,38 +954,41 @@ function updateApiModelOptions() {
     }
 }
 
+// Global helper for simple lang selector
+function useEnOrZh(zh, en) {
+    return gameState.lang === "en" ? en : zh;
+}
+
 // --- 动态填充并渲染剧本板子角色对照表 ---
 function populateScriptPreview() {
     const selectedScriptKey = dom.scriptSelect ? dom.scriptSelect.value : "wushang";
-    const script = SCRIPTS_DATA[selectedScriptKey] || SCRIPTS_DATA.wushang;
+    const useEnglish = gameState.lang === "en";
+    const script = useEnglish ? SCRIPTS_DATA_EN[selectedScriptKey] : SCRIPTS_DATA[selectedScriptKey];
     
     // 动态更新弹窗标题
     const previewTitle = document.querySelector("#scriptPreviewModal h4");
     if (previewTitle) {
-        previewTitle.textContent = `《${script.name}》剧本角色对照表`;
+        previewTitle.textContent = useEnglish 
+            ? `《${script.name}》Character Sheet`
+            : `《${script.name}》剧本角色对照表`;
     }
 
     // 动态更新分类下方的数量提示
-    const containerHeaderGood = document.getElementById("previewTownsfolkContainer") ? document.getElementById("previewTownsfolkContainer").previousElementSibling : null;
-    if (containerHeaderGood && containerHeaderGood.tagName === "H5") {
-        const countText = containerHeaderGood.querySelector("span:last-child");
-        if (countText) countText.textContent = `共 ${script.townsfolk.length} 个`;
-    }
-    const containerHeaderOutsider = document.getElementById("previewOutsidersContainer") ? document.getElementById("previewOutsidersContainer").previousElementSibling : null;
-    if (containerHeaderOutsider && containerHeaderOutsider.tagName === "H5") {
-        const countText = containerHeaderOutsider.querySelector("span:last-child");
-        if (countText) countText.textContent = `共 ${script.outsider.length} 个`;
-    }
-    const containerHeaderMinion = document.getElementById("previewMinionsContainer") ? document.getElementById("previewMinionsContainer").previousElementSibling : null;
-    if (containerHeaderMinion && containerHeaderMinion.tagName === "H5") {
-        const countText = containerHeaderMinion.querySelector("span:last-child");
-        if (countText) countText.textContent = `共 ${script.minion.length} 个`;
-    }
-    const containerHeaderDemon = document.getElementById("previewDemonsContainer") ? document.getElementById("previewDemonsContainer").previousElementSibling : null;
-    if (containerHeaderDemon && containerHeaderDemon.tagName === "H5") {
-        const countText = containerHeaderDemon.querySelector("span:last-child");
-        if (countText) countText.textContent = `共 ${script.demon.length} 个`;
-    }
+    const updateHeader = (containerId, textZh, textEn, count) => {
+        const container = document.getElementById(containerId);
+        const header = container ? container.previousElementSibling : null;
+        if (header && header.tagName === "H5") {
+            const titleSpan = header.querySelector("span:first-child");
+            if (titleSpan) titleSpan.textContent = useEnglish ? textEn : textZh;
+            const countText = header.querySelector("span:last-child");
+            if (countText) countText.textContent = useEnglish ? `${count} Total` : `共 ${count} 个`;
+        }
+    };
+    
+    updateHeader("previewTownsfolkContainer", "村民角色 (Townsfolk)", "Townsfolk", script.townsfolk.length);
+    updateHeader("previewOutsidersContainer", "外来者角色 (Outsiders)", "Outsiders", script.outsider.length);
+    updateHeader("previewMinionsContainer", "爪牙角色 (Minions)", "Minions", script.minion.length);
+    updateHeader("previewDemonsContainer", "恶魔角色 (Demons)", "Demons", script.demon.length);
     
     const renderCards = (roles, containerId, borderThemeClass) => {
         const container = document.getElementById(containerId);
@@ -590,7 +996,9 @@ function populateScriptPreview() {
         container.innerHTML = "";
         
         roles.forEach(role => {
-            const desc = (CHARACTER_DETAILS[selectedScriptKey] && CHARACTER_DETAILS[selectedScriptKey][role]) || "暂无能力详细描述。";
+            const desc = useEnglish
+                ? ((CHARACTER_DETAILS_EN[selectedScriptKey] && CHARACTER_DETAILS_EN[selectedScriptKey][role]) || "No description available.")
+                : ((CHARACTER_DETAILS[selectedScriptKey] && CHARACTER_DETAILS[selectedScriptKey][role]) || "暂无能力详细描述。");
             const card = document.createElement("div");
             card.className = `preview-character-card glass ${borderThemeClass}`;
             card.style.padding = "10px 12px";
@@ -653,15 +1061,27 @@ function initGame() {
     }
 
     // 重置日志流水志
-    gameState.logs = [
-        `对局初始化：${gameState.playerCount} 人本，板子《${SCRIPTS_DATA[gameState.scriptName].name}》。`,
-        `我的位置是 <strong>${gameState.mySeat} 号</strong>，角色是 <strong>${gameState.myRole}</strong> (${gameState.myAlignment === "good" ? "善良阵营" : "邪恶阵营"})。`
-    ];
-
-    // 如果是邪恶阵营，追加伪装记录
-    if (gameState.myAlignment === "evil") {
-        const bluffsText = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.join('、') : "未填报";
-        gameState.logs.push(`说书人给的 3 个好人伪装身份：<strong>${bluffsText}</strong>。`);
+    if (gameState.lang === "en") {
+        const scriptNameEn = SCRIPTS_DATA_EN[gameState.scriptName]?.name || gameState.scriptName;
+        const myRoleEn = ROLE_TRANSLATIONS[gameState.myRole] || gameState.myRole;
+        const myAlignEn = gameState.myAlignment === "good" ? "Good Team" : "Evil Team";
+        gameState.logs = [
+            `Game initialized: ${gameState.playerCount}-player game, Script: "${scriptNameEn}".`,
+            `My seat is <strong>Seat ${gameState.mySeat}</strong>, Role: <strong>${myRoleEn}</strong> (${myAlignEn}).`
+        ];
+        if (gameState.myAlignment === "evil") {
+            const bluffsText = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.map(b => ROLE_TRANSLATIONS[b] || b).join(', ') : "None declared";
+            gameState.logs.push(`3 Demon Bluffs given by Storyteller: <strong>${bluffsText}</strong>.`);
+        }
+    } else {
+        gameState.logs = [
+            `对局初始化：${gameState.playerCount} 人本，板子《${SCRIPTS_DATA[gameState.scriptName].name}》。`,
+            `我的位置是 <strong>${gameState.mySeat} 号</strong>，角色是 <strong>${gameState.myRole}</strong> (${gameState.myAlignment === "good" ? "善良阵营" : "邪恶阵营"})。`
+        ];
+        if (gameState.myAlignment === "evil") {
+            const bluffsText = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.join('、') : "未填报";
+            gameState.logs.push(`说书人给的 3 个好人伪装身份：<strong>${bluffsText}</strong>。`);
+        }
     }
 
     // 更新界面
@@ -716,8 +1136,9 @@ function renderSeatingChart() {
 
     // 动态更新圆桌中心的剧本背景水印与高贵霓虹呼吸灯效果
     if (dom.seatingChartWatermark) {
-        const currentScript = SCRIPTS_DATA[gameState.scriptName];
-        dom.seatingChartWatermark.textContent = currentScript.name;
+        const useEnglish = gameState.lang === "en";
+        const currentScript = useEnglish ? SCRIPTS_DATA_EN[gameState.scriptName] : SCRIPTS_DATA[gameState.scriptName];
+        dom.seatingChartWatermark.textContent = currentScript?.name || "";
         
         if (gameState.scriptName === "wushang" || gameState.scriptName === "mengyun") {
             dom.seatingChartWatermark.style.color = "rgba(255, 51, 102, 0.15)";
@@ -764,8 +1185,8 @@ function renderSeatingChart() {
         node.innerHTML = `
             <div class="seat-node-circle">
                 <span class="seat-node-num">${player.seat}</span>
-                <span class="seat-node-name">${player.name === "我" ? "我" : player.name}</span>
-                ${player.claim !== "未知" ? `<span class="seat-node-role">${player.claim}</span>` : ""}
+                <span class="seat-node-name">${(player.name === "我" || player.name === "Me") ? (gameState.lang === "en" ? "Me" : "我") : player.name}</span>
+                ${player.claim !== "未知" ? `<span class="seat-node-role">${getLocalizedRole(player.claim)}</span>` : ""}
             </div>
         `;
 
@@ -828,8 +1249,8 @@ function renderPlayerList() {
         row.innerHTML = `
             <div class="player-info-meta">
                 <span class="seat-badge">${player.seat}</span>
-                <span class="player-name-text">${player.name}</span>
-                <span class="player-claim-badge">${player.claim}</span>
+                <span class="player-name-text">${(player.name === "我" || player.name === "Me") ? (gameState.lang === "en" ? "Me" : "我") : player.name}</span>
+                <span class="player-claim-badge">${getLocalizedClaim(player.claim)}</span>
             </div>
             <div class="player-actions-toggles">
                 <label class="toggle-switch" title="存活/死亡">
@@ -866,13 +1287,17 @@ function renderPlayerList() {
 // --- 渲染局势流向日志 ---
 function renderTimelineLogs() {
     dom.timelineLogsContainer.innerHTML = "";
-    dom.logCountText.textContent = `共 ${gameState.logs.length} 条信息`;
+    
+    const isEn = gameState.lang === "en";
+    dom.logCountText.textContent = isEn 
+        ? `${gameState.logs.length} Log Entries` 
+        : `共 ${gameState.logs.length} 条信息`;
 
     if (gameState.logs.length === 0) {
         dom.timelineLogsContainer.innerHTML = `
             <div class="empty-state">
                 <i data-lucide="clipboard-list" class="empty-icon"></i>
-                <p>暂无游戏记录，在右侧控制台输入第一条局势变动吧</p>
+                <p>${isEn ? "No game logs yet. Enter the first turn event or whisper in the console on the right." : "暂无游戏记录，在右侧控制台输入第一条局势变动吧"}</p>
             </div>
         `;
         lucide.createIcons();
@@ -883,16 +1308,18 @@ function renderTimelineLogs() {
         const item = document.createElement("div");
         item.className = "log-item";
         
+        let displayLog = getLocalizedLog(log, gameState.lang);
+
         // 简单着色
-        if (log.includes("邪恶") || log.includes("死亡") || log.includes("处决")) {
+        if (log.includes("邪恶") || log.includes("死亡") || log.includes("处决") || log.includes("❌") || log.includes("Dead") || log.includes("Evil") || log.includes("poisoned") || log.includes("Poisoned")) {
             item.classList.add("evil");
-        } else if (log.includes("善良") || log.includes("共情者") || log.includes("初始化")) {
+        } else if (log.includes("善良") || log.includes("共情者") || log.includes("初始化") || log.includes("Good") || log.includes("initialized") || log.includes("Empath")) {
             item.classList.add("good");
         } else {
             item.classList.add("system");
         }
 
-        item.innerHTML = `[事件 ${index + 1}] ${log}`;
+        item.innerHTML = isEn ? `[Event ${index + 1}] ${displayLog}` : `[事件 ${index + 1}] ${displayLog}`;
         dom.timelineLogsContainer.appendChild(item);
     });
     
@@ -905,7 +1332,11 @@ function togglePlayerAlive(seat, isAlive) {
     const player = gameState.players.find(p => p.seat === seat);
     if (player) {
         player.alive = isAlive;
-        gameState.logs.push(`<strong>${player.name}</strong> 状态更新为：${isAlive ? '存活' : '❌ 死亡'}`);
+        if (gameState.lang === "en") {
+            gameState.logs.push(`<strong>${player.name}</strong> status updated to: ${isAlive ? 'Alive' : '❌ Dead'}`);
+        } else {
+            gameState.logs.push(`<strong>${player.name}</strong> 状态更新为：${isAlive ? '存活' : '❌ 死亡'}`);
+        }
         renderSeatingChart();
         renderPlayerList();
         renderTimelineLogs();
@@ -917,7 +1348,11 @@ function togglePlayerPoison(seat, isPoisoned) {
     const player = gameState.players.find(p => p.seat === seat);
     if (player) {
         player.poisoned = isPoisoned;
-        gameState.logs.push(`<strong>${player.name}</strong> 标记为：${isPoisoned ? '🟣 中毒/醉酒状态' : '已恢复健康状态'}`);
+        if (gameState.lang === "en") {
+            gameState.logs.push(`<strong>${player.name}</strong> marked as: ${isPoisoned ? '🟣 Drunk/Poisoned' : 'Healthy'}`);
+        } else {
+            gameState.logs.push(`<strong>${player.name}</strong> 标记为：${isPoisoned ? '🟣 中毒/醉酒状态' : '已恢复健康状态'}`);
+        }
         renderSeatingChart();
         renderPlayerList();
         renderTimelineLogs();
@@ -931,7 +1366,11 @@ function openPopover(seat) {
     const player = gameState.players.find(p => p.seat === seat);
     if (!player) return;
 
-    dom.popoverPlayerTitle.textContent = `${player.name === "我" ? "我 (自己)" : player.name} 状态编辑`;
+    const isMe = (player.name === "我" || player.name === "Me");
+    const nameText = isMe ? (gameState.lang === "en" ? "Me (Self)" : "我 (自己)") : player.name;
+    const titleSuffix = TRANSLATIONS[gameState.lang]?.popoverPlayerTitleSuffix || "状态编辑";
+    dom.popoverPlayerTitle.textContent = `${nameText} ${titleSuffix}`;
+    
     dom.popoverRoleSelect.value = player.claim;
     dom.popoverAliveCheckbox.checked = player.alive;
     dom.popoverAlignmentSelect.value = player.alignment;
@@ -970,14 +1409,29 @@ function savePopoverData() {
 
     // 记录日志变化
     let changes = [];
-    if (oldClaim !== newClaim) changes.push(`宣称变更为 <strong>${newClaim}</strong>`);
-    if (oldAlive !== newAlive) changes.push(`生命状态变更为 <strong>${newAlive ? '存活' : '死亡'}</strong>`);
-    if (oldAlignment !== newAlignment) changes.push(`推测阵营变更为 <strong>${newAlignment === 'good' ? '善良' : newAlignment === 'evil' ? '邪恶' : '未知'}</strong>`);
-    if (oldPoison !== newPoison) changes.push(`状态标记为 <strong>${newPoison ? '中毒/醉酒' : '正常'}</strong>`);
-    if (newNote && newNote !== player.note) changes.push(`备注："${newNote}"`);
-
-    if (changes.length > 0) {
-        gameState.logs.push(`手动更新了 <strong>${player.name}</strong> 的状态：${changes.join('，')}`);
+    if (gameState.lang === "en") {
+        if (oldClaim !== newClaim) changes.push(`Claim updated to <strong>${ROLE_TRANSLATIONS[newClaim] || newClaim}</strong>`);
+        if (oldAlive !== newAlive) changes.push(`Life status changed to <strong>${newAlive ? 'Alive' : 'Dead'}</strong>`);
+        if (oldAlignment !== newAlignment) {
+            const alignMap = { "good": "Good", "evil": "Evil", "unknown": "Unknown" };
+            changes.push(`Suspected alignment changed to <strong>${alignMap[newAlignment] || newAlignment}</strong>`);
+        }
+        if (oldPoison !== newPoison) changes.push(`Status marked as <strong>${newPoison ? 'Drunk/Poisoned' : 'Normal'}</strong>`);
+        if (newNote && newNote !== player.note) changes.push(`Notes: "${newNote}"`);
+        
+        if (changes.length > 0) {
+            gameState.logs.push(`Manually updated <strong>${player.name}</strong> status: ${changes.join(', ')}`);
+        }
+    } else {
+        if (oldClaim !== newClaim) changes.push(`宣称变更为 <strong>${newClaim}</strong>`);
+        if (oldAlive !== newAlive) changes.push(`生命状态变更为 <strong>${newAlive ? '存活' : '死亡'}</strong>`);
+        if (oldAlignment !== newAlignment) changes.push(`推测阵营变更为 <strong>${newAlignment === 'good' ? '善良' : newAlignment === 'evil' ? '邪恶' : '未知'}</strong>`);
+        if (oldPoison !== newPoison) changes.push(`状态标记为 <strong>${newPoison ? '中毒/醉酒' : '正常'}</strong>`);
+        if (newNote && newNote !== player.note) changes.push(`备注："${newNote}"`);
+        
+        if (changes.length > 0) {
+            gameState.logs.push(`手动更新了 <strong>${player.name}</strong> 的状态：${changes.join('，')}`);
+        }
     }
 
     closePopover();
@@ -1156,7 +1610,8 @@ function registerEventListeners() {
     
     // 重置所有玩家
     dom.resetPlayersBtn.addEventListener("click", () => {
-        if (confirm("确定要重置当前对局所有玩家的状态吗？（日志和本地缓存也会被重置）")) {
+        const confirmMsg = TRANSLATIONS[gameState.lang]?.confirmReset || "确定要重置当前对局所有玩家的状态吗？（日志和本地缓存也会被重置）";
+        if (confirm(confirmMsg)) {
             localStorage.removeItem("botc_game_state");
             initGame();
         }
@@ -1198,7 +1653,8 @@ function registerEventListeners() {
 
     // 语音输入说明提示
     dom.voiceInputBtn.addEventListener("click", () => {
-        alert("语音输入支持：\n你可以使用操作系统自带的语音听写功能（Mac 快捷键：双击 Fn 或按 F5）在输入框内直接输入文字，随后点击发送分析即可！");
+        const voiceHelpMsg = TRANSLATIONS[gameState.lang]?.voiceInputHelp || "语音输入支持：\n你可以使用操作系统自带的语音听写功能（Mac 快捷键：双击 Fn 或按 F5）在输入框内直接输入文字，随后点击发送分析即可！";
+        alert(voiceHelpMsg);
     });
 
     // 手动恢复上次对局
@@ -1253,12 +1709,14 @@ async function handleAiAnalysis() {
     if (!navigator.onLine) {
         console.log("🚨 [DEBUG] 检测到处于离线状态！数据暂存。");
         if (rawText) {
-            gameState.logs.push(`白天进展陈述(暂存)："${rawText}"`);
+            const tempLog = gameState.lang === "en" ? `Day progress updates (cached): "${rawText}"` : `白天进展陈述(暂存)："${rawText}"`;
+            gameState.logs.push(tempLog);
             renderTimelineLogs();
             dom.consoleInput.value = "";
         }
         saveToLocalStorage();
-        alert("检测到您目前处于离线状态！已为您将当前白天局势安全保存在本地。等您重新连接网络后，直接点击【发送给AI分析局势】即可恢复网络并发送线上演练。");
+        const offlineAlertMsg = TRANSLATIONS[gameState.lang]?.offlineAlert || "检测到您目前处于离线状态！已为您将当前白天局势安全保存在本地。等您重新连接网络后，直接点击【发送给AI分析局势】即可恢复网络并发送线上演练。";
+        alert(offlineAlertMsg);
         resetAnalysisBoxes();
         return;
     }
@@ -1268,7 +1726,8 @@ async function handleAiAnalysis() {
     
     if (!apiKey && !isLocalhost) {
         console.log("🚨 [DEBUG] 缺失 API Key，拦截。");
-        alert("请输入有效的 API Key 以启用分析！");
+        const missingKeyMsg = TRANSLATIONS[gameState.lang]?.apiKeyMissingAlert || "请输入有效的 API Key 以启用分析！";
+        alert(missingKeyMsg);
         const apiKeyDetails = document.getElementById("apiKeyDetails");
         if (apiKeyDetails) apiKeyDetails.open = true;
         dom.apiKeyInput.focus();
@@ -1542,7 +2001,8 @@ function constructGeminiPrompt(consoleText) {
             const statusStr = p.alive ? 'Alive' : '❌ Dead';
             const poisonStr = p.poisoned ? 'Yes' : 'No';
             const alignmentStr = p.alignment === 'good' ? 'Good' : (p.alignment === 'evil' ? 'Evil' : 'Unknown');
-            return `- [Seat ${p.seat}] Name: ${p.name}, Status: ${statusStr}, Claimed Character: ${p.claim || 'None'}, Suspected Alignment: ${alignmentStr}, Drunk/Poisoned: ${poisonStr}, Notes: ${p.note || 'None'}`;
+            const roleNameEn = p.claim === '未知' ? 'Unknown' : (ROLE_TRANSLATIONS[p.claim] || p.claim);
+            return `- [Seat ${p.seat}] Name: ${p.name}, Status: ${statusStr}, Claimed Character: ${roleNameEn}, Suspected Alignment: ${alignmentStr}, Drunk/Poisoned: ${poisonStr}, Notes: ${p.note || 'None'}`;
         }).join('\n');
     } else {
         playerStatuses = gameState.players.map(p => {
@@ -1553,27 +2013,28 @@ function constructGeminiPrompt(consoleText) {
     // 日志信息描述
     let gameLogs = "";
     if (gameState.lang === "en") {
-        gameLogs = gameState.logs.map((log, idx) => `[Event ${idx+1}] ${log}`).join('\n');
+        gameLogs = gameState.logs.map((log, idx) => `[Event ${idx+1}] ${getLocalizedLog(log, "en")}`).join('\n');
     } else {
-        gameLogs = gameState.logs.map((log, idx) => `[第 ${idx+1} 条事件] ${log}`).join('\n');
+        gameLogs = gameState.logs.map((log, idx) => `[第 ${idx+1} 条事件] ${getLocalizedLog(log, "zh")}`).join('\n');
     }
 
     let systemRolePrompt = "";
     let setupPrompt = "";
     if (gameState.lang === "en") {
+        const myRoleEn = ROLE_TRANSLATIONS[gameState.myRole] || gameState.myRole;
         if (gameState.myAlignment === "evil") {
-            const bluffsStr = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.join(', ') : "None declared";
-            systemRolePrompt = `You are an extremely experienced Blood on the Clocktower logician and strategic mastermind. You are acting as the "AI Tactical Copilot" for Player ${gameState.mySeat} (real role: ${gameState.myRole}, alignment: Evil).
+            const bluffsStr = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.map(b => ROLE_TRANSLATIONS[b] || b).join(', ') : "None declared";
+            systemRolePrompt = `You are an extremely experienced Blood on the Clocktower logician and strategic mastermind. You are acting as the "AI Tactical Copilot" for Player ${gameState.mySeat} (real role: ${myRoleEn}, alignment: Evil).
 The Storyteller gave you 3 Demon Bluffs (roles definitely NOT in play): [${bluffsStr}].
 Please analyze the game from the absolute perspective of the Evil team (Demons and Minions):
 - Guide them on how to claim and utilize these 3 Bluffs to cooperate with Evil teammates.
 - Suggest strategic options for framing Good players, validating Evil teammates, and fabricating false information!
 - Deduce which claims from Good players are real, and highlight logical contradictions to exploit.`;
-            setupPrompt = `- My Real Role: ${gameState.myRole} (Evil Team)\n- 3 Demon Bluffs from Storyteller: ${bluffsStr}`;
+            setupPrompt = `- My Real Role: ${myRoleEn} (Evil Team)\n- 3 Demon Bluffs from Storyteller: ${bluffsStr}`;
         } else {
-            systemRolePrompt = `You are an extremely experienced Blood on the Clocktower logician and strategic mastermind. You are acting as the "AI Tactical Copilot" for Player ${gameState.mySeat} (real role: ${gameState.myRole}, alignment: Good).
+            systemRolePrompt = `You are an extremely experienced Blood on the Clocktower logician and strategic mastermind. You are acting as the "AI Tactical Copilot" for Player ${gameState.mySeat} (real role: ${myRoleEn}, alignment: Good).
 Please analyze the game from the absolute perspective of the Good team, helping them spot logical contradictions, identify deceitful claims, and locate the hidden Demon and Minions.`;
-            setupPrompt = `- My Real Role: ${gameState.myRole} (Good Team)`;
+            setupPrompt = `- My Real Role: ${myRoleEn} (Good Team)`;
         }
     } else {
         if (gameState.myAlignment === "evil") {
@@ -2001,6 +2462,9 @@ function setLanguage(lang) {
         dom.langToggleText.textContent = lang === "zh" ? "English" : "简体中文";
     }
     
+    // 动态翻译下拉菜单 (Translate dynamic dropdown select lists)
+    translateDropdowns(lang);
+    
     // 更新所有带有 data-i18n 的静态文本节点 (Process all elements with data-i18n)
     const elements = document.querySelectorAll("[data-i18n]");
     elements.forEach(el => {
@@ -2027,6 +2491,9 @@ function setLanguage(lang) {
             el.title = TRANSLATIONS[lang][key];
         }
     });
+    
+    // 重新填充当前角色的选择框
+    updateMyRoleOptions();
     
     // 如果对局已初始化，同步更新动态生成的玩家列表与日志状态 (Sync dynamic data views)
     if (gameState.players && gameState.players.length > 0) {
@@ -2055,4 +2522,55 @@ function setLanguage(lang) {
     
     // 自动刷新保存缓存
     saveToLocalStorage();
+}
+
+function translateDropdowns(lang) {
+    const isEn = lang === "en";
+    
+    // 1. Player Count Dropdown options
+    if (dom.playerCountSelect) {
+        const select = dom.playerCountSelect;
+        Array.from(select.options).forEach(opt => {
+            const val = opt.value;
+            if (val === "7") opt.textContent = isEn ? "7 Players (5 Townsfolk / 1 Outsider / 1 Minion / 1 Demon)" : "7 人本 (5村民 / 1外来 / 1爪牙 / 1恶魔)";
+            else if (val === "8") opt.textContent = isEn ? "8 Players (5 Townsfolk / 1 Outsider / 1 Minion / 1 Demon) *Balloonist +1" : "8 人本 (5村民 / 1外来 / 1爪牙 / 1恶魔) *气球等+1";
+            else if (val === "9") opt.textContent = isEn ? "9 Players (5 Townsfolk / 2 Outsiders / 1 Minion / 1 Demon)" : "9 人本 (5村民 / 2外来 / 1爪牙 / 1恶魔)";
+            else if (val === "10") opt.textContent = isEn ? "10 Players (7 Townsfolk / 0 Outsiders / 2 Minions / 1 Demon)" : "10 人本 (7村民 / 0外来 / 2爪牙 / 1恶魔)";
+            else if (val === "11") opt.textContent = isEn ? "11 Players (7 Townsfolk / 1 Outsider / 2 Minions / 1 Demon)" : "11 人本 (7村民 / 1外来 / 2爪牙 / 1恶魔)";
+            else if (val === "12") opt.textContent = isEn ? "12 Players (7 Townsfolk / 2 Outsiders / 2 Minions / 1 Demon)" : "12 人本 (7村民 / 2外来 / 2爪牙 / 1恶魔)";
+            else if (val === "13") opt.textContent = isEn ? "13 Players (9 Townsfolk / 0 Outsiders / 3 Minions / 1 Demon)" : "13 人本 (9村民 / 0外来 / 3爪牙 / 1恶魔)";
+            else if (val === "14") opt.textContent = isEn ? "14 Players (9 Townsfolk / 1 Outsider / 3 Minions / 1 Demon)" : "14 人本 (9村民 / 1外来 / 3爪牙 / 1恶魔)";
+            else if (val === "15") opt.textContent = isEn ? "15 Players (9 Townsfolk / 2 Outsiders / 3 Minions / 1 Demon)" : "15 人本 (9村民 / 2外来 / 3爪牙 / 1恶魔)";
+        });
+    }
+
+    // 2. Script Select Dropdown options
+    if (dom.scriptSelect) {
+        const select = dom.scriptSelect;
+        Array.from(select.options).forEach(opt => {
+            const val = opt.value;
+            if (val === "wushang") opt.textContent = isEn ? "Supreme Slaughter (Custom High-Interaction Board)" : "无上杀戮 (自定义强交互板)";
+            else if (val === "anliu") opt.textContent = isEn ? "Trouble Brewing (Classic Novice Board)" : "暗流涌动 (经典新手板)";
+            else if (val === "mengyun") opt.textContent = isEn ? "Sects & Violets (Classic Advanced Board)" : "梦殒春宵 (经典进阶板)";
+            else if (val === "wafuleiming") opt.textContent = isEn ? "Laissez un Faire (Classic Advanced Board)" : "瓦釜雷鸣 (经典进阶板)";
+        });
+    }
+
+    // 3. API Provider options
+    if (dom.apiProviderSelect) {
+        const select = dom.apiProviderSelect;
+        Array.from(select.options).forEach(opt => {
+            const val = opt.value;
+            if (val === "gemini") opt.textContent = "Google Gemini";
+            else if (val === "chatgpt") opt.textContent = "OpenAI ChatGPT";
+            else if (val === "claude") opt.textContent = "Anthropic Claude";
+            else if (val === "deepseek") opt.textContent = "DeepSeek";
+            else if (val === "qwen") opt.textContent = isEn ? "Alibaba Qwen" : "阿里通义千问 (Qwen)";
+            else if (val === "zhipu") opt.textContent = isEn ? "Zhipu GLM" : "智谱清言 (GLM)";
+            else if (val === "doubao") opt.textContent = isEn ? "ByteDance Doubao" : "字节跳动火山引擎 (Doubao)";
+            else if (val === "kimi") opt.textContent = isEn ? "Moonshot Kimi" : "月之暗面 (Kimi)";
+            else if (val === "baidu") opt.textContent = isEn ? "Baidu ERNIE" : "百度文心一言 (ERNIE)";
+            else if (val === "custom") opt.textContent = isEn ? "Custom / OpenAI Compatible" : "自定义 / 其他兼容协议 (Custom)";
+        });
+    }
 }
