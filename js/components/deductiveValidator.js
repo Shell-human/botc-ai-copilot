@@ -4,7 +4,14 @@
 
 import { gameState } from '../state.js';
 import { GAME_DISTRIBUTIONS, SCRIPTS_DATA } from '../data/rules.js';
-import { getLocalizedRole } from '../i18n.js';
+import { ROLE_TRANSLATIONS } from '../data/translations.js';
+
+function getLocalizedRole(roleName) {
+    if (gameState.lang === "en") {
+        return ROLE_TRANSLATIONS[roleName] || roleName;
+    }
+    return roleName;
+}
 
 export function renderDeductiveValidator() {
     const card = document.getElementById("deductiveValidatorCard");
