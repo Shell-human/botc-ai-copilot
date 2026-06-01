@@ -42,6 +42,15 @@
         height: 620px !important;
     }
     
+    .map-panel {
+        height: 720px !important;
+    }
+    
+    .seating-chart-wrapper {
+        min-height: 280px !important;
+        max-height: 480px !important;
+    }
+    
     /* Input and Select Mobile touch enhancement */
     input[type="text"],
     input[type="password"],
@@ -95,10 +104,13 @@
         padding: 12px !important;
     }
     
-    /* Dynamically downscale the seating chart to fit small screens */
+    .map-panel {
+        height: 680px !important;
+    }
+    
     .seating-chart-wrapper {
-        transform: scale(0.60) !important;
-        transform-origin: center center !important;
+        min-height: 240px !important;
+        max-height: 440px !important;
     }
     
     /* Player list optimization to prevent overflows */
@@ -144,8 +156,13 @@
 }
 
 @media (max-width: 360px) {
+    .map-panel {
+        height: 620px !important;
+    }
+    
     .seating-chart-wrapper {
-        transform: scale(0.46) !important;
+        min-height: 200px !important;
+        max-height: 380px !important;
     }
     
     .player-name-text {
@@ -165,9 +182,7 @@
         padding: 10px 24px !important;
     }
     .seating-chart-wrapper {
-        transform: scale(0.63) !important;
-        transform-origin: center center !important;
-        transition: transform 0.3s ease !important;
+        max-height: 460px !important;
     }
     .validator-dashboard-container {
         margin: 10px 24px !important;
@@ -184,8 +199,7 @@
         padding: 6px 20px !important;
     }
     .seating-chart-wrapper {
-        transform: scale(0.58) !important;
-        transform-origin: center center !important;
+        max-height: 400px !important;
     }
     .validator-dashboard-container {
         margin: 8px 20px !important;
@@ -206,8 +220,7 @@
         padding: 4px 16px !important;
     }
     .seating-chart-wrapper {
-        transform: scale(0.51) !important;
-        transform-origin: center center !important;
+        max-height: 350px !important;
     }
     .validator-dashboard-container {
         margin: 6px 16px !important;
@@ -221,8 +234,7 @@
 
 @media (max-height: 650px) {
     .seating-chart-wrapper {
-        transform: scale(0.45) !important;
-        transform-origin: center center !important;
+        max-height: 300px !important;
     }
     .timeline-container {
         height: 90px !important;

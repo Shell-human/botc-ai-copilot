@@ -12,6 +12,7 @@ import { updateMyRoleOptions, updateApiModelOptions, setLanguage, useEnOrZh, upd
 import { resetChatBox } from './components/chatRenderer.js';
 import { showToast } from './utils.js';
 import { populateScriptPreview } from './components/scriptPreview.js';
+import { renderSeatingChart } from './components/seatingChart.js';
 import { TRANSLATIONS } from './data/translations.js';
 import { clearGameState, loadApiKey, saveApiKey } from './services/storage.js';
 import { renderDeductiveValidator } from './components/deductiveValidator.js';
@@ -21,6 +22,7 @@ export function initCoreEvents() {
     bindApiEvents();
     bindConsoleEvents();
     bindTabEvents();
+    bindResizeEvents();
 }
 
 /**
@@ -232,5 +234,18 @@ function bindTabEvents() {
             });
         });
     }
+}
+
+/**
+ * 监听窗口尺寸变化，动态重绘环形座位图以自适应各种高宽比及手机端布局
+ */
+function bindResizeEvents() {
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+        if (resizeTimer) clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            renderSeatingChart();
+        }, 150);
+    });
 }
 

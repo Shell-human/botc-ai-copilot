@@ -14,12 +14,49 @@ import { escapeHtml } from '../utils.js';
 // --- 渲染环形座位轨迹图 ---
 export function renderSeatingChart() {
     dom.seatingNodesContainer.innerHTML = "";
-    const width = 720;
-    const height = 520;
+    
+    // Get fluid client dimensions of the seating chart container
+    const wrapper = document.querySelector('.seating-chart-wrapper');
+    const width = wrapper ? (wrapper.clientWidth || 720) : 720;
+    const height = wrapper ? (wrapper.clientHeight || 520) : 520;
+    
     const centerX = width / 2;
     const centerY = height / 2;
-    const rx = 300; // 横向椭圆长半轴
-    const ry = 190; // 纵向椭圆短半轴
+    
+    // Calculate adaptive scale factor based on container dimensions
+    const refWidth = 720;
+    const refHeight = 480;
+    const scale = Math.min(1.0, Math.max(0.65, Math.min(width / refWidth, height / refHeight)));
+    
+    // Set dynamic CSS custom property for seat node scaling
+    const nodeSize = Math.round(92 * scale);
+    if (wrapper) {
+        wrapper.style.setProperty('--seat-node-size', `${nodeSize}px`);
+    }
+    
+    // Calculate adaptive margins based on the scaled node size to ensure no clipping
+    const paddingX = Math.round(Math.max(42, 56 * scale));
+    const paddingY = Math.round(Math.max(42, 56 * scale));
+    
+    let rx = Math.max(80, (width / 2) - paddingX);
+    let ry = Math.max(80, (height / 2) - paddingY);
+    
+    // Generous aspect ratio limits: dynamic vertical ellipse for mobile and stretched landscape for desktop
+    const maxLandscapeRatio = 2.3;
+    const maxPortraitRatio = 1.8;
+    
+    if (rx > ry * maxLandscapeRatio) {
+        rx = ry * maxLandscapeRatio;
+    } else if (ry > rx * maxPortraitRatio) {
+        ry = rx * maxPortraitRatio;
+    }
+    
+    // Calculate dynamic superellipse exponent n (Lamé curve parameter)
+    // When circular, n=2.0 (ellipse). When stretched, n increases up to 2.8 (rounded rectangle) to fill the corners.
+    const ratioVal = Math.max(rx / ry, ry / rx);
+    const n = 2.0 + Math.min(1.0, (ratioVal - 1.0) / 1.5) * 0.8;
+    const power = 2 / n;
+    
     const count = gameState.playerCount;
 
     // 动态更新圆桌中心的剧本背景水印与高贵霓虹呼吸灯效果
@@ -37,19 +74,33 @@ export function renderSeatingChart() {
         }
     }
 
-    // 清空旧 SVG 连线
-    dom.seatingSvg.innerHTML = "";
+    // 清空旧 SVG 连线, 并动态设置 viewBox
+    if (dom.seatingSvg) {
+        dom.seatingSvg.innerHTML = "";
+        dom.seatingSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    }
 
-    // 绘制外部椭圆桌底轮廓
-    const tableEllipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-    tableEllipse.setAttribute("cx", centerX);
-    tableEllipse.setAttribute("cy", centerY);
-    tableEllipse.setAttribute("rx", rx);
-    tableEllipse.setAttribute("ry", ry);
-    tableEllipse.setAttribute("stroke", "rgba(255, 255, 255, 0.05)");
-    tableEllipse.setAttribute("stroke-width", "1");
-    tableEllipse.setAttribute("fill", "none");
-    dom.seatingSvg.appendChild(tableEllipse);
+    // 绘制外部超椭圆（Superellipse/Lamé Curve）桌底轮廓
+    const points = [];
+    const steps = 72; // Smoothness factor
+    for (let j = 0; j <= steps; j++) {
+        const theta = (j * 2 * Math.PI) / steps;
+        const cosVal = Math.cos(theta);
+        const sinVal = Math.sin(theta);
+        const px = centerX + rx * Math.sign(cosVal) * Math.pow(Math.abs(cosVal), power);
+        const py = centerY + ry * Math.sign(sinVal) * Math.pow(Math.abs(sinVal), power);
+        points.push(`${j === 0 ? 'M' : 'L'} ${px.toFixed(1)} ${py.toFixed(1)}`);
+    }
+    const pathD = points.join(' ') + ' Z';
+
+    const tablePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    tablePath.setAttribute("d", pathD);
+    tablePath.setAttribute("stroke", "rgba(255, 255, 255, 0.05)");
+    tablePath.setAttribute("stroke-width", "1.5");
+    tablePath.setAttribute("fill", "none");
+    if (dom.seatingSvg) {
+        dom.seatingSvg.appendChild(tablePath);
+    }
 
     // 动态生成座位节点坐标，并保存到节点中，方便画线
     const nodeCoords = [];
@@ -60,8 +111,10 @@ export function renderSeatingChart() {
         
         // 动态旋转：确保"我"（gameState.mySeat）的座位始终位于正下方最中间（即 Math.PI / 2，90度角）
         const angle = Math.PI / 2 + ((player.seat - gameState.mySeat) * 2 * Math.PI) / count;
-        const x = centerX + rx * Math.cos(angle);
-        const y = centerY + ry * Math.sin(angle);
+        const cosVal = Math.cos(angle);
+        const sinVal = Math.sin(angle);
+        const x = centerX + rx * Math.sign(cosVal) * Math.pow(Math.abs(cosVal), power);
+        const y = centerY + ry * Math.sign(sinVal) * Math.pow(Math.abs(sinVal), power);
         nodeCoords.push({ seat: player.seat, x, y });
 
         // 渲染 HTML 节点
