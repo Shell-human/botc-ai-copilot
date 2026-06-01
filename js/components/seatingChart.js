@@ -3,25 +3,21 @@
    ========================================================================== */
 
 import { SCRIPTS_DATA, SCRIPTS_DATA_EN } from '../data/rules.js';
-import { gameState, saveToLocalStorage } from '../state.js';
-import { dom } from '../dom.js';
+import { gameState } from '../core/state.js';
+import { dom } from '../core/dom.js';
+import { notifyStateChange } from '../controllers/gameController.js';
+import { getLocalizedRole } from '../i18n/engine.js';
 import { openPopover } from './popoverModal.js';
-
-function getLocalizedRole(roleName) {
-    if (window.getLocalizedRole) {
-        return window.getLocalizedRole(roleName);
-    }
-    return roleName;
-}
 
 // --- 渲染环形座位轨迹图 ---
 export function renderSeatingChart() {
     dom.seatingNodesContainer.innerHTML = "";
-    const width = 480;
-    const height = 480;
+    const width = 720;
+    const height = 520;
     const centerX = width / 2;
     const centerY = height / 2;
-    const radius = 180; // 环形半径
+    const rx = 310; // 横向椭圆长半轴
+    const ry = 175; // 纵向椭圆短半轴
     const count = gameState.playerCount;
 
     // 动态更新圆桌中心的剧本背景水印与高贵霓虹呼吸灯效果
@@ -42,15 +38,16 @@ export function renderSeatingChart() {
     // 清空旧 SVG 连线
     dom.seatingSvg.innerHTML = "";
 
-    // 绘制外部大圆桌底轮廓
-    const tableCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    tableCircle.setAttribute("cx", centerX);
-    tableCircle.setAttribute("cy", centerY);
-    tableCircle.setAttribute("r", radius);
-    tableCircle.setAttribute("stroke", "rgba(255, 255, 255, 0.05)");
-    tableCircle.setAttribute("stroke-width", "1");
-    tableCircle.setAttribute("fill", "none");
-    dom.seatingSvg.appendChild(tableCircle);
+    // 绘制外部椭圆桌底轮廓
+    const tableEllipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+    tableEllipse.setAttribute("cx", centerX);
+    tableEllipse.setAttribute("cy", centerY);
+    tableEllipse.setAttribute("rx", rx);
+    tableEllipse.setAttribute("ry", ry);
+    tableEllipse.setAttribute("stroke", "rgba(255, 255, 255, 0.05)");
+    tableEllipse.setAttribute("stroke-width", "1");
+    tableEllipse.setAttribute("fill", "none");
+    dom.seatingSvg.appendChild(tableEllipse);
 
     // 动态生成座位节点坐标，并保存到节点中，方便画线
     const nodeCoords = [];
@@ -59,10 +56,10 @@ export function renderSeatingChart() {
         const player = gameState.players[i];
         if (!player) continue;
         
-        // 动态旋转：确保“我”（gameState.mySeat）的座位始终位于正下方最中间（即 Math.PI / 2，90度角）
+        // 动态旋转：确保"我"（gameState.mySeat）的座位始终位于正下方最中间（即 Math.PI / 2，90度角）
         const angle = Math.PI / 2 + ((player.seat - gameState.mySeat) * 2 * Math.PI) / count;
-        const x = centerX + radius * Math.cos(angle);
-        const y = centerY + radius * Math.sin(angle);
+        const x = centerX + rx * Math.cos(angle);
+        const y = centerY + ry * Math.sin(angle);
         nodeCoords.push({ seat: player.seat, x, y });
 
         // 渲染 HTML 节点
@@ -107,13 +104,7 @@ export function renderSeatingChart() {
                 token.addEventListener("click", (e) => {
                     e.stopPropagation(); // 阻止冒泡，避免触发 openPopover
                     player.ghostVoteUsed = !player.ghostVoteUsed;
-                    saveToLocalStorage();
-                    renderSeatingChart();
-                    
-                    // 触发大盘逻辑校验器重新渲染
-                    if (window.renderDeductiveValidator) {
-                        window.renderDeductiveValidator();
-                    }
+                    notifyStateChange();
                 });
             }
         }

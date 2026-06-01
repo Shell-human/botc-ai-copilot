@@ -48,7 +48,7 @@ export function showToast(message) {
 // --- 简易高效的 Markdown 解析器 ---
 export function parseMarkdown(md) {
     if (!md) return "";
-    let html = escapeHtml(md);
+    let html = md;
     
     // GitHub Alert 警示框处理
     html = html.replace(/^\>\s*\[!NOTE\]\s*(.*$)/gim, '<blockquote class="alert note"><i data-lucide="info" class="icon-sm"></i> $1</blockquote>');

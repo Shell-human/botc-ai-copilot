@@ -2,16 +2,11 @@
    playerList.js - 玩家列表快速管理面板组件
    ========================================================================== */
 
-import { gameState, togglePlayerAlive, togglePlayerPoison } from '../state.js';
-import { dom } from '../dom.js';
+import { gameState } from '../core/state.js';
+import { dom } from '../core/dom.js';
+import { togglePlayerAlive, togglePlayerPoison } from '../controllers/gameController.js';
+import { getLocalizedClaim } from '../i18n/engine.js';
 import { openPopover } from './popoverModal.js';
-
-function getLocalizedClaim(claim) {
-    if (window.getLocalizedClaim) {
-        return window.getLocalizedClaim(claim);
-    }
-    return claim;
-}
 
 // --- 渲染左下角玩家列表控制面板 ---
 export function renderPlayerList() {
@@ -58,5 +53,5 @@ export function renderPlayerList() {
         dom.playerListContainer.appendChild(row);
     });
 
-    lucide.createIcons();
+    if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
 }

@@ -52,113 +52,113 @@ export const SCRIPTS_DATA = {
 // --- 板子角色详细技能定义 ---
 export const CHARACTER_DETAILS = {
     wushang: {
-        "贵族": "你的首个夜晚，你会得知三名玩家：其中有且只有一名玩家是邪恶的。",
-        "厨师": "在你的首个夜晚，你会得知场上邻座的邪恶玩家有多少对。",
-        "共情者": "每个夜晚，你会得知与你邻近的两名存活的玩家中邪恶玩家的数量。",
-        "罂粟种植者": "爪牙和恶魔互相不认识。如果你死亡，当晚他们会互相认识。",
-        "博学者": "每个白天，你可以私下询问说书人以得知两条信息：一个是正确的，一个是错误的。",
-        "茶艺师": "如果与你邻近的两名存活的玩家是善良的，他们不会死亡。",
-        "城镇公告员": "每个夜晚*，你会得知在今天白天时是否有爪牙发起过提名。",
-        "舞蛇人": "每个夜晚，你要选择一名存活的玩家：如果你选中了恶魔，你和他交换角色和阵营，然后他中毒。",
-        "送葬者": "每个夜晚*，你会得知今天白天死于处决的玩家的角色。",
-        "熊孩子": "每个夜晚，你要选择一个镇民角色：他的能力会产生错误信息，直到下个黄昏。",
-        "传教士": "每个夜晚，你要选择一名玩家：如果你选中了爪牙，他会得知被传教士选中。所有被你选中的爪牙失去能力。",
-        "水手": "每个夜晚，你要选择一名存活的玩家：你或他之一会醉酒直到下个黄昏。你不会死亡。",
-        "赏金猎人": "在你的首个夜晚，你会得知一名邪恶玩家。每当你得知的玩家死亡，你会在当晚得知另一名邪恶玩家。[会有一名镇民转变为邪恶阵营]",
-        "炼金术士": "你拥有一个爪牙角色的能力。当你使用能力时，说书人可能会要求你更换选择。",
-        "气球驾驶员": "每个夜晚，你会得知一名与之首夜夜晚得知的玩家角色类型不同的玩家，直到集满4种类型。[+0~1外来者]",
-        "畸形秀演员": "如果你“疯狂”地证明自己是外来者，你可能被处决。",
-        "魔像": "每局游戏你只能发起提名一次。当你发起提名时，如果被你提名的玩家不是恶魔，他死亡。",
-        "政客": "如果你是对你的阵营落败负最大责任的人，你转变阵营并获胜，即使你已死亡。",
-        "瘟疫医生": "当你死亡时，说书人会获得一个爪牙能力。",
-        "理发师": "如果你死亡，在当晚恶魔可以选择两名玩家（不能选择其他恶魔）交换角色。",
-        "精神病患者": "每个白天，在提名开始前，你可以公开选择一名玩家：他死亡。如果你被处决，提名你的玩家需要和你猜拳，只有你输了你才会死亡。",
-        "皮克希": "每局游戏限一次，在夜晚时*，你可以选择一个非恶魔角色：如果该角色不在场，你要再选择一名玩家：他变成该角色。",
-        "洗脑师": "每夜，你要选择一名玩家和一个善良角色。他明天白天 and 夜晚需要“疯狂”地证明自己是这个角色，不然他可能被处决。",
-        "召唤师": "在首个夜晚，你会得知三个伪装。在第三个夜晚，你要选择一名玩家：他变成你选择的邪恶恶魔。",
-        "教父": "在首夜，你会得知有哪些外来者角色在场。如果有外来者在白天死亡，你可在当晚杀死一名玩家。[-1 或 +1 外来者]",
-        "涡流": "每个夜晚*，你要选择一名玩家：他死亡。镇民玩家的能力都会产生错误信息。如果白天没人被处决，邪恶阵营获胜。",
-        "卡扎力": "每个夜晚*，你要选择一名玩家：他死亡。[由你决定是什么爪牙，-或+任意数量外来者]",
-        "诺·达鲺": "每个夜晚*，你要选择一名玩家：他死亡。与你邻近的两名镇民中毒。",
-        "哈迪寂亚": "每个夜晚*，你可以选择三名玩家（所有玩家都会得知你选了谁）：他们分别秘密决定自己的生死，然后如果他们都存活则都死亡。"
+        "贵族": "首夜知3人中恰1邪恶。",
+        "厨师": "首夜知邻座邪恶对数。",
+        "共情者": "每夜知两存活邻座中邪恶数。",
+        "罂粟种植者": "爪牙恶魔互不知。你死当夜他们互知。",
+        "博学者": "每日私询说书人获2信息：1真1假。",
+        "茶艺师": "两存活善良邻座不死。",
+        "城镇公告员": "每夜*知白天爪牙是否提名。",
+        "舞蛇人": "每夜选1存活玩家：若中恶魔，互换角色阵营，他中毒。",
+        "送葬者": "每夜*知白天被处决者角色。",
+        "熊孩子": "每夜选1镇民角色：其能力产生错误信息至下个黄昏。",
+        "传教士": "每夜选1玩家：若为爪牙，得知被选且失去能力。",
+        "水手": "每夜选1存活玩家：你或他之一醉酒至下黄昏。你不会死。",
+        "赏金猎人": "首夜知1邪恶玩家。他死当夜知另一邪恶。[1镇民变邪恶]",
+        "炼金术士": "拥有1爪牙能力。使用时说书人可要求换选。",
+        "气球驾驶员": "每夜知1不同角色类型玩家，集满4种。[+0~1外来者]",
+        "畸形秀演员": "若疯狂证明是外来者，可能被处决。",
+        "魔像": "每局提名1次。提名时若非恶魔，他死。",
+        "政客": "若对阵营落败负最大责，变阵营获胜，即使已死。",
+        "瘟疫医生": "死时说书人获1爪牙能力。",
+        "理发师": "若死，恶魔当夜可选2玩家(非恶魔)互换角色。",
+        "精神病患者": "每日提名前公开选1玩家：他死。被处决时提名者需猜拳赢你。",
+        "皮克希": "每局1次，夜*选非恶魔角色：若不在场，选1人变该角。",
+        "洗脑师": "每夜选1玩家及1善良角：他明天须疯狂证明该角，否则可能被处决。",
+        "召唤师": "首夜知3伪装。第三夜选1玩家变你选的邪恶恶魔。",
+        "教父": "首夜知在场外来者。白天有外来者死，当夜可杀1人。[±1外来者]",
+        "涡流": "每夜*杀1人。所有镇民信息必假。白天无处决→邪恶胜。",
+        "卡扎力": "每夜*杀1人。[你定爪牙，±任意外来者]",
+        "诺·达鲺": "每夜*杀1人。两存活邻座镇民中毒。",
+        "哈迪寂亚": "每夜*可选3人(全知)：各自秘密定生死，全选活则全死。"
     },
     anliu: {
-        "洗衣妇": "在你的首个夜晚，你会得知两名玩家和一个镇民角色：这两名玩家之一是该角色。",
-        "图书管理员": "在你的首个夜晚，你会得知两名玩家和一个外来者角色：这两名玩家之一是该角色（或者你会得知没有外来者在场）。",
-        "调查员": "在你的首个夜晚，你会得知两名玩家和一个爪牙角色：这两名玩家之一是该角色（或者你会得知没有爪牙在场）。",
-        "厨师": "在你的首个夜晚，你会得知场上邻座的邪恶玩家有多少对。",
-        "共情者": "每个夜晚，你会得知与你邻近的两名存活的玩家中邪恶玩家的数量。",
-        "占卜师": "每个夜晚，你要选择两名玩家：你会得知他们之中是否有恶魔。会有一名善良玩家始终被你的能力当作恶魔。",
-        "送葬者": "每个夜晚*，你会得知今天白天死于处决的玩家的角色。",
-        "僧侣": "每个夜晚*，你要选择除你以外的一名玩家：当晚恶魔的负面能力对他无效。",
-        "守鸦人": "如果你在夜晚死亡，你会被唤醒，然后你要选择一名玩家：你会得知他的角色。",
-        "贞洁者": "当你首次被提名时，如果提名你的玩家是镇民，他立刻被处决。",
-        "猎手": "每局游戏限一次，你可以在白天时公开选择一名玩家：如果他是恶魔，他死亡。",
-        "士兵": "恶魔的负面能力对你无效。",
-        "镇长": "如果只有三名玩家存活且白天没有人被处决，你的阵营获胜。如果你在夜晚即将死亡，可能会有一名其他玩家代替你死亡。",
-        "管家": "每个夜晚，你要选择除你以外的一名玩家：明天白天，只有他投票时你才能投票。",
-        "酒鬼": "你不知道你是酒鬼。你以为你是一个镇民角色，但其实你不是。",
-        "陌客": "你可能会被当作邪恶阵营、爪牙角色或恶魔角色，即使你已死亡。",
-        "圣徒": "如果你死于处决，你的阵营落败。",
-        "投毒者": "每个夜晚，你要选择一名玩家：他在当晚和明天白天中毒。",
-        "间谍": "每个夜晚，你能查看魔典。你可能会被当作善良阵营、镇民角色或外来者角色，即使你已死亡。",
-        "男爵": "会有额外的外来者在场。[+2外来者]",
-        "红唇女郎": "如果大于等于五名玩家存活时（旅行者不计算在内）恶魔死亡，你变成那个恶魔。",
-        "小恶魔": "每个夜晚*，你要选择一名玩家：他死亡。如果你以这种方式自杀，一名爪牙会变成小恶魔。"
+        "洗衣妇": "首夜知2玩家及1镇民角，其中1人是该角。",
+        "图书管理员": "首夜知2玩家及1外来者角，其中1人是该角(或知无外来者)。",
+        "调查员": "首夜知2玩家及1爪牙角，其中1人是该角(或知无爪牙)。",
+        "厨师": "首夜知邻座邪恶对数。",
+        "共情者": "每夜知两存活邻座中邪恶数。",
+        "占卜师": "每夜选2玩家：知是否有恶魔。始终有1善良玩家被当恶魔。",
+        "送葬者": "每夜*知白天被处决者角色。",
+        "僧侣": "每夜*选除你外1玩家：当夜恶魔负面能力对他无效。",
+        "守鸦人": "若死于夜晚，醒后选1玩家知角色。",
+        "贞洁者": "首次被提名时，若提名者为镇民，他立刻被处决。",
+        "猎手": "每局1次，白天公开选1玩家：若为恶魔，他死。",
+        "士兵": "恶魔负面能力对你无效。",
+        "镇长": "若仅3人存活且白天无处决，阵营获胜。若夜晚将死，可能他人代死。",
+        "管家": "每夜选除你外1玩家：明天仅他投票时你才能投。",
+        "酒鬼": "不知是酒鬼。以为是某镇民，实则不是。",
+        "陌客": "可能被当作邪恶/爪牙/恶魔，即使已死。",
+        "圣徒": "若死于处决，阵营落败。",
+        "投毒者": "每夜选1玩家：他当夜及明天白天中毒。",
+        "间谍": "每夜可看魔典。可能被当作善良/镇民/外来者，即使已死。",
+        "男爵": "额外外来者在场。[+2外来者]",
+        "红唇女郎": "若≥5人存活时恶魔死，你变恶魔。",
+        "小恶魔": "每夜*杀1人。若自杀，1爪牙变小恶魔。"
     },
     mengyun: {
-        "钟表匠": "在你的首个夜晚，你会得知恶魔与爪牙之间最近的距离。（邻座的玩家距离为1）",
-        "筑梦师": "每个夜晚，你要选择（除你及旅行者以外的）一名玩家：你会得知一个善良角色和一个邪恶角色，该玩家是其中一个角色。",
-        "舞蛇人": "每个夜晚，你要选择一名存活的玩家：如果你选中了恶魔，你和他交换角色和阵营，然后他中毒。",
-        "数学家": "每个夜晚，你会得知有多少名玩家能力因为其他角色的能力而未正常生效（从上个黎明到你被唤醒时）。",
-        "卖花女孩": "每个夜晚*，你会得知在今天白天时是否有恶魔投过票。",
-        "城镇公告员": "每个夜晚*，你会得知在今天白天时是否有爪牙发起过提名。",
-        "神谕者": "每个夜晚*，你会得知有多少名死亡的玩家是邪恶的。",
-        "杂耍艺人": "在你的首个白天，你可以公开猜测任意玩家的角色最多五次。在当晚，你会得知猜测正确的角色数量。",
-        "博学者": "每个白天，你可以私下拜访说书人获得两条信息：一个是正确的，一个是错误的。",
-        "女裁缝": "每局游戏限一次，在夜晚时，你可以选择（除你以外）的两名玩家：你会得知他们是否为同一阵营。",
-        "哲学家": "每局游戏限一次，在夜晚时，你可以选择一个善良角色：你获得该角色的能力。如果这个角色在场，他醉酒。",
-        "艺术家": "每局游戏限一次，在白天时，你可以私下拜访说书人提问一个是非题，你会得知该问题的答案（是 / 不是 / 我不知道）。",
-        "贤者": "如果恶魔杀死了你，在当晚你会被唤醒并得知两名玩家，其中一名是杀死你的那个恶魔。",
-        "畸形秀演员": "如果你“疯狂”地证明自己是外来者，你可能被处决。",
-        "理发师": "如果你死亡，在当晚恶魔可以选择两名玩家（不能选择其他恶魔）交换角色（今晚理发）。",
-        "心上人": "当你死亡时，会有一名玩家开始醉酒。",
-        "呆瓜": "当你得知你死亡时，你要公开选择一名存活的玩家：如果他是邪恶的，你的阵营落败。",
-        "女巫": "每个夜晚，你要选择一名玩家：如果他明天白天发起提名，他死亡。如果只有三名存存活的玩家，你失去此能力。",
-        "洗脑师": "每个夜晚，你要选择一名玩家和一个善良角色。他明天白天和夜晚需要“疯狂”地证明自己是这个角色，不然他可能被处决。",
-        "麻脸巫婆": "每个夜晚*，你要选择一名玩家和一个角色，如果该角色不在场，他变成该角色。如果因此创造了一个恶魔，当晚的死亡由说书人决定（生死无常夜）。",
-        "镜像双子": "你与一名对立阵营的玩家互相知道对方是什么角色。如果其中善良玩家被处决，邪恶阵营获胜。如果你们都存活，善良阵营无法获胜。",
-        "方吉": "每个夜晚*，你要选择一名玩家：他死亡。被该能力杀死的外来者改为变成邪恶的方吉且代替他死亡，但每局游戏仅能成功转化一次。[+1外来者]",
-        "诺·达鲺": "每个夜晚*，你要选择一名玩家：他死亡。与你邻近的两名镇民中毒。",
-        "亡骨魔": "每个夜晚*，你要选择一名玩家：他死亡。被你杀死的爪牙保留他的能力，且与他邻近的两名镇民之一中毒。[-1外来者]",
-        "涡流": "每个夜晚*，你要选择一名玩家：他死亡。镇民玩家的能力都会产生错误信息。如果白天没人被处决，邪恶阵营获胜。"
+        "钟表匠": "首夜知恶魔到最近爪牙距离。",
+        "筑梦师": "每夜选1玩家(非你及旅行者)：知1善1恶角，他是其一。",
+        "舞蛇人": "每夜选1存活玩家：若中恶魔，互换角色阵营，他中毒。",
+        "数学家": "每夜知能力异常生效的玩家数(黎明至唤醒间)。",
+        "卖花女孩": "每夜*知白天恶魔是否投票。",
+        "城镇公告员": "每夜*知白天爪牙是否提名。",
+        "神谕者": "每夜*知死亡邪恶玩家数。",
+        "杂耍艺人": "首日可公开猜至多5玩家角色。当夜知猜对数。",
+        "博学者": "每日私询说书人获2信息：1真1假。",
+        "女裁缝": "每局1次，夜选2玩家(非你)：知是否同阵营。",
+        "哲学家": "每局1次，夜选1善良角：获其能力。若在场，他醉酒。",
+        "艺术家": "每局1次，白天私询说书人1个是非题。",
+        "贤者": "若恶魔杀你，当夜醒知2玩家，其1是恶魔。",
+        "畸形秀演员": "若疯狂证明是外来者，可能被处决。",
+        "理发师": "若死，恶魔当夜可选2玩家(非恶魔)互换角色。",
+        "心上人": "你死时有1玩家永久醉酒。",
+        "呆瓜": "知死时公开选1存活玩家：若邪恶，阵营落败。",
+        "女巫": "每夜选1玩家：若他明天提名，他死。仅3存活时失此能力。",
+        "洗脑师": "每夜选1玩家及1善良角：他明天须疯狂证明该角，否则可能被处决。",
+        "麻脸巫婆": "每夜*选1玩家及1角：若不在场，他变该角。若创恶魔，死由说书人定。",
+        "镜像双子": "与对立阵营1玩家互知角色。善良双被处决→邪恶胜。二人皆活时善良无法获胜。",
+        "方吉": "每夜*杀1人。首外来者被杀变邪恶方吉代死。[+1外来者]",
+        "诺·达鲺": "每夜*杀1人。两存活邻座镇民中毒。",
+        "亡骨魔": "每夜*杀1人。被杀爪牙保留能力，其1邻座镇民中毒。[-1外来者]",
+        "涡流": "每夜*杀1人。所有镇民信息必假。白天无处决→邪恶胜。"
     },
     wafuleiming: {
-        "调查员": "在你的首个夜晚，你会得知两名玩家和一个爪牙角色：这两名玩家之一是该角色（或者你会得知没有爪牙在场）。",
-        "厨师": "在你的首个夜晚，你会得知场上邻座的邪恶玩家有多少对。",
-        "祖母": "在你的首个夜晚，你会得知一名善良玩家和他的角色。如果恶魔杀死了他，你也会死亡。",
-        "占卜师": "每个夜晚，你要选择两名玩家：你会得知他们之中是否有恶魔。会有一名善良玩家始终被你的能力当作恶魔（干扰项）。",
-        "气球驾驶员": "每个夜晚，你会得知一名不同角色类型的玩家，直到场上所有的角色类型你都得知过一次。[+1 外来者]",
-        "筑梦师": "每个夜晚，你要选择除你及旅行者以外的一名玩家：你会得知一个善良角色和一个邪恶角色，该玩家是其中一个角色。",
-        "舞蛇人": "每个夜晚，你要选择一名存活的玩家：如果你选中了恶魔，你和他交换角色 and 阵营，然后他中毒。",
-        "赌徒": "每个夜晚*，你要选择一名玩家并猜测他的角色：如果你猜错了，你会死亡。",
-        "博学者": "每个白天，你可以私下询问说书人以得知两条信息：一个是正确的，一个是错误的。",
-        "哲学家": "每局游戏限一次，在夜晚时，你可以选择一个善良角色：你获得该角色的能力。如果这个角色在场，他醉酒。",
-        "守鸦人": "如果你在夜晚死亡，你会被唤醒，然后你要选择一名玩家：你会得知他的角色。",
-        "失忆者": "你不知道你的能力是什么。每个白天你可以找说书人猜测一次，你会得知你的猜测有多准确。",
-        "食人族": "你拥有上个死于处决的玩家的能力。如果该玩家属于邪恶阵营，你中毒直到下个善良玩家死于处决。",
-        "酒鬼": "你不知道你是酒鬼。你以为你是一个镇民角色，但其实你不是。",
-        "畸形秀演员": "如果你“疯狂”地证明自己是外来者，你可能被处决。",
-        "疯子": "你以为你是一个恶魔，但其实你不是。恶魔知道你是疯子以及你在每个夜晚选择了哪些玩家。",
-        "陌客": "你可能会被当作邪恶阵营、爪牙角色或恶魔角色，即使你已死亡。",
-        "心上人": "当你死亡时，会有一名玩家开始醉酒。",
-        "教父": "在你的首个夜晚，你会得知有哪些外来者角色在场。如果有外来者在白天死亡，你会在当晚被唤醒并且你要选择一名玩家：他死亡。[-1 或 +1 外来者]",
-        "洗脑师": "每个夜晚，你要选择一名玩家和一个善良角色。他明天白天和夜晚需要“疯狂”地证明自己是这个角色，不然他可能被处决。",
-        "麻脸巫婆": "每个夜晚*，你要选择一名玩家和一个角色，如果该角色不在场，他变成该角色。",
-        "寡妇": "在你的首个夜晚，你能查看魔典并选择一名玩家：他中毒。随后，始终会有一名善良玩家知道寡妇在场。",
-        "小恶魔": "每个夜晚*，你要选择一名玩家：他死亡. 如果你以这种方式自杀，一名爪牙会变成小恶魔。",
-        "方吉": "每个夜晚*，你要选择一名玩家：他死亡。被该能力杀死的外来者改为变成邪恶的方吉且代替他死亡，但每局游戏仅能成功转化一次。[+1 外来者]",
-        "亡骨魔": "每个夜晚*，你要选择一名玩家：他死亡。被你杀死的爪牙保留他的能力，且与他邻近的两名镇民之一中毒。[-1 外来者]"
+        "调查员": "首夜知2玩家及1爪牙角，其中1人是该角(或知无爪牙)。",
+        "厨师": "首夜知邻座邪恶对数。",
+        "祖母": "首夜知1善良玩家及角色。若恶魔杀他，你同死。",
+        "占卜师": "每夜选2玩家：知是否有恶魔。始终有1善良玩家被当恶魔。",
+        "气球驾驶员": "每夜知1不同角色类型玩家，集满所有类型。[+1外来者]",
+        "筑梦师": "每夜选1玩家(非你及旅行者)：知1善1恶角，他是其一。",
+        "舞蛇人": "每夜选1存活玩家：若中恶魔，互换角色阵营，他中毒。",
+        "赌徒": "每夜*选1玩家猜角色：猜错则你死。",
+        "博学者": "每日私询说书人获2信息：1真1假。",
+        "哲学家": "每局1次，夜选1善良角：获其能力。若在场，他醉酒。",
+        "守鸦人": "若死于夜晚，醒后选1玩家知角色。",
+        "失忆者": "不知自己能力。每日可猜1次，说书人告知准确度。",
+        "食人族": "拥有上个被处决者能力。若他邪恶，你中毒至下次善良处决。",
+        "酒鬼": "不知是酒鬼。以为是某镇民，实则不是。",
+        "陌客": "可能被当作邪恶/爪牙/恶魔，即使已死。",
+        "畸形秀演员": "若疯狂证明是外来者，可能被处决。",
+        "疯子": "以为自己是恶魔，实则不是。恶魔知你是疯子及你每夜选谁。",
+        "心上人": "你死时有1玩家永久醉酒。",
+        "教父": "首夜知在场外来者。白天外来者死，当夜醒可选1玩家杀。[±1外来者]",
+        "洗脑师": "每夜选1玩家及1善良角：他明天须疯狂证明该角，否则可能被处决。",
+        "麻脸巫婆": "每夜*选1玩家及1角：若不在场，他变该角。",
+        "寡妇": "首夜看魔典并选1玩家中毒。始终有1善良玩家知寡妇在场。",
+        "小恶魔": "每夜*杀1人。若自杀，1爪牙变小恶魔。",
+        "方吉": "每夜*杀1人。首外来者被杀变邪恶方吉代死。[+1外来者]",
+        "亡骨魔": "每夜*杀1人。被杀爪牙保留能力，其1邻座镇民中毒。[-1外来者]"
     }
 };
 
@@ -196,181 +196,133 @@ export const SCRIPTS_DATA_EN = {
 
 export const CHARACTER_DETAILS_EN = {
     wushang: {
-        "Noble": "On your first night, you learn 3 players: exactly one is evil.",
-        "Chef": "On your first night, you learn the number of pairs of adjacent evil players.",
-        "Empath": "Each night, you learn the number of evil players among your 2 alive neighbors.",
-        "Poppy Grower": "Minions & Demons do not know each other. If you die, they learn each other that night.",
-        "Savant": "Each day, you may visit the Storyteller privately to learn 2 statements: 1 is correct & 1 is incorrect.",
-        "Tea Lady": "If your 2 alive neighbors are good, they cannot die.",
-        "Town Crier": "Each night*, you learn if a Minion nominated today.",
-        "Snake Charmer": "Each night, choose an alive player: if you choose the Demon, you swap characters and alignments, then they become poisoned.",
-        "Undertaker": "Each night*, you learn the character of the player executed today.",
-        "Rascal": "Each night, choose a Townsfolk character: their ability yields incorrect information until next dusk.",
-        "Preacher": "Each night, choose a player: if they are a Minion, they learn they were chosen by the Preacher. All Minions chosen by you lose their abilities.",
-        "Sailor": "Each night, choose an alive player: either you or they are drunk until next dusk. You cannot die.",
-        "Bounty Hunter": "On your first night, you learn an evil player. Each time your learned player dies, you learn another evil player tonight. [1 Townsfolk is evil]",
-        "Alchemist": "You have a Minion ability. When you use it, the Storyteller may prompt you to make a different choice.",
-        "Balloonist": "Each night, you learn an alive player of a different character type than those you've learned on previous nights, until you have learned all 4 types. [+0 to +1 Outsider]",
-        "Mutant": "If you are 'mad' about being an Outsider, you might be executed.",
-        "Golem": "You may only nominate once per game. When you nominate, if the nominee is not the Demon, they die.",
-        "Politician": "If you are the player most responsible for your team losing, you change alignment and win, even if dead.",
-        "Plague Doctor": "When you die, the Storyteller gains a Minion ability.",
-        "Barber": "If you die, the Demon may swap the characters of 2 players tonight (cannot choose other Demons).",
-        "Psychopath": "Each day, before nominations start, you may publicly choose a player: they die. If executed, your nominator plays Rock-Paper-Scissors with you; you only die if you lose.",
-        "Pixie": "Once per game, at night*, choose a non-Demon character: if they are not in play, choose a player: they become that character.",
-        "Cerenovus": "Each night, choose a player and a good character: they must be mad about being that character tomorrow, or they might be executed.",
-        "Summoner": "On your first night, you learn 3 bluffs. On the third night, choose a player: they become your chosen evil Demon.",
-        "Godfather": "On your first night, you learn which Outsiders are in play. If an Outsider dies during the day, you may kill a player tonight. [-1 or +1 Outsider]",
-        "Vortox": "Each night*, choose a player: they die. Townsfolk abilities yield incorrect information. If no one is executed by day, Evil wins.",
-        "Kazali": "Each night*, choose a player: they die. [You choose the Minions in play, - or + any number of Outsiders]",
-        "No-Dashi": "Each night*, choose a player: they die. Your 2 alive Townsfolk neighbors are poisoned.",
-        "Al-Hadikhia": "Each night*, choose 3 players (all learn who): they secretly decide whether to live or die. If all choose to live, they all die."
+        "Noble": "1st night: learn 3 players, exactly 1 evil.",
+        "Chef": "1st night: learn # of adjacent evil pairs.",
+        "Empath": "Each night: learn evil count among 2 alive neighbors.",
+        "Poppy Grower": "Minions & Demon don't know each other. When you die, they learn each other that night.",
+        "Savant": "Each day: privately ask Storyteller for 2 statements, 1 true & 1 false.",
+        "Tea Lady": "If both alive neighbors are good, they cannot die.",
+        "Town Crier": "Each night*: learn if a Minion nominated today.",
+        "Snake Charmer": "Each night: pick alive player; if Demon, swap characters & alignments, they're poisoned.",
+        "Undertaker": "Each night*: learn character of today's executed player.",
+        "Rascal": "Each night: pick a Townsfolk; their ability yields false info until next dusk.",
+        "Preacher": "Each night: pick player; if Minion, they learn & lose ability.",
+        "Sailor": "Each night: pick alive player; you or they drunk until dusk. You cannot die.",
+        "Bounty Hunter": "1st night: learn 1 evil player. When they die, learn another that night. [1 Townsfolk is evil]",
+        "Alchemist": "You have a Minion ability. Storyteller may change your choice.",
+        "Balloonist": "Each night: learn player of new character type until all 4 collected. [+0~1 Outsider]",
+        "Mutant": "If 'mad' about being an Outsider, may be executed.",
+        "Golem": "1 nomination/game. Nominee not Demon → they die.",
+        "Politician": "If most responsible for team losing, swap alignment & win (even dead).",
+        "Plague Doctor": "When you die, Storyteller gains a Minion ability.",
+        "Barber": "When you die, Demon may swap 2 non-Demon players' characters tonight.",
+        "Psychopath": "Each day, before noms: publicly pick a player, they die. If executed, Rock-Paper-Scissors with nominator.",
+        "Pixie": "Once per game, night*: pick non-Demon char; if not in play, pick player to become it.",
+        "Cerenovus": "Each night: pick player & good char; they must be mad about it tomorrow or may be executed.",
+        "Summoner": "1st night: learn 3 bluffs. 3rd night: pick player to become your chosen evil Demon.",
+        "Godfather": "1st night: learn in-play Outsiders. If Outsider dies by day, may kill tonight. [±1 Outsider]",
+        "Vortox": "Each night*: kill 1. All Townsfolk info false. No execution → Evil wins.",
+        "Kazali": "Each night*: kill 1. [You choose Minions, ±any Outsiders]",
+        "No-Dashi": "Each night*: kill 1. 2 alive neighbor Townsfolk poisoned.",
+        "Al-Hadikhia": "Each night*: pick 3 (all know); each secretly chooses live/die. All choose live → all die."
     },
     anliu: {
-        "Washerwoman": "On your first night, you learn 2 players and 1 Townsfolk character: 1 of those players is that character.",
-        "Librarian": "On your first night, you learn 2 players and 1 Outsider character: 1 of those players is that character (or that there are no Outsiders).",
-        "Investigator": "On your first night, you learn 2 players and 1 Minion character: 1 of those players is that character (or that there are no Minions).",
-        "Chef": "On your first night, you learn the number of pairs of adjacent evil players.",
-        "Empath": "Each night, you learn how many of your 2 alive neighbors are evil.",
-        "Fortune Teller": "Each night, choose 2 players: you learn if at least 1 is a Demon. 1 good player is registered as a Demon to you.",
-        "Undertaker": "Each night*, you learn the character of the player executed today.",
-        "Monk": "Each night*, choose a player other than yourself: the Demon's negative ability has no effect on them tonight.",
-        "Ravenkeeper": "If you die at night, you are woken to choose a player: you learn their character.",
-        "Virgin": "The first time you are nominated, if the nominator is a Townsfolk, they are executed immediately.",
-        "Slayer": "Once per game, during the day, choose a player: if they are the Demon, they die.",
-        "Soldier": "The Demon's negative ability has no effect on you.",
-        "Mayor": "If only 3 players are alive & no execution occurs, your team wins. If you die at night, another player might die instead.",
-        "Butler": "Each night, choose a player other than yourself: tomorrow, you can only vote if they vote.",
-        "Drunk": "You do not know you are the Drunk. You think you are a Townsfolk, but you are not.",
-        "Recluse": "You might register as evil, a Minion, or a Demon, even if dead.",
-        "Saint": "If you die by execution, your team loses.",
-        "Poisoner": "Each night, choose a player: they are poisoned tonight and tomorrow.",
-        "Spy": "Each night, you may look at the Grimoire. You might register as good, a Townsfolk, or an Outsider, even if dead.",
-        "Baron": "There are extra Outsiders in play. [+2 Outsiders]",
-        "Scarlet Woman": "If 5 or more players are alive (excluding Travelers) and the Demon dies, you become the Demon.",
-        "Imp": "Each night*, choose a player: they die. If you kill yourself, a Minion becomes the Imp."
+        "Washerwoman": "1st night: learn 2 players & 1 Townsfolk; 1 of them is that character.",
+        "Librarian": "1st night: learn 2 players & 1 Outsider; 1 is that char (or learn no Outsiders).",
+        "Investigator": "1st night: learn 2 players & 1 Minion; 1 is that char (or learn no Minions).",
+        "Chef": "1st night: learn # of adjacent evil pairs.",
+        "Empath": "Each night: learn evil count among 2 alive neighbors.",
+        "Fortune Teller": "Each night: pick 2; learn if there's a Demon. 1 good player always registers as Demon.",
+        "Undertaker": "Each night*: learn character of today's executed player.",
+        "Monk": "Each night*: pick another player; Demon's harmful ability blocked on them.",
+        "Ravenkeeper": "If killed at night, wake to pick a player: learn their character.",
+        "Virgin": "1st time nominated: if nominator is Townsfolk, they are executed immediately.",
+        "Slayer": "Once/game, day: publicly pick player; if Demon, they die.",
+        "Soldier": "Demon's harmful ability has no effect on you.",
+        "Mayor": "If 3 alive & no execution, team wins. If dying at night, another may die instead.",
+        "Butler": "Each night: pick another player; tomorrow you may only vote if they do.",
+        "Drunk": "You think you're a Townsfolk but you're not. You don't know this.",
+        "Recluse": "May register as evil/Minion/Demon, even if dead.",
+        "Saint": "If executed, your team loses.",
+        "Poisoner": "Each night: pick player; they're poisoned tonight & tomorrow.",
+        "Spy": "Each night: may see Grimoire. May register as good/Townsfolk/Outsider, even dead.",
+        "Baron": "Extra Outsiders in play. [+2 Outsiders]",
+        "Scarlet Woman": "If ≥5 alive (excl. Travelers) & Demon dies, you become the Demon.",
+        "Imp": "Each night*: kill 1. If you kill yourself, a Minion becomes the Imp."
     },
     mengyun: {
-        "Clockmaker": "On your first night, you learn the distance from the Demon to the nearest Minion.",
-        "Dreamer": "Each night, choose a player other than yourself or Travelers: you learn 1 good & 1 evil character, and 1 is their real character.",
-        "Snake Charmer": "Each night, choose an alive player: if they are the Demon, you swap characters and alignments, then they become poisoned.",
-        "Mathematician": "Each night, you learn how many players' abilities did not work correctly due to other abilities since dawn.",
-        "Flowergirl": "Each night*, you learn if the Demon voted today.",
-        "Town Crier": "Each night*, you learn if a Minion nominated today.",
-        "Oracle": "Each night*, you learn how many dead players are evil.",
-        "Juggler": "On your first day, you may publicly guess up to 5 players' characters. Tonight, you learn how many guesses were correct.",
-        "Savant": "Each day, you may visit the Storyteller privately to learn 2 statements: 1 is correct & 1 is incorrect.",
-        "Seamstress": "Once per game, at night, choose 2 players other than yourself: you learn if they are of the same alignment.",
-        "Philosopher": "Once per game, at night, choose a good character: you gain their ability. If that character is in play, they are drunk.",
-        "Artist": "Once per game, during the day, you may privately ask the Storyteller any yes/no question.",
-        "Sage": "If the Demon kills you, you wake tonight and learn 2 players: 1 is the Demon.",
-        "Mutant": "If you are 'mad' about being an Outsider, you might be executed.",
-        "Barber": "If you die, the Demon may swap the characters of 2 players tonight (cannot choose other Demons).",
-        "Sweetheart": "When you die, one player becomes drunk permanently.",
-        "Klutz": "When you learn you died, publicly choose an alive player: if they are evil, your team loses.",
-        "Witch": "Each night, choose a player: they are poisoned tonight and tomorrow. If only 3 players are alive, you lose this ability.",
-        "Cerenovus": "Each night, choose a player and a good character: they must be mad about being that character tomorrow, or they might be executed.",
-        "Pit-Hag": "Each night*, choose a player and a character: if that character is not in play, they become that character. If a Demon is created, night deaths are decided by the Storyteller.",
-        "Evil Twin": "You and an opposing alignment player know each other's characters. If the good twin is executed, Evil wins. While both live, Good cannot win.",
-        "Fang Gu": "Each night*, choose a player: they die. The first Outsider killed becomes the evil Fang Gu instead, and you die. [+1 Outsider]",
-        "No-Dashi": "Each night*, choose a player: they die. Your 2 alive Townsfolk neighbors are poisoned.",
-        "Vigormortis": "Each night*, choose a player: they die. Minions killed by you retain their ability, and 1 of their Townsfolk neighbors is poisoned. [-1 Outsider]",
-        "Vortox": "Each night*, choose a player: they die. Townsfolk abilities yield incorrect information. If no one is executed by day, Evil wins."
+        "Clockmaker": "1st night: learn distance from Demon to nearest Minion.",
+        "Dreamer": "Each night: pick non-you/Traveler; learn 1 good & 1 evil char, 1 is their real role.",
+        "Snake Charmer": "Each night: pick alive player; if Demon, swap characters & alignments, they're poisoned.",
+        "Mathematician": "Each night: learn how many abilities malfunctioned since dawn.",
+        "Flowergirl": "Each night*: learn if Demon voted today.",
+        "Town Crier": "Each night*: learn if a Minion nominated today.",
+        "Oracle": "Each night*: learn how many dead players are evil.",
+        "Juggler": "1st day: publicly guess up to 5 player characters. Night: learn correct count.",
+        "Savant": "Each day: privately ask Storyteller for 2 statements, 1 true & 1 false.",
+        "Seamstress": "Once/game, night: pick 2 non-you players; learn if same alignment.",
+        "Philosopher": "Once/game, night: pick good char; gain its ability. If in play, they're drunk.",
+        "Artist": "Once/game, day: privately ask Storyteller 1 yes/no question.",
+        "Sage": "If Demon kills you, wake tonight: learn 2 players, 1 is the Demon.",
+        "Mutant": "If 'mad' about being an Outsider, may be executed.",
+        "Barber": "When you die, Demon may swap 2 non-Demon players' characters tonight.",
+        "Sweetheart": "When you die, 1 player becomes drunk permanently.",
+        "Klutz": "When you learn you died: publicly pick alive player; if evil, team loses.",
+        "Witch": "Each night: pick player; if they nominate tomorrow, they die. Lost when 3 alive.",
+        "Cerenovus": "Each night: pick player & good char; they must be mad about it tomorrow or may be executed.",
+        "Pit-Hag": "Each night*: pick player & char; if not in play, they become it. If Demon created, deaths arbitrary.",
+        "Evil Twin": "You & opposing-alignment player know each other. Good twin executed → Evil wins. Both alive → Good can't win.",
+        "Fang Gu": "Each night*: kill 1. 1st Outsider killed becomes evil Fang Gu instead. [+1 Outsider]",
+        "No-Dashi": "Each night*: kill 1. 2 alive neighbor Townsfolk poisoned.",
+        "Vigormortis": "Each night*: kill 1. Killed Minions keep ability, 1 neighbor Townsfolk poisoned. [-1 Outsider]",
+        "Vortox": "Each night*: kill 1. All Townsfolk info false. No execution → Evil wins."
     },
     wafuleiming: {
-        "Investigator": "On your first night, you learn 2 players and 1 Minion character: 1 of those players is that character (or that there are no Minions).",
-        "Chef": "On your first night, you learn the number of pairs of adjacent evil players.",
-        "Grandma": "On your first night, you learn 1 good player and their character. If the Demon kills them, you die too.",
-        "Fortune Teller": "Each night, choose 2 players: you learn if at least 1 is a Demon. 1 good player is registered as a Demon to you.",
-        "Balloonist": "Each night, you learn a player of a different character type, until you have learned all character types. [+1 Outsider]",
-        "Dreamer": "Each night, choose a player other than yourself or Travelers: you learn 1 good & 1 evil character, and 1 is their real character.",
-        "Snake Charmer": "Each night, choose an alive player: if they are the Demon, you swap characters and alignments, then they become poisoned.",
-        "Gambler": "Each night*, choose a player and guess their character: if you guess wrong, you die tonight.",
-        "Savant": "Each day, you may visit the Storyteller to learn 2 statements: 1 is true & 1 is false.",
-        "Philosopher": "Once per game, at night, choose a good character: you gain their ability. If that character is in play, they are drunk.",
-        "Ravenkeeper": "If you die at night, you are woken to choose a player: you learn their character.",
-        "Amnesiac": "You do not know what your ability is. Each day, you may guess your ability to the Storyteller: they tell you how accurate you are.",
-        "Cannibal": "You have the ability of the last player executed. If they were evil, you are poisoned until next execution.",
-        "Drunk": "You do not know you are the Drunk. You think you are a Townsfolk, but you are not.",
-        "Recluse": "You might register as evil, a Minion, or a Demon, even if dead.",
-        "Mutant": "If you are 'mad' about being an Outsider, you might be executed.",
-        "Sweetheart": "When you die, one player becomes drunk permanently.",
-        "Lunatic": "You think you are the Demon, but you are not. You act as the Demon, but the real Demon knows who you are and what you chose.",
-        "Godfather": "On your first night, you learn which Outsiders are in play. If an Outsider dies during the day, you are woken tonight to choose a player: they die. [-1 or +1 Outsider]",
-        "Pit-Hag": "Each night*, choose a player and a character: if that character is not in play, they become that character.",
-        "Cerenovus": "Each night, choose a player and a good character: they must be mad about being that character tomorrow, or they might be executed.",
-        "Widow": "On your first night, you look at the Grimoire and choose a player to poison. One good player learns that a Widow is in play.",
-        "Imp": "Each night*, choose a player: they die. If you kill yourself, a Minion becomes the Imp.",
-        "Vigormortis": "Each night*, choose a player: they die. Minions killed by you retain their ability, and 1 of their Townsfolk neighbors is poisoned. [-1 Outsider]",
-        "Fang Gu": "Each night*, choose a player: they die. The first Outsider killed becomes the evil Fang Gu instead, and you die. [+1 Outsider]"
+        "Investigator": "1st night: learn 2 players & 1 Minion; 1 is that char (or learn no Minions).",
+        "Chef": "1st night: learn # of adjacent evil pairs.",
+        "Grandma": "1st night: learn 1 good player & their char. If Demon kills them, you die too.",
+        "Fortune Teller": "Each night: pick 2; learn if there's a Demon. 1 good player always registers as Demon.",
+        "Balloonist": "Each night: learn player of new character type until all types learned. [+1 Outsider]",
+        "Dreamer": "Each night: pick non-you/Traveler; learn 1 good & 1 evil char, 1 is their real role.",
+        "Snake Charmer": "Each night: pick alive player; if Demon, swap characters & alignments, they're poisoned.",
+        "Gambler": "Each night*: pick player & guess char; wrong → you die.",
+        "Savant": "Each day: privately ask Storyteller for 2 statements, 1 true & 1 false.",
+        "Philosopher": "Once/game, night: pick good char; gain its ability. If in play, they're drunk.",
+        "Ravenkeeper": "If killed at night, wake to pick a player: learn their character.",
+        "Amnesiac": "You don't know your ability. Each day, guess it; Storyteller tells accuracy.",
+        "Cannibal": "You have last executed player's ability. If they were evil, poisoned until next good execution.",
+        "Drunk": "You think you're a Townsfolk but you're not. You don't know this.",
+        "Recluse": "May register as evil/Minion/Demon, even if dead.",
+        "Mutant": "If 'mad' about being an Outsider, may be executed.",
+        "Sweetheart": "When you die, 1 player becomes drunk permanently.",
+        "Lunatic": "You think you're the Demon but aren't. Real Demon knows you & your picks.",
+        "Godfather": "1st night: learn in-play Outsiders. If Outsider dies by day, wake to kill tonight. [±1 Outsider]",
+        "Pit-Hag": "Each night*: pick player & char; if not in play, they become it.",
+        "Cerenovus": "Each night: pick player & good char; they must be mad about it tomorrow or may be executed.",
+        "Widow": "1st night: see Grimoire + poison 1 player. 1 good player learns Widow is in play.",
+        "Imp": "Each night*: kill 1. If you kill yourself, a Minion becomes the Imp.",
+        "Vigormortis": "Each night*: kill 1. Killed Minions keep ability, 1 neighbor Townsfolk poisoned. [-1 Outsider]",
+        "Fang Gu": "Each night*: kill 1. 1st Outsider killed becomes evil Fang Gu instead. [+1 Outsider]"
     }
 };
 
 export const CORE_LOGIC_RULES = `
-=== 血染钟楼核心推理知识库 (Deduction Axioms v3.0) ===
-[约束格式：IF(条件) -> THEN(必然结果) | NOT(绝对不可能)]
+=== 血染钟楼核心推理公理 (Deduction Axioms v4.0) ===
 
-1. 伪装与物理实体 (Bluff & Token Constraints)
-   - 伪装排他: IF (角色 ∈ 恶魔的3个Bluffs) -> THEN (物理卡牌不在场中 && 任何起跳者必假).
-   - 酒鬼排假: IF (角色 ∈ 恶魔的3个Bluffs) -> THEN (角色 != 酒鬼以为的镇民) [因酒鬼标识牌在场内].
-   - 木偶特例: IF (提线木偶在场) -> THEN (恶魔3个Bluffs中，有1个是木偶所持有的真实镇民卡牌).
-   - 微局零假: IF (玩家数 <= 6 && 玩具匠不在场) -> THEN (恶魔Bluffs = 0).
-
-2. 涡流真值干涉 (Vortox Truth Interference)
-   - 涡流绝对假: IF (恶魔 = 涡流) -> THEN (所有镇民信息必为假) && (白天无处决 -> 邪恶胜). 
-   - 醉毒覆盖: IF (恶魔 = 涡流 && 镇民醉酒/中毒) -> THEN (镇民信息依然必为假) [涡流拥有全局最高优先级].
-   - 身份锚定: IF (恶魔 = 涡流) -> THEN (外来者/爪牙的真实身份信息可为真，如酒鬼/木偶). IF (镇民利用哲学家/食人族获得外来者技能) -> THEN (其信息仍必为假) [依据原始卡牌类型判定].
-
-3. 醉毒与被动失效 (Droisoning & Passive Fails)
-   - 即死/胜负失效: IF (圣徒 / 莽夫 / 哥布林 在醉酒/中毒时死于处决或发动技能) -> THEN (其导致游戏直接结束的特殊胜负判定完全失效).
-   - 贞洁者物理标签: IF (贞洁者健康) -> THEN (即使提名者处于醉酒/中毒，只要其原始卡牌为镇民，依然触发闪电处决). IF (贞洁者醉毒) -> THEN (提名无事发生，且首次触发额度永久消耗).
-   - 一次性能力损耗: IF (杀手/猎手在醉酒/中毒时发动技能) -> THEN (技能无效且永久消耗).
-
-4. 邪恶共知与隔离 (Evil Co-cognition & Isolation)
-   - 罂粟隔离: 默认首夜互认. IF (邪恶互不认识) -> THEN (罂粟种植者必存活在场). IF (罂粟死时处于醉毒) -> THEN (当夜邪恶依然无法相认).
-   - 魔术师防窥: IF (间谍/寡妇查看魔典 && 魔术师在场) -> THEN (说书人必须同时隐去恶魔与魔术师标识以掩护魔术师).
-
-5. 物理座位与重组 (Physical Seating & Contraction)
-   - 座位折叠: 结算邻座(共情者/茶艺师/诺·达鲺)时，死亡玩家物理折叠，两侧存活玩家直接并拢.
-   - 巫婆互斥: IF (麻脸巫婆试图将玩家变成场上已存活的善良角色) -> THEN (技能直接失效，什么都不发生).
-
-6. 恶魔传承与奇点结算 (Demon Lineage & Singularities)
-   - 物理尸体败局: IF (恶魔将身份传递给已死玩家，如维戈莫提斯杀爪牙或传给死红唇女郎) -> THEN (因场上无存活恶魔，邪恶立刻战败).
-   - 宿主挂起: IF (吸血鬼处于醉毒态 && 宿主死亡) -> THEN (吸血鬼暂时不死) && (一旦吸血鬼解毒恢复健康 -> 立即死亡战败).
-   - 嵌套反转: IF (异端分子在场 && 邪恶双子在场 && 恶魔被处决) -> THEN (双子阻断好人胜 -> 异端分子将“好人未胜”反转为“邪恶直接胜利”结束游戏).
+1. 伪装排他: 恶魔的3个Bluffs角色物理卡牌不在场中。任何宣称Bluffs角色者必为假。
+2. 座位收缩: 结算邻座(共情者/茶艺师/诺达鲺)时，死亡玩家被物理跳过，两侧存活直接并拢形成新邻座。
+3. 醉毒一命: 一次性技能(杀手/猎手/魔像)在醉酒/中毒时发动 → 永久消耗且无效。圣徒/呆瓜醉毒时处决 → 胜负判定不触发。
+4. 恶魔传承: 恶魔身份传给已死玩家 → 邪恶立刻战败(无存活恶魔在场)。
+5. 角色唯一: 同一善良角色在场至多1个。两人宣称同一善良身份 → 必有一假(排除洗脑/巫婆/酒鬼干扰后)。
 `;
 
 export const CORE_LOGIC_RULES_EN = `
-=== BOTC CORE DEDUCTION AXIOMS (BOOLEAN CONSTRAINTS v3.0) ===
-[FORMAT: IF(Condition) -> THEN(Absolute Result) | NOT(Impossible)]
+=== BOTC CORE DEDUCTION AXIOMS (v4.0) ===
 
-1. Bluff & Token Physics
-   - Bluff Exclusivity: IF (Role ∈ 3 Demon Bluffs) -> THEN (Token is NOT in play && Claim is 100% FALSE).
-   - Drunk Exclusion: IF (Role ∈ 3 Demon Bluffs) -> THEN (Role != Drunk's assumed Townsfolk) [since Drunk's real token is in play].
-   - Marionette Exception: IF (Marionette in play) -> THEN (1 of 3 Demon Bluffs = Marionette's real nominal Townsfolk card).
-   - Teensyville Rules: IF (Players <= 6 AND Toymaker NOT in play) -> THEN (Demon Bluffs = 0).
-
-2. Vortox Truth Manipulation
-   - Vortox Force-False: IF (Demon = Vortox) -> THEN (ALL Townsfolk info = 100% FALSE) && (No daytime execution -> Evil wins).
-   - Priority Override: IF (Demon = Vortox AND Townsfolk is Drunk/Poisoned) -> THEN (Townsfolk info MUST still be false) [Vortox global override].
-   - Core Card Anchor: IF (Demon = Vortox) -> THEN (Outsider/Minion info [e.g., Drunk/Marionette] CAN be true). IF (Townsfolk obtains Outsider ability via Philosopher/Cannibal) -> THEN (Info MUST still be false) [checked by original nominal card type].
-
-3. Droisoning & Passive Fails
-   - Instant Win/Lose Fails: IF (Saint / Klutz / Goblin is executed/dies while Drunk/Poisoned) -> THEN (Their game-ending win/loss abilities DO NOT trigger).
-   - Virgin Verification: IF (Virgin is sober) -> THEN (Execution triggers even if nominator is a Drunk/Poisoned Townsfolk). IF (Virgin is Drunk/Poisoned) -> THEN (Nomination does nothing, and the 'first time' trigger is permanently consumed).
-   - One-Time Ability Burn: IF (Slayer / Slayer-equivalent fires shot while Drunk/Poisoned) -> THEN (Shot fails and is wasted permanently).
-
-4. Evil Recognition & Isolation
-   - Poppy Grower: Default = Evil knows Evil N1. IF (Evil blind) -> THEN (Poppy Grower is ALIVE in play). IF (Poppy Grower dies while Drunk/Poisoned) -> THEN (Evil players still DO NOT learn each other tonight).
-   - Magician Cover: IF (Spy/Widow views Grimoire AND Magician in play) -> THEN (Storyteller MUST hide both Demon and Magician tokens).
-
-5. Physical Contraction & Seating
-   - Seating Collapse: Dead players are physically skipped for neighbor checks (Empath/Tea Lady/No-Dashi). Connect next alive players directly.
-   - Pit-Hag Exclusivity: IF (Pit-Hag attempts to transform a player into an in-play alive good role) -> THEN (Ability fails and nothing happens).
-
-6. Succession & Singularities
-   - Dead Demon Defeat: IF (Demon passes role to a dead player [e.g. dead Minion or dead Scarlet Woman via Vigormortis]) -> THEN (No alive Demon exists -> Evil loses immediately).
-   - Lleech Delay: IF (Lleech is Drunk/Poisoned AND Host dies) -> THEN (Lleech temporarily survives) && (As soon as Lleech recovers sanity/soberness -> Lleech dies immediately).
-   - Nested Inversion: IF (Heretic in play AND Evil Twin in play AND Demon executed) -> THEN (Twin blocks Good victory -> Heretic inverts 'Good not winning' -> Evil wins immediately).
+1. Bluff Exclusivity: The 3 Demon Bluffs are NOT physically in play. Any claim of a Bluff role = FALSE.
+2. Seating Contraction: Dead players are physically skipped for neighbor checks (Empath/Tea Lady/No-Dashi). Adjacent alive players merge directly.
+3. One-Shot Burn: Using a one-shot ability (Slayer/Hunter/Golem) while drunk/poisoned → permanently consumed and fails. Saint/Klutz execution while drunk/poisoned → game-ending effect does NOT trigger.
+4. Demon Succession: Passing Demonhood to a dead player → Evil loses immediately (no living Demon exists).
+5. Role Uniqueness: Each good character appears at most once in play. Two players claiming the same good role → at least one is false (after ruling out Cerenovus/Pit-Hag/Drunk interference).
 `;
 

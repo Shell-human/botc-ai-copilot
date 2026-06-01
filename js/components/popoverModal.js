@@ -3,13 +3,10 @@
    ========================================================================== */
 
 import { ROLE_TRANSLATIONS, TRANSLATIONS } from '../data/translations.js';
-import { gameState, saveToLocalStorage } from '../state.js';
-import { dom } from '../dom.js';
+import { gameState } from '../core/state.js';
+import { dom } from '../core/dom.js';
 import { escapeHtml } from '../utils.js';
-
-import { renderSeatingChart } from './seatingChart.js';
-import { renderPlayerList } from './playerList.js';
-import { renderTimelineLogs } from './timelineLogs.js';
+import { notifyStateChange } from '../controllers/gameController.js';
 
 // --- 弹窗 Modal 管理 ---
 export function openPopover(seat) {
@@ -87,16 +84,7 @@ export function savePopoverData() {
     }
 
     closePopover();
-    renderSeatingChart();
-    renderPlayerList();
-    renderTimelineLogs();
-    
-    if (window.renderDeductiveValidator) {
-        window.renderDeductiveValidator();
-    }
-    
-    // 保存状态到本地
-    saveToLocalStorage();
+    notifyStateChange();
 }
 
 // 自我初始化事件绑定，高内聚低耦合

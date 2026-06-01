@@ -1,35 +1,19 @@
 /* ==========================================================================
-   state.js - 全局运行时状态机管理与视图层同步协调中心 (State Model)
+   gameController.js - 游戏生命周期控制器 (Game Lifecycle Controller)
+   职责：游戏初始化、存档加载、玩家操作、视图同步
    ========================================================================== */
 
-import { dom } from './dom.js';
-import { setLanguage, updateMyRoleOptions, updateApiModelOptions, resetAnalysisBoxes } from './i18n.js';
-import { renderSeatingChart } from './components/seatingChart.js';
-import { renderPlayerList } from './components/playerList.js';
-import { renderTimelineLogs } from './components/timelineLogs.js';
-import { renderDeductiveValidator } from './components/deductiveValidator.js';
-import { SCRIPTS_DATA, SCRIPTS_DATA_EN } from './data/rules.js';
-import { ROLE_TRANSLATIONS, TRANSLATIONS } from './data/translations.js';
-import { saveGameState, loadGameState, hasSavedGame, loadApiKey } from './services/storage.js';
-
-export const gameState = {
-    apiKey: "",
-    playerCount: 9,
-    scriptName: "wushang",
-    mySeat: 3,
-    myRole: "共情者",
-    myAlignment: "good",
-    evilBluffs: ["", "", ""],
-    apiProvider: "gemini",
-    apiBaseUrl: "https://api.openai.com/v1",
-    aiModel: "gemini-flash-latest",
-    apiModelCustom: "",
-    players: [],
-    logs: [],
-    aiOutputs: [],
-    selectedSeatForEdit: null,
-    lang: "zh"
-};
+import { gameState } from '../core/state.js';
+import { dom } from '../core/dom.js';
+import { renderSeatingChart } from '../components/seatingChart.js';
+import { renderPlayerList } from '../components/playerList.js';
+import { renderTimelineLogs } from '../components/timelineLogs.js';
+import { renderDeductiveValidator } from '../components/deductiveValidator.js';
+import { SCRIPTS_DATA, SCRIPTS_DATA_EN } from '../data/rules.js';
+import { ROLE_TRANSLATIONS } from '../data/translations.js';
+import { saveGameState, loadGameState, hasSavedGame, loadApiKey } from '../services/storage.js';
+import { setLanguage, updateMyRoleOptions, updateApiModelOptions, resetAnalysisBoxes } from '../i18n/engine.js';
+import { updateApiStatusIndicator } from '../core/statusIndicator.js';
 
 // --- 对局本地自动持久化存储代理 ---
 export function saveToLocalStorage() {
@@ -47,10 +31,12 @@ export function saveToLocalStorage() {
         players: gameState.players,
         logs: gameState.logs,
         aiOutputs: gameState.aiOutputs || [],
+        chatMessages: gameState.chatMessages || [],
         consoleInputDraft: dom.consoleInput ? dom.consoleInput.value : "",
         analysisBoxHtml: dom.analysisBox ? dom.analysisBox.innerHTML : "",
         worldlinesBoxHtml: dom.worldlinesBox ? dom.worldlinesBox.innerHTML : "",
         tipsBoxHtml: dom.tipsBox ? dom.tipsBox.innerHTML : "",
+        chatBoxHtml: dom.chatBox ? dom.chatBox.innerHTML : "",
         lang: gameState.lang
     });
 }
@@ -80,12 +66,11 @@ export function loadFromLocalStorage() {
         gameState.players = data.players;
         gameState.logs = data.logs;
         gameState.aiOutputs = data.aiOutputs || [];
+        gameState.chatMessages = data.chatMessages || [];
         gameState.lang = data.lang || "zh";
 
-        // Sync i18n
         setLanguage(gameState.lang);
 
-        // 同步 UI 控件状态
         dom.playerCountSelect.value = gameState.playerCount;
         dom.scriptSelect.value = gameState.scriptName;
         dom.mySeatInput.value = gameState.mySeat;
@@ -94,20 +79,15 @@ export function loadFromLocalStorage() {
         dom.apiProviderSelect.value = gameState.apiProvider;
         dom.apiBaseUrlInput.value = gameState.apiBaseUrl;
 
-        // 载入该厂商已保存的密钥
         const savedKey = loadApiKey(gameState.apiProvider);
         dom.apiKeyInput.value = savedKey;
         gameState.apiKey = savedKey;
 
-        // 重新填充下拉框
         updateMyRoleOptions();
         updateApiModelOptions();
 
-        if (window.updateApiStatusIndicator) {
-            window.updateApiStatusIndicator();
-        }
+        updateApiStatusIndicator();
 
-        // 恢复邪恶伪装面板及状态值
         if (gameState.myAlignment === "evil") {
             dom.evilBluffsContainer.classList.remove("hidden");
             if (gameState.evilBluffs[0]) dom.evilBluff1.value = gameState.evilBluffs[0];
@@ -117,7 +97,6 @@ export function loadFromLocalStorage() {
             dom.evilBluffsContainer.classList.add("hidden");
         }
 
-        // 恢复输入框草稿与 AI 分析结果
         if (dom.consoleInput && data.consoleInputDraft) {
             dom.consoleInput.value = data.consoleInputDraft;
         }
@@ -132,20 +111,20 @@ export function loadFromLocalStorage() {
         if (dom.tipsBox && data.tipsBoxHtml && data.tipsBoxHtml.trim()) {
             dom.tipsBox.innerHTML = data.tipsBoxHtml;
         }
+        if (dom.chatBox && data.chatBoxHtml && data.chatBoxHtml.trim()) {
+            dom.chatBox.innerHTML = data.chatBoxHtml;
+        }
 
-        // 重新渲染全部视图
         renderSeatingChart();
         renderPlayerList();
         renderTimelineLogs();
         renderDeductiveValidator();
 
-        // 自动折叠初始化面板
         const initGameDetails = document.getElementById("initGameDetails");
         if (initGameDetails) {
             initGameDetails.open = false;
         }
 
-        // 隐藏恢复按钮，既然已经恢复
         if (dom.restoreGameBtn) {
             dom.restoreGameBtn.classList.add("hidden");
         }
@@ -163,7 +142,6 @@ export function loadFromLocalStorage() {
     }
 }
 
-// --- 初始化游戏核心逻辑 ---
 export function initGame() {
     gameState.apiKey = dom.apiKeyInput.value.trim() || gameState.apiKey;
     gameState.playerCount = parseInt(dom.playerCountSelect.value);
@@ -176,14 +154,12 @@ export function initGame() {
     gameState.aiModel = dom.aiModelSelect.value;
     gameState.apiModelCustom = dom.apiModelCustomInput.value.trim();
     
-    // 获取邪恶伪装身份
     gameState.evilBluffs = [
         dom.evilBluff1.value,
         dom.evilBluff2.value,
         dom.evilBluff3.value
     ].filter(b => b !== "");
 
-    // 创建玩家数组
     gameState.players = [];
     for (let i = 1; i <= gameState.playerCount; i++) {
         const isMe = (i === gameState.mySeat);
@@ -199,10 +175,9 @@ export function initGame() {
         });
     }
 
-    // 重置 AI 历史输出与记忆
     gameState.aiOutputs = [];
+    gameState.chatMessages = [];
 
-    // 重置日志流水
     if (gameState.lang === "en") {
         const scriptNameEn = SCRIPTS_DATA_EN[gameState.scriptName]?.name || gameState.scriptName;
         const myRoleEn = ROLE_TRANSLATIONS[gameState.myRole] || gameState.myRole;
@@ -227,30 +202,23 @@ export function initGame() {
         }
     }
 
-    // 更新界面
     renderSeatingChart();
     renderPlayerList();
     renderTimelineLogs();
     renderDeductiveValidator();
 
-    // 重置分析框
     resetAnalysisBoxes();
 
-    // 初始化完成后自动折叠配置面板，腾出空间给玩家列表
     const initGameDetails = document.getElementById("initGameDetails");
     if (initGameDetails) {
         initGameDetails.open = false;
     }
 
-    // 保存状态到本地
     saveToLocalStorage();
 
-    if (window.updateApiStatusIndicator) {
-        window.updateApiStatusIndicator();
-    }
+    updateApiStatusIndicator();
 }
 
-// --- 状态变动辅助函数 ---
 export function togglePlayerAlive(seat, isAlive) {
     const player = gameState.players.find(p => p.seat === seat);
     if (player) {
@@ -260,11 +228,7 @@ export function togglePlayerAlive(seat, isAlive) {
         } else {
             gameState.logs.push(`<strong>${player.name}</strong> 状态更新为：${isAlive ? '存活' : '❌ 死亡'}`);
         }
-        renderSeatingChart();
-        renderPlayerList();
-        renderTimelineLogs();
-        renderDeductiveValidator();
-        saveToLocalStorage();
+        notifyStateChange();
     }
 }
 
@@ -277,119 +241,19 @@ export function togglePlayerPoison(seat, isPoisoned) {
         } else {
             gameState.logs.push(`<strong>${player.name}</strong> 标记为：${isPoisoned ? '🟣 中毒/醉酒状态' : '已恢复健康状态'}`);
         }
-        renderSeatingChart();
-        renderPlayerList();
-        renderTimelineLogs();
-        renderDeductiveValidator();
-        saveToLocalStorage();
+        notifyStateChange();
     }
 }
 
-// --- 💡 极客功能：智能语义化分析与自动状态追踪提取器 (NLP Smart Command Parser) ---
-export function parseAndApplyTextEvents(text) {
-    if (!text) return;
-    
-    const currentScript = SCRIPTS_DATA[gameState.scriptName];
-    if (!currentScript) return;
-    
-    // 中英文角色底牌池
-    const allRolesCn = [...currentScript.townsfolk, ...currentScript.outsider, ...currentScript.minion, ...currentScript.demon];
-    const currentScriptEn = SCRIPTS_DATA_EN[gameState.scriptName] || { townsfolk:[], outsider:[], minion:[], demon:[] };
-    const allRolesEn = [...currentScriptEn.townsfolk, ...currentScriptEn.outsider, ...currentScriptEn.minion, ...currentScriptEn.demon];
-    
-    // 按分句拆分以实现精准座位与事件多点对应匹配
-    const sentences = text.split(/[,.，。;\n\s+、]+/);
-    let hasChanges = false;
-    
-    sentences.forEach(sentence => {
-        if (!sentence.trim()) return;
-        
-        // 匹配玩家座位，支持多种格式："1号"、"2号玩家"、"玩家3"、"Seat 4"、"seat-5" 等
-        const seatMatch = sentence.match(/(\d+)[\s-]*号|玩家[\s-]*(\d+)|seat[\s-]*(\d+)/i);
-        if (!seatMatch) return;
-        
-        const seatNum = parseInt(seatMatch[1] || seatMatch[2] || seatMatch[3]);
-        if (seatNum < 1 || seatNum > gameState.playerCount) return;
-        
-        const player = gameState.players.find(p => p.seat === seatNum);
-        if (!player) return;
-        
-        // 1. 自动追踪生死变化 (Death/Life Status Check)
-        if (/死|亡|出局|阵亡|被处决|die|dead|killed|executed/i.test(sentence) && !/没死|不死|未死|alive|not\s+dead/i.test(sentence)) {
-            if (player.alive !== false) {
-                player.alive = false;
-                hasChanges = true;
-                const logMsg = gameState.lang === "en"
-                    ? `[NLP Auto] Marked Seat ${seatNum} as Dead`
-                    : `[智能同步] 根据输入自动将 ${seatNum} 号标记为死亡状态`;
-                gameState.logs.push(logMsg);
-                console.log(`💡 [NLP Parser] Auto-updated Seat ${seatNum} to DEAD based on: "${sentence}"`);
-            }
-        } else if (/活|存活|未死|不死|没死|复活|alive/i.test(sentence)) {
-            if (player.alive !== true) {
-                player.alive = true;
-                hasChanges = true;
-                const logMsg = gameState.lang === "en"
-                    ? `[NLP Auto] Marked Seat ${seatNum} as Alive`
-                    : `[智能同步] 根据输入自动将 ${seatNum} 号标记为存活状态`;
-                gameState.logs.push(logMsg);
-                console.log(`💡 [NLP Parser] Auto-updated Seat ${seatNum} to ALIVE based on: "${sentence}"`);
-            }
-        }
-        
-        // 2. 自动追踪中毒醉酒状态 (Drunk/Poisoned Status Check)
-        if (/中毒|醉酒|drunk|poisoned/i.test(sentence) && !/解毒|恢复|正常|healthy|cured/i.test(sentence)) {
-            if (player.poisoned !== true) {
-                player.poisoned = true;
-                hasChanges = true;
-                const logMsg = gameState.lang === "en"
-                    ? `[NLP Auto] Marked Seat ${seatNum} as Drunk/Poisoned`
-                    : `[智能同步] 根据输入自动将 ${seatNum} 号标记为中毒/醉酒`;
-                gameState.logs.push(logMsg);
-                console.log(`💡 [NLP Parser] Auto-updated Seat ${seatNum} to POISONED based on: "${sentence}"`);
-            }
-        } else if (/解毒|恢复|解酒|正常|正常状态|healthy|cured/i.test(sentence)) {
-            if (player.poisoned !== false) {
-                player.poisoned = false;
-                hasChanges = true;
-                const logMsg = gameState.lang === "en"
-                    ? `[NLP Auto] Cleared Drunk/Poisoned on Seat ${seatNum}`
-                    : `[智能同步] 根据输入自动清除了 ${seatNum} 号的中毒/醉酒状态`;
-                gameState.logs.push(logMsg);
-                console.log(`💡 [NLP Parser] Auto-updated Seat ${seatNum} to HEALTHY based on: "${sentence}"`);
-            }
-        }
-        
-        // 3. 自动匹配并更新角色宣称 (Role Claims Check)
-        for (let i = 0; i < allRolesCn.length; i++) {
-            const cnRole = allRolesCn[i];
-            const enRole = allRolesEn[i] || "";
-            
-            // 确保角色全名出现在分句中，并支持中英双语识别
-            const regexCn = new RegExp(cnRole);
-            const regexEn = enRole ? new RegExp("\\b" + enRole + "\\b", "i") : null;
-            
-            if (regexCn.test(sentence) || (regexEn && regexEn.test(sentence))) {
-                if (player.claim !== cnRole) {
-                    const oldClaim = player.claim;
-                    player.claim = cnRole; // 始终以中文全名作为统一基准标识存储
-                    hasChanges = true;
-                    const logMsg = gameState.lang === "en"
-                        ? `[NLP Auto] Updated Seat ${seatNum} claim to: ${enRole}`
-                        : `[智能同步] 根据输入自动将 ${seatNum} 号的宣称变更为：${cnRole}`;
-                    gameState.logs.push(logMsg);
-                    console.log(`💡 [NLP Parser] Auto-updated Seat ${seatNum} claim from "${oldClaim}" to "${cnRole}"`);
-                }
-                break;
-            }
-        }
-    });
-    
-    if (hasChanges) {
-        renderSeatingChart();
-        renderPlayerList();
-        renderTimelineLogs();
-        renderDeductiveValidator();
-        saveToLocalStorage();
-    }
+/**
+ * notifyStateChange() — 统一视图同步入口
+ * 所有组件通过此函数触发 UI 重新渲染，替代组件间直接互相 import。
+ * 切断 seatingChart ↔ popoverModal 等双向循环依赖。
+ */
+export function notifyStateChange() {
+    renderSeatingChart();
+    renderPlayerList();
+    renderTimelineLogs();
+    renderDeductiveValidator();
+    saveToLocalStorage();
 }

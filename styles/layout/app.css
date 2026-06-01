@@ -1,0 +1,58 @@
+/* ==========================================================================
+   app.css - 玻璃材质卡片、核心网格布局、面板通用骨架
+   ========================================================================== */
+
+/* 玻璃材质卡片 (Glassmorphism) */
+.glass {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(16px) saturate(140%);
+    box-shadow: var(--shadow-main);
+    border-radius: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.glass:hover {
+    border-color: var(--border-hover);
+}
+
+/* 核心应用网格布局 */
+.app-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 320px 1fr 380px;
+    gap: 16px;
+    padding: 16px;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+}
+
+/* 面板通用骨架 */
+.panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+}
+
+.panel-header {
+    height: 52px;
+    min-height: 52px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.panel-header h2 {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.panel-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--color-good);
+}

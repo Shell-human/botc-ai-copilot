@@ -1,0 +1,205 @@
+/* ==========================================================================
+   validator.css - 逻辑校验器仪表盘 (Deductive Validator Dashboard)
+   大盘逻辑校验、冲突追踪器、鬼魂投票标记
+   ========================================================================== */
+
+.validator-dashboard-container {
+    margin: 16px 24px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.validator-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 8px;
+}
+
+.validator-title {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.validator-title i {
+    color: var(--color-accent);
+}
+
+.validator-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .validator-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
+.validator-panel {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.validator-panel-header {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.validator-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 80px;
+    overflow-y: auto;
+}
+
+.validator-list::-webkit-scrollbar {
+    width: 3px;
+}
+
+.validator-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.validator-item {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.validator-item.alert-danger {
+    background: rgba(255, 51, 102, 0.1);
+    border: 1px solid rgba(255, 51, 102, 0.2);
+    color: #ff3366;
+}
+
+.validator-item.alert-warning {
+    background: rgba(255, 145, 0, 0.1);
+    border: 1px solid rgba(255, 145, 0, 0.2);
+    color: #ff9100;
+}
+
+.validator-item.alert-success {
+    background: rgba(0, 210, 255, 0.1);
+    border: 1px solid rgba(0, 210, 255, 0.2);
+    color: #00d2ff;
+}
+
+.validator-item.alert-neutral {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+}
+
+.validator-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+
+.validator-badge.danger { background: #ff3366; color: #fff; }
+.validator-badge.warning { background: #ff9100; color: #fff; }
+.validator-badge.success { background: #00d2ff; color: #0d121b; }
+.validator-badge.neutral { background: rgba(255, 255, 255, 0.1); color: var(--text-primary); }
+
+.validator-empty-text {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    padding: 8px 0;
+}
+
+/* Ghost Vote Tokens */
+.ghost-vote-token {
+    position: absolute;
+    bottom: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(13, 18, 27, 0.95);
+    border: 1.5px solid var(--border-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ghost-vote-token.active {
+    color: #ff9100;
+    border-color: #ff9100;
+    filter: drop-shadow(0 0 4px rgba(255, 145, 0, 0.6));
+    animation: pulseVote 2s infinite ease-in-out;
+}
+
+.ghost-vote-token.spent {
+    color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0.5;
+}
+
+.ghost-vote-token:hover {
+    transform: scale(1.2);
+}
+
+.ghost-vote-token.active:hover {
+    filter: drop-shadow(0 0 8px rgba(255, 145, 0, 0.9));
+}
+
+.ghost-vote-svg {
+    width: 11px;
+    height: 11px;
+    transition: all 0.3s;
+}
+
+@keyframes pulseVote {
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 3px rgba(255, 145, 0, 0.5));
+    }
+    50% {
+        transform: scale(1.08);
+        filter: drop-shadow(0 0 8px rgba(255, 145, 0, 0.8));
+    }
+}

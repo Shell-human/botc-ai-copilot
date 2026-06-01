@@ -1,5 +1,6 @@
 /* ==========================================================================
-   dom.js - 全局 DOM 元素缓存引用注册中心
+   core/dom.js - 全局 DOM 元素缓存引用注册中心
+   职责：仅包含 DOM 元素引用，不包含任何操作逻辑。
    ========================================================================== */
 
 export const dom = {
@@ -17,8 +18,6 @@ export const dom = {
     timelineLogsContainer: document.getElementById("timelineLogsContainer"),
     logCountText: document.getElementById("logCountText"),
     consoleInputLabel: document.getElementById("consoleInputLabel"),
-    aiChatModeToggle: document.getElementById("aiChatModeToggle"),
-    chatModeLabel: document.getElementById("chatModeLabel"),
     consoleInput: document.getElementById("consoleInput"),
     clearConsoleBtn: document.getElementById("clearConsoleBtn"),
     analyzeBtn: document.getElementById("analyzeBtn"),
@@ -27,6 +26,7 @@ export const dom = {
     analysisBox: document.getElementById("analysisBox"),
     worldlinesBox: document.getElementById("worldlinesBox"),
     tipsBox: document.getElementById("tipsBox"),
+    chatBox: document.getElementById("chatBox"),
     // Popover Modal
     popoverModal: document.getElementById("seatPopoverModal"),
     popoverPlayerTitle: document.getElementById("popoverPlayerTitle"),
@@ -58,5 +58,8 @@ export const dom = {
     closeScriptPreviewBtn: document.getElementById("closeScriptPreviewBtn"),
     seatingChartWatermark: document.getElementById("seatingChartWatermark"),
     langToggleBtn: document.getElementById("langToggleBtn"),
-    langToggleText: document.getElementById("langToggleText")
+    langToggleText: document.getElementById("langToggleText"),
+
+    // 校验器卡片容器（仅 deductiveValidator.js 使用，纳入统一管理）
+    deductiveValidatorCard: document.getElementById("deductiveValidatorCard"),
 };

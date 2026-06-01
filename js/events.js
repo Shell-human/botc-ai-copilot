@@ -2,12 +2,16 @@
    events.js - 核心配置面板与控制台事件订阅注册中心 (Controller / Events)
    ========================================================================== */
 
-import { dom } from './dom.js';
-import { gameState, initGame, saveToLocalStorage, loadFromLocalStorage } from './state.js';
-import { updateMyRoleOptions, updateApiModelOptions, setLanguage, useEnOrZh, updateConsoleUI } from './i18n.js';
+import { dom } from './core/dom.js';
+import { gameState } from './core/state.js';
+import { PROVIDER_BASE_URLS } from './core/constants.js';
+import { updateApiStatusIndicator } from './core/statusIndicator.js';
+import { initGame, saveToLocalStorage, loadFromLocalStorage } from './controllers/gameController.js';
+import { handleAiAnalysis } from './controllers/aiController.js';
+import { updateMyRoleOptions, updateApiModelOptions, setLanguage, useEnOrZh, updateConsoleUI, resetAnalysisBoxes } from './i18n/engine.js';
+import { resetChatBox } from './components/chatRenderer.js';
 import { showToast } from './utils.js';
 import { populateScriptPreview } from './components/scriptPreview.js';
-import { handleAiAnalysis } from './api.js';
 import { TRANSLATIONS } from './data/translations.js';
 import { clearGameState, loadApiKey, saveApiKey } from './services/storage.js';
 import { renderDeductiveValidator } from './components/deductiveValidator.js';
@@ -34,24 +38,12 @@ export function initCoreEvents() {
         updateApiModelOptions();
         
         // 自动切换对应的预设 Base URL
-        if (gameState.apiProvider === "chatgpt") {
-            dom.apiBaseUrlInput.value = "https://api.openai.com/v1";
-        } else if (gameState.apiProvider === "claude") {
-            dom.apiBaseUrlInput.value = "https://api.anthropic.com/v1";
-        } else if (gameState.apiProvider === "deepseek") {
-            dom.apiBaseUrlInput.value = "https://api.deepseek.com/v1";
-        } else if (gameState.apiProvider === "qwen") {
-            dom.apiBaseUrlInput.value = "https://dashscope.aliyuncs.com/compatible-mode/v1";
-        } else if (gameState.apiProvider === "zhipu") {
-            dom.apiBaseUrlInput.value = "https://open.bigmodel.cn/api/paas/v4/";
-        } else if (gameState.apiProvider === "doubao") {
-            dom.apiBaseUrlInput.value = "https://ark.cn-beijing.volces.com/api/v3";
-        } else if (gameState.apiProvider === "kimi") {
-            dom.apiBaseUrlInput.value = "https://api.moonshot.cn/v1";
-        } else if (gameState.apiProvider === "baidu") {
-            dom.apiBaseUrlInput.value = "https://aistudio.baidu.com/llm/lmapi/v3";
+        const providerBaseUrl = PROVIDER_BASE_URLS[gameState.apiProvider];
+        if (providerBaseUrl) {
+            dom.apiBaseUrlInput.value = providerBaseUrl;
         } else if (gameState.apiProvider === "custom") {
-            if (!dom.apiBaseUrlInput.value || dom.apiBaseUrlInput.value.includes("api.openai.com") || dom.apiBaseUrlInput.value.includes("api.deepseek.com") || dom.apiBaseUrlInput.value.includes("dashscope.aliyuncs.com") || dom.apiBaseUrlInput.value.includes("api.anthropic.com") || dom.apiBaseUrlInput.value.includes("bigmodel.cn") || dom.apiBaseUrlInput.value.includes("volces.com") || dom.apiBaseUrlInput.value.includes("moonshot.cn") || dom.apiBaseUrlInput.value.includes("baidu.com")) {
+            const currentVal = dom.apiBaseUrlInput.value || "";
+            if (!currentVal || /api\.openai|api\.deepseek|dashscope\.aliyuncs|api\.anthropic|bigmodel\.cn|volces\.com|moonshot\.cn|baidu\.com/.test(currentVal)) {
                 dom.apiBaseUrlInput.value = "http://localhost:11434/v1";
             }
         }
@@ -59,9 +51,7 @@ export function initCoreEvents() {
         gameState.apiBaseUrl = dom.apiBaseUrlInput.value;
         gameState.aiModel = dom.aiModelSelect.value;
         
-        if (window.updateApiStatusIndicator) {
-            window.updateApiStatusIndicator();
-        }
+        updateApiStatusIndicator();
         
         saveToLocalStorage();
     });
@@ -78,22 +68,9 @@ export function initCoreEvents() {
             gameState.aiModel = val;
             
             // 切换模型时，如果是对应的厂商，也做一次智能预设
-            if (gameState.apiProvider === "chatgpt") {
-                dom.apiBaseUrlInput.value = "https://api.openai.com/v1";
-            } else if (gameState.apiProvider === "claude") {
-                dom.apiBaseUrlInput.value = "https://api.anthropic.com/v1";
-            } else if (gameState.apiProvider === "deepseek") {
-                dom.apiBaseUrlInput.value = "https://api.deepseek.com/v1";
-            } else if (gameState.apiProvider === "qwen") {
-                dom.apiBaseUrlInput.value = "https://dashscope.aliyuncs.com/compatible-mode/v1";
-            } else if (gameState.apiProvider === "zhipu") {
-                dom.apiBaseUrlInput.value = "https://open.bigmodel.cn/api/paas/v4/";
-            } else if (gameState.apiProvider === "doubao") {
-                dom.apiBaseUrlInput.value = "https://ark.cn-beijing.volces.com/api/v3";
-            } else if (gameState.apiProvider === "kimi") {
-                dom.apiBaseUrlInput.value = "https://api.moonshot.cn/v1";
-            } else if (gameState.apiProvider === "baidu") {
-                dom.apiBaseUrlInput.value = "https://aistudio.baidu.com/llm/lmapi/v3";
+            const providerBaseUrl = PROVIDER_BASE_URLS[gameState.apiProvider];
+            if (providerBaseUrl) {
+                dom.apiBaseUrlInput.value = providerBaseUrl;
             }
             gameState.apiBaseUrl = dom.apiBaseUrlInput.value;
         }
@@ -113,9 +90,7 @@ export function initCoreEvents() {
         const key = e.target.value.trim();
         gameState.apiKey = key;
         saveApiKey(gameState.apiProvider, key);
-        if (window.updateApiStatusIndicator) {
-            window.updateApiStatusIndicator();
-        }
+        updateApiStatusIndicator();
     });
 
     // 5. 接口基地址输入监听
@@ -166,6 +141,9 @@ export function initCoreEvents() {
             btn.classList.add("active");
             const tabId = btn.getAttribute("data-tab");
             document.getElementById(tabId).classList.add("active");
+            
+            // 根据当前活跃 Tab 更新控制台 UI
+            updateConsoleUI(tabId === "tab-chat");
         });
     });
 
@@ -196,18 +174,4 @@ export function initCoreEvents() {
         });
     }
 
-    // 16. AI 对话模式切换监听
-    if (dom.aiChatModeToggle) {
-        dom.aiChatModeToggle.addEventListener("change", () => {
-            updateConsoleUI();
-            saveToLocalStorage();
-            if (dom.aiChatModeToggle.checked) {
-                // Auto switch to the "Instant Analysis" tab (where Chat is rendered) for premium interactive flow
-                const analysisTabBtn = document.querySelector('.tab-btn[data-tab="tab-analysis"]');
-                if (analysisTabBtn) {
-                    analysisTabBtn.click();
-                }
-            }
-        });
-    }
 }

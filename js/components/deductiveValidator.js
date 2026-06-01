@@ -2,19 +2,13 @@
    deductiveValidator.js - 大盘逻辑校验与冲突追踪看板组件 (Component)
    ========================================================================= */
 
-import { gameState } from '../state.js';
+import { gameState } from '../core/state.js';
+import { dom } from '../core/dom.js';
 import { GAME_DISTRIBUTIONS, SCRIPTS_DATA } from '../data/rules.js';
-import { ROLE_TRANSLATIONS } from '../data/translations.js';
-
-function getLocalizedRole(roleName) {
-    if (gameState.lang === "en") {
-        return ROLE_TRANSLATIONS[roleName] || roleName;
-    }
-    return roleName;
-}
+import { getLocalizedRole } from '../i18n/engine.js';
 
 export function renderDeductiveValidator() {
-    const card = document.getElementById("deductiveValidatorCard");
+    const card = dom.deductiveValidatorCard;
     if (!card) {
         console.warn("⚠️ [DeductiveValidator] Card container element 'deductiveValidatorCard' not found in DOM.");
         return;
@@ -200,5 +194,3 @@ export function renderDeductiveValidator() {
     `;
 }
 
-// Bind to window to allow seating chart or other files to trigger updates
-window.renderDeductiveValidator = renderDeductiveValidator;
