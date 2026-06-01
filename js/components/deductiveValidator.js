@@ -1,0 +1,168 @@
+/* ==========================================================================
+   deductiveValidator.js - 大盘逻辑校验与冲突追踪看板组件 (Component)
+   ========================================================================= */
+
+import { gameState } from '../state.js';
+import { GAME_DISTRIBUTIONS, SCRIPTS_DATA } from '../data/rules.js';
+
+export function renderDeductiveValidator() {
+    const card = document.getElementById("deductiveValidatorCard");
+    if (!card) return;
+
+    const isEn = gameState.lang === "en";
+    const currentScript = SCRIPTS_DATA[gameState.scriptName];
+    if (!currentScript) {
+        card.innerHTML = "";
+        return;
+    }
+
+    // 1. 计算对跳冲突 (Claim Collisions)
+    const claimGroups = {};
+    gameState.players.forEach(p => {
+        if (p.claim && p.claim !== "未知" && p.claim !== "Unknown") {
+            if (!claimGroups[p.claim]) {
+                claimGroups[p.claim] = [];
+            }
+            claimGroups[p.claim].push(p.seat);
+        }
+    });
+
+    const collisions = [];
+    Object.entries(claimGroups).forEach(([role, seats]) => {
+        if (seats.length > 1) {
+            collisions.push({ role, seats });
+        }
+    });
+
+    // 2. 计算外来者数量校验 (Outsider Validator)
+    const standardDist = GAME_DISTRIBUTIONS[gameState.playerCount] || { Townsfolk: 0, outsider: 0, minion: 0, demon: 0 };
+    const standardOutsiders = standardDist.outsider || 0;
+    
+    // 找出当前宣称为外来者的玩家
+    const claimedOutsiders = gameState.players.filter(p => {
+        return currentScript.outsider.includes(p.claim);
+    });
+    const claimedOutsidersCount = claimedOutsiders.length;
+
+    // 3. 计算幽灵票存余统计 (Ghost Votes)
+    const deadPlayers = gameState.players.filter(p => !p.alive);
+    const totalDeadCount = deadPlayers.length;
+    const remainingGhostVotes = deadPlayers.filter(p => !p.ghostVoteUsed).length;
+
+    // ----------------------------------------------------
+    // 开始构造大盘 HTML
+    // ----------------------------------------------------
+    const titleText = isEn ? "Deductive Validator Dashboard" : "大盘逻辑校验与冲突追踪器";
+    const conflictHeader = isEn ? "Claim Collisions" : "角色对跳冲突";
+    const outsiderHeader = isEn ? "Outsider Count" : "外来者数量校验";
+    const ghostVoteHeader = isEn ? "Dead Ghost Votes" : "幽灵票存余统计";
+
+    // 2.1 对跳冲突列表 HTML
+    let collisionListHtml = "";
+    if (collisions.length === 0) {
+        collisionListHtml = `<p class="validator-empty-text">${isEn ? "No claim conflicts detected" : "暂无角色对跳冲突"}</p>`;
+    } else {
+        collisionListHtml = collisions.map(c => {
+            const seatsStr = isEn ? `Seats ${c.seats.join(" & ")}` : `${c.seats.join(" 号 & ")} 号`;
+            return `
+                <div class="validator-item alert-danger">
+                    <span><strong>${c.role}</strong> (${seatsStr})</span>
+                    <span class="validator-badge danger">${isEn ? "Collision" : "对跳"}</span>
+                </div>
+            `;
+        }).join("");
+    }
+
+    // 2.2 外来者校验 HTML
+    let outsiderStatusClass = "alert-success";
+    let outsiderBadgeClass = "success";
+    let outsiderStatusText = isEn ? "Normal" : "正常";
+    let outsiderDesc = isEn 
+        ? `Standard Outsiders: <strong>${standardOutsiders}</strong>, Claimed: <strong>${claimedOutsidersCount}</strong>`
+        : `标准外来者: <strong>${standardOutsiders}</strong> 位, 场上已跳: <strong>${claimedOutsidersCount}</strong> 位`;
+
+    if (claimedOutsidersCount > standardOutsiders) {
+        outsiderStatusClass = "alert-warning";
+        outsiderBadgeClass = "warning";
+        outsiderStatusText = isEn ? "Abnormal" : "异常溢出";
+        outsiderDesc += isEn 
+            ? `<br><span style="font-size:10px; opacity:0.8;">⚠️ Mismatch! Baron bluffing or Drunk role active?</span>`
+            : `<br><span style="font-size:10px; opacity:0.8;">⚠️ 溢出！可能存在男爵改配置，或有酒鬼、坏人穿衣服</span>`;
+    }
+
+    const outsiderValidatorHtml = `
+        <div class="validator-item ${outsiderStatusClass}" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+            <div style="display: flex; width: 100%; justify-content: space-between; align-items: center;">
+                <span class="validator-badge ${outsiderBadgeClass}">${outsiderStatusText}</span>
+            </div>
+            <p style="margin: 0; font-size: 11px; line-height: 1.4;">${outsiderDesc}</p>
+        </div>
+    `;
+
+    // 2.3 幽灵票校验 HTML
+    let ghostVoteStatusClass = "alert-neutral";
+    let ghostVoteBadgeClass = "neutral";
+    if (remainingGhostVotes > 0) {
+        ghostVoteStatusClass = "alert-warning";
+        ghostVoteBadgeClass = "warning";
+    }
+    const ghostVoteDesc = isEn 
+        ? `Available Votes: <strong>${remainingGhostVotes}</strong> / <strong>${totalDeadCount}</strong> Dead`
+        : `存余死票: <strong>${remainingGhostVotes}</strong> 张 / 共 <strong>${totalDeadCount}</strong> 位阵亡`;
+
+    const ghostVoteValidatorHtml = `
+        <div class="validator-item ${ghostVoteStatusClass}" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+            <div style="display: flex; width: 100%; justify-content: space-between; align-items: center;">
+                <span class="validator-badge ${ghostVoteBadgeClass}">${isEn ? `${remainingGhostVotes} Active` : `存余 ${remainingGhostVotes} 张`}</span>
+            </div>
+            <p style="margin: 0; font-size: 11px; line-height: 1.4;">${ghostVoteDesc}</p>
+        </div>
+    `;
+
+    card.innerHTML = `
+        <div class="validator-title-row">
+            <div class="validator-title">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--color-accent);">
+                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                    <path d="M12 6v6l4 2"/>
+                </svg>
+                <span>${titleText}</span>
+            </div>
+        </div>
+        <div class="validator-grid">
+            <!-- Panel 1: Claim Collisions -->
+            <div class="validator-panel">
+                <div class="validator-panel-header">
+                    <span>${conflictHeader}</span>
+                    <span style="opacity: 0.5;">[${collisions.length}]</span>
+                </div>
+                <div class="validator-list">
+                    ${collisionListHtml}
+                </div>
+            </div>
+
+            <!-- Panel 2: Outsiders Validator -->
+            <div class="validator-panel">
+                <div class="validator-panel-header">
+                    <span>${outsiderHeader}</span>
+                </div>
+                <div class="validator-list">
+                    ${outsiderValidatorHtml}
+                </div>
+            </div>
+
+            <!-- Panel 3: Ghost Votes -->
+            <div class="validator-panel">
+                <div class="validator-panel-header">
+                    <span>${ghostVoteHeader}</span>
+                </div>
+                <div class="validator-list">
+                    ${ghostVoteValidatorHtml}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Bind to window to allow seating chart or other files to trigger updates
+window.renderDeductiveValidator = renderDeductiveValidator;

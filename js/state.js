@@ -7,6 +7,7 @@ import { setLanguage, updateMyRoleOptions, updateApiModelOptions, resetAnalysisB
 import { renderSeatingChart } from './components/seatingChart.js';
 import { renderPlayerList } from './components/playerList.js';
 import { renderTimelineLogs } from './components/timelineLogs.js';
+import { renderDeductiveValidator } from './components/deductiveValidator.js';
 import { SCRIPTS_DATA, SCRIPTS_DATA_EN } from './data/rules.js';
 import { ROLE_TRANSLATIONS, TRANSLATIONS } from './data/translations.js';
 import { saveGameState, loadGameState, hasSavedGame } from './services/storage.js';
@@ -127,6 +128,7 @@ export function loadFromLocalStorage() {
         renderSeatingChart();
         renderPlayerList();
         renderTimelineLogs();
+        renderDeductiveValidator();
 
         // 自动折叠初始化面板
         const initGameDetails = document.getElementById("initGameDetails");
@@ -183,6 +185,7 @@ export function initGame() {
             claim: isMe ? gameState.myRole : "未知",
             alignment: isMe ? gameState.myAlignment : "unknown",
             poisoned: false,
+            ghostVoteUsed: false,
             note: isMe ? "这是我的底牌角色" : ""
         });
     }
@@ -218,6 +221,7 @@ export function initGame() {
     renderSeatingChart();
     renderPlayerList();
     renderTimelineLogs();
+    renderDeductiveValidator();
 
     // 重置分析框
     resetAnalysisBoxes();
@@ -245,6 +249,7 @@ export function togglePlayerAlive(seat, isAlive) {
         renderSeatingChart();
         renderPlayerList();
         renderTimelineLogs();
+        renderDeductiveValidator();
         saveToLocalStorage();
     }
 }
@@ -261,6 +266,7 @@ export function togglePlayerPoison(seat, isPoisoned) {
         renderSeatingChart();
         renderPlayerList();
         renderTimelineLogs();
+        renderDeductiveValidator();
         saveToLocalStorage();
     }
 }

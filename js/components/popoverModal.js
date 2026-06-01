@@ -89,6 +89,10 @@ export function savePopoverData() {
     renderPlayerList();
     renderTimelineLogs();
     
+    if (window.renderDeductiveValidator) {
+        window.renderDeductiveValidator();
+    }
+    
     // 保存状态到本地
     saveToLocalStorage();
 }

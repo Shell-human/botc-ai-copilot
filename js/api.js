@@ -592,7 +592,13 @@ ${aiHistoryPrompt}
 
 ---
 Please provide depth analysis based on the latest update: "${consoleText}".
-For an optimal user experience, you MUST strictly format your response using these three exact tags:
+For an optimal user experience, you MUST strictly format your response using these four exact tags:
+
+=== MEMO ===
+Provide exactly 3 highly condensed bullet points summarizing the tactical situation:
+- **[Game Point]**: E.g. Day 2, 8 players alive, standard execution window.
+- **[Faultline]**: E.g. Seat 2 Empath's '1' contradicts Seat 5 Chef's '0' if Seat 3 is the Poisoner.
+- **[Next Step]**: E.g. Private chat Seat 2 to verify their Empath claim.
 
 === ANALYSIS ===
 Provide instant analysis here.
@@ -615,7 +621,7 @@ Guidelines:
 3. Conclude with a concise one-line tactical takeaway.
 
 [CRITICAL FORMATTING REQUIREMENT]
-Do NOT merge or omit these tags. Each section must start with the exact tag (=== ANALYSIS ===, === WORLDLINES ===, === TIPS ===) on a new line!
+Do NOT merge or omit these tags. Each section must start with the exact tag (=== MEMO ===, === ANALYSIS ===, === WORLDLINES ===, === TIPS ===) on a new line!
 Render all content in premium, clean English Markdown. Use bolding and lists appropriately for readability.
 `;
     }
@@ -655,8 +661,14 @@ ${gameLogs}
 ${aiHistoryPrompt}
 
 ---
-请帮我根据最新的变化“${consoleText}”，输出三个模块的分析。
-为了让我极高体验地使用，请严格按照以下三个标签标记划分你的输出：
+请帮我根据最新的变化“${consoleText}”，输出四个模块的分析。
+为了让我极高体验地使用，请严格按照以下四个标签标记划分你的输出：
+
+=== MEMO ===
+用极其精炼的语言提供刚好 3 行（加粗前缀）的战局核心备忘录：
+- **【当前死活线】**：例如：第 2 天，场上 8 人存活，进入标准投票轮次。
+- **【逻辑冲突线】**：例如：如果 3 号是投毒者，2 号的共情者 '1' 信息与 5 号的厨师 '0' 信息将产生冲突。
+- **【今日核心任务】**：例如：白天去私聊 2 号核对占卜师信息，并诱导大家投票给 6 号。
 
 === ANALYSIS ===
 这里进行【即时分析】。
@@ -679,7 +691,7 @@ ${aiHistoryPrompt}
 3. 给出一个简洁的一句话战术行动总结建议。
 
 【重要格式要求】
-不要合并或者漏掉以上标签。每一块内容必须以 === ANALYSIS ===, === WORLDLINES ===, === TIPS === 这三个大写标签单独占一行开启！
+不要合并或者漏掉以上标签。每一块内容必须以 === MEMO ===, === ANALYSIS ===, === WORLDLINES ===, === TIPS === 这四个大写标签单独占一行开启！
 所有的内容请采用精美的中文 Markdown 语法呈现，包含加粗、列表，请适当使用加粗和图标让重点内容极度清晰。
 `;
 }
@@ -689,33 +701,49 @@ export function distributeResponse(text, thoughtHtml = "") {
     console.log("🚨 [DEBUG] === distributeResponse() 开始执行 ===");
     console.log("🚨 [DEBUG] 原始返回文本长度:", text ? text.length : 0);
     
+    let memoPart = "";
+    let cleanText = text || "";
+    
+    const memoRegex = /(?:###\s*)?(?:\*\*)?===\s*MEMO\s*===(?:\*\*)?/i;
+    const memoMatch = cleanText.match(memoRegex);
+    const analysisRegex = /(?:###\s*)?(?:\*\*)?===\s*ANALYSIS\s*===(?:\*\*)?/i;
+    const analysisMatch = cleanText.match(analysisRegex);
+    
+    if (memoMatch && analysisMatch) {
+        const startPos = memoMatch.index + memoMatch[0].length;
+        const endPos = analysisMatch.index;
+        if (endPos > startPos) {
+            memoPart = cleanText.substring(startPos, endPos).trim();
+            // 剔除 Memo 块，防止其移位 fallback 拆分
+            cleanText = cleanText.substring(0, memoMatch.index) + cleanText.substring(analysisMatch.index);
+        }
+    }
+
     let analysisPart = "";
     let worldlinesPart = "";
     let tipsPart = "";
 
-    // 极其稳健的正则表达式，匹配可能带有多级标题、星号或空格的标签段
-    const analysisRegex = /(?:###\s*)?(?:\*\*)?===\s*ANALYSIS\s*===(?:\*\*)?/i;
     const worldlinesRegex = /(?:###\s*)?(?:\*\*)?===\s*WORLDLINES\s*===(?:\*\*)?/i;
     const tipsRegex = /(?:###\s*)?(?:\*\*)?===\s*TIPS\s*===(?:\*\*)?/i;
 
-    const analysisMatch = text.match(analysisRegex);
-    const worldlinesMatch = text.match(worldlinesRegex);
-    const tipsMatch = text.match(tipsRegex);
+    const analysisMatch2 = cleanText.match(analysisRegex);
+    const worldlinesMatch = cleanText.match(worldlinesRegex);
+    const tipsMatch = cleanText.match(tipsRegex);
 
     console.log("🚨 [DEBUG] 正则强匹配结果：", {
-        analysisMatched: !!analysisMatch,
+        analysisMatched: !!analysisMatch2,
         worldlinesMatched: !!worldlinesMatch,
         tipsMatched: !!tipsMatch
     });
 
-    if (analysisMatch && worldlinesMatch && tipsMatch) {
-        const analysisIdx = analysisMatch.index;
+    if (analysisMatch2 && worldlinesMatch && tipsMatch) {
+        const analysisIdx = analysisMatch2.index;
         const worldlinesIdx = worldlinesMatch.index;
         const tipsIdx = tipsMatch.index;
 
         // 整理匹配项的物理范围并排序，以防AI颠倒顺序输出
         const sections = [
-            { name: "analysis", start: analysisIdx, end: analysisIdx + analysisMatch[0].length },
+            { name: "analysis", start: analysisIdx, end: analysisIdx + analysisMatch2[0].length },
             { name: "worldlines", start: worldlinesIdx, end: worldlinesIdx + worldlinesMatch[0].length },
             { name: "tips", start: tipsIdx, end: tipsIdx + tipsMatch[0].length }
         ];
@@ -728,8 +756,8 @@ export function distributeResponse(text, thoughtHtml = "") {
             const current = sections[currentIdx];
             const next = sections[currentIdx + 1];
             const startPos = current.end;
-            const endPos = next ? next.start : text.length;
-            return text.substring(startPos, endPos).trim();
+            const endPos = next ? next.start : cleanText.length;
+            return cleanText.substring(startPos, endPos).trim();
         };
 
         analysisPart = getSectionContent("analysis");
@@ -738,11 +766,11 @@ export function distributeResponse(text, thoughtHtml = "") {
     } else {
         console.log("🚨 [DEBUG] 正则强匹配失败，进入 split 兼容模式分割...");
         // 兼容性兜底正则分割（忽略大小写）
-        const parts = text.split(/===\s*[a-zA-Z]+\s*===/i);
+        const parts = cleanText.split(/===\s*[a-zA-Z]+\s*===/i);
         console.log("🚨 [DEBUG] split 拆分出的 parts.length =", parts.length);
         
         if (parts.length < 4) {
-            analysisPart = text;
+            analysisPart = cleanText;
             const isChatMode = dom.aiChatModeToggle && dom.aiChatModeToggle.checked;
             if (isChatMode) {
                 worldlinesPart = `<div class="empty-tab-state"><p>💬 您正处于与 AI 的<b>【对话交流模式】</b>中。<br>此模式下只进行直接对话问答，如需对局局势推理，请关闭对话开关并输入局势进展。</p></div>`;
@@ -776,9 +804,32 @@ export function distributeResponse(text, thoughtHtml = "") {
         tipsPart = `<div class="empty-tab-state"><p>AI 未能生成本轮的具体行动建议。建议您阅读【即时分析】页面的全局逻辑推演。</p></div>`;
     }
 
-    // 渲染 Markdown
+    // 2.4 构造 AI 语义化战术备忘录 HTML
+    let memoHtml = "";
+    if (memoPart.trim()) {
+        const isEn = gameState.lang === "en";
+        const headerTitle = isEn ? "AI Copilot Tactical Memo" : "AI 战术备忘录";
+        
+        // 渲染备忘录列表
+        memoHtml = `
+            <div class="copilot-memo-card">
+                <div class="copilot-memo-header">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: middle;">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                    <span>${headerTitle}</span>
+                </div>
+                <div class="copilot-memo-list">
+                    ${parseMarkdown(memoPart.trim())}
+                </div>
+            </div>
+        `;
+    }
+
+    // 渲染 HTML
     console.log("🚨 [DEBUG] 正在将解析出的 HTML 渲染写入 DOM 元素中...");
-    dom.analysisBox.innerHTML = thoughtHtml + parseMarkdown(analysisPart.trim());
+    dom.analysisBox.innerHTML = thoughtHtml + memoHtml + parseMarkdown(analysisPart.trim());
     dom.worldlinesBox.innerHTML = parseMarkdown(worldlinesPart.trim());
     dom.tipsBox.innerHTML = parseMarkdown(tipsPart.trim());
 

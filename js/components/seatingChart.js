@@ -3,7 +3,7 @@
    ========================================================================== */
 
 import { SCRIPTS_DATA, SCRIPTS_DATA_EN } from '../data/rules.js';
-import { gameState } from '../state.js';
+import { gameState, saveToLocalStorage } from '../state.js';
 import { dom } from '../dom.js';
 import { getLocalizedRole } from '../i18n.js';
 import { openPopover } from './popoverModal.js';
@@ -67,16 +67,51 @@ export function renderSeatingChart() {
         node.style.left = `${x}px`;
         node.style.top = `${y}px`;
         
+        let ghostVoteHtml = "";
+        if (!player.alive) {
+            const isSpent = player.ghostVoteUsed;
+            const titleText = gameState.lang === "en" 
+                ? (isSpent ? "Ghost Vote spent" : "Ghost Vote active (Click to spend)") 
+                : (isSpent ? "幽灵票已使用" : "幽灵票存余 (点击消耗)");
+            ghostVoteHtml = `
+                <div class="ghost-vote-token ${isSpent ? 'spent' : 'active'}" title="${titleText}">
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="ghost-vote-svg">
+                        <circle cx="12" cy="12" r="8" />
+                    </svg>
+                </div>
+            `;
+        }
+        
         node.innerHTML = `
             <div class="seat-node-circle">
                 <span class="seat-node-num">${player.seat}</span>
                 <span class="seat-node-name">${(player.name === "我" || player.name === "Me") ? (gameState.lang === "en" ? "Me" : "我") : player.name}</span>
                 ${player.claim !== "未知" ? `<span class="seat-node-role">${getLocalizedRole(player.claim)}</span>` : ""}
             </div>
+            ${ghostVoteHtml}
         `;
 
         // 绑定点击事件，点击在地图上弹窗修改
         node.addEventListener("click", () => openPopover(player.seat));
+        
+        // 绑定幽灵票点击切换
+        if (!player.alive) {
+            const token = node.querySelector(".ghost-vote-token");
+            if (token) {
+                token.addEventListener("click", (e) => {
+                    e.stopPropagation(); // 阻止冒泡，避免触发 openPopover
+                    player.ghostVoteUsed = !player.ghostVoteUsed;
+                    saveToLocalStorage();
+                    renderSeatingChart();
+                    
+                    // 触发大盘逻辑校验器重新渲染
+                    if (window.renderDeductiveValidator) {
+                        window.renderDeductiveValidator();
+                    }
+                });
+            }
+        }
+        
         dom.seatingNodesContainer.appendChild(node);
     }
 
