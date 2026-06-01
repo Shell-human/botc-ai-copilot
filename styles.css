@@ -523,6 +523,7 @@ input:checked + .slider::before {
 
 .seating-chart-container {
     flex: 1;
+    min-height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -530,6 +531,7 @@ input:checked + .slider::before {
     position: relative;
     overflow: hidden;
     border-bottom: 1px solid var(--border-color);
+    transition: all 0.3s ease;
 }
 
 .seating-chart-wrapper {
@@ -1559,4 +1561,59 @@ textarea {
 .copilot-memo-list li strong {
     color: var(--text-primary);
 }
+
+/* ==========================================================================
+   Height-Based Responsive Adjustments (防止小屏或矮屏下大盘看板与轨迹图重叠)
+   ========================================================================== */
+@media (max-height: 900px) {
+    .seating-chart-container {
+        padding: 12px 24px !important;
+    }
+    .seating-chart-wrapper {
+        transform: scale(0.88) !important;
+        transform-origin: center center !important;
+        transition: transform 0.3s ease !important;
+    }
+    .validator-dashboard-container {
+        margin: 12px 24px !important;
+        padding: 12px !important;
+        gap: 8px !important;
+    }
+    .validator-grid {
+        gap: 8px !important;
+    }
+}
+
+@media (max-height: 780px) {
+    .seating-chart-container {
+        padding: 4px 16px !important;
+    }
+    .seating-chart-wrapper {
+        transform: scale(0.78) !important;
+        transform-origin: center center !important;
+    }
+    .validator-dashboard-container {
+        margin: 8px 16px !important;
+        padding: 10px !important;
+        gap: 6px !important;
+    }
+    .validator-panel-header {
+        padding-bottom: 4px !important;
+        margin-bottom: 4px !important;
+    }
+    .timeline-container {
+        height: 140px !important; /* 适当压缩日志流水高度以预留更多垂直空间 */
+    }
+}
+
+@media (max-height: 680px) {
+    .seating-chart-wrapper {
+        transform: scale(0.68) !important;
+        transform-origin: center center !important;
+    }
+    .timeline-container {
+        height: 120px !important;
+    }
+}
+
 
