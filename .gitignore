@@ -1,7 +1,12 @@
 .DS_Store
 node_modules/
-.env
+.env*
 .system_generated/
 scratch/
 AIAPI.html
 .antigravityrules
+*.log
+.vscode/
+.idea/
+dist/
+

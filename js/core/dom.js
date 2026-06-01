@@ -63,3 +63,25 @@ export const dom = {
     // 校验器卡片容器（仅 deductiveValidator.js 使用，纳入统一管理）
     deductiveValidatorCard: document.getElementById("deductiveValidatorCard"),
 };
+
+/**
+ * 校验 DOM 元素引用，如有缺失或未渲染成功的元素，在控制台输出警告提示，极大方便日常调试。
+ */
+export function validateDomReferences() {
+    console.log("🔍 [DOM Registry] 开始验证 DOM 元素引用...");
+    let missingCount = 0;
+    
+    Object.entries(dom).forEach(([key, element]) => {
+        if (!element || (element instanceof NodeList && element.length === 0)) {
+            console.warn(`⚠️ [DOM Registry] 缺失 DOM 元素引用: '${key}' (在 HTML 页面中未找到对应 ID 或 Selector)`);
+            missingCount++;
+        }
+    });
+    
+    if (missingCount === 0) {
+        console.log("✅ [DOM Registry] 所有 DOM 元素引用成功通过验证！");
+    } else {
+        console.warn(`⚠️ [DOM Registry] 验证完毕：共发现 ${missingCount} 处缺失的 DOM 引用，请核对 HTML 文件相应 ID。`);
+    }
+}
+
