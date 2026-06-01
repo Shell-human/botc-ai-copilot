@@ -103,6 +103,7 @@ export function loadFromLocalStorage() {
             dom.analysisBox.innerHTML = data.analysisBoxHtml;
         } else {
             resetAnalysisBoxes();
+        }
         if (dom.tipsBox && data.tipsBoxHtml && data.tipsBoxHtml.trim()) {
             dom.tipsBox.innerHTML = data.tipsBoxHtml;
         }
