@@ -1627,17 +1627,17 @@ textarea {
 /* ==========================================================================
    Height-Based Responsive Adjustments (防止小屏或矮屏下大盘看板与轨迹图重叠)
    ========================================================================== */
-@media (max-height: 900px) {
+@media (max-height: 950px) {
     .seating-chart-container {
-        padding: 12px 24px !important;
+        padding: 10px 24px !important;
     }
     .seating-chart-wrapper {
-        transform: scale(0.88) !important;
+        transform: scale(0.82) !important;
         transform-origin: center center !important;
         transition: transform 0.3s ease !important;
     }
     .validator-dashboard-container {
-        margin: 12px 24px !important;
+        margin: 10px 24px !important;
         padding: 12px !important;
         gap: 8px !important;
     }
@@ -1646,16 +1646,16 @@ textarea {
     }
 }
 
-@media (max-height: 780px) {
+@media (max-height: 850px) {
     .seating-chart-container {
-        padding: 4px 16px !important;
+        padding: 6px 20px !important;
     }
     .seating-chart-wrapper {
-        transform: scale(0.78) !important;
+        transform: scale(0.75) !important;
         transform-origin: center center !important;
     }
     .validator-dashboard-container {
-        margin: 8px 16px !important;
+        margin: 8px 20px !important;
         padding: 10px !important;
         gap: 6px !important;
     }
@@ -1664,17 +1664,35 @@ textarea {
         margin-bottom: 4px !important;
     }
     .timeline-container {
-        height: 140px !important; /* 适当压缩日志流水高度以预留更多垂直空间 */
+        height: 130px !important; /* 适当压缩日志流水高度以预留更多垂直空间 */
     }
 }
 
-@media (max-height: 680px) {
+@media (max-height: 750px) {
+    .seating-chart-container {
+        padding: 4px 16px !important;
+    }
     .seating-chart-wrapper {
-        transform: scale(0.68) !important;
+        transform: scale(0.66) !important;
+        transform-origin: center center !important;
+    }
+    .validator-dashboard-container {
+        margin: 6px 16px !important;
+        padding: 8px !important;
+        gap: 4px !important;
+    }
+    .timeline-container {
+        height: 110px !important;
+    }
+}
+
+@media (max-height: 650px) {
+    .seating-chart-wrapper {
+        transform: scale(0.58) !important;
         transform-origin: center center !important;
     }
     .timeline-container {
-        height: 120px !important;
+        height: 90px !important;
     }
 }
 
