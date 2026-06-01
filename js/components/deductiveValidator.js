@@ -3,6 +3,7 @@
    ========================================================================= */
 
 import { gameState } from '../core/state.js';
+import { dom } from '../core/dom.js';
 import { GAME_DISTRIBUTIONS, SCRIPTS_DATA } from '../data/rules.js';
 import { getLocalizedRole } from '../i18n/engine.js';
 
