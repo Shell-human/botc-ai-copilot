@@ -149,10 +149,10 @@
 /* Ghost Vote Tokens */
 .ghost-vote-token {
     position: absolute;
-    bottom: calc(var(--seat-node-size, 92px) * -0.09); /* e.g., -8px for 92px */
-    right: calc(var(--seat-node-size, 92px) * -0.09);  /* e.g., -8px for 92px */
-    width: calc(var(--seat-node-size, 92px) * 0.26);  /* e.g., 24px for 92px */
-    height: calc(var(--seat-node-size, 92px) * 0.26); /* e.g., 24px for 92px */
+    bottom: calc(var(--seat-node-size, 84px) * -0.09); /* e.g., -8px for 84px */
+    right: calc(var(--seat-node-size, 84px) * -0.09);  /* e.g., -8px for 84px */
+    width: calc(var(--seat-node-size, 84px) * 0.26);  /* e.g., 24px for 84px */
+    height: calc(var(--seat-node-size, 84px) * 0.26); /* e.g., 24px for 84px */
     border-radius: 50%;
     background: rgba(13, 18, 27, 0.95);
     border: 1.5px solid var(--border-hover);
@@ -188,8 +188,8 @@
 }
 
 .ghost-vote-svg {
-    width: calc(var(--seat-node-size, 92px) * 0.12);  /* e.g., 11px for 92px */
-    height: calc(var(--seat-node-size, 92px) * 0.12); /* e.g., 11px for 92px */
+    width: calc(var(--seat-node-size, 84px) * 0.12);  /* e.g., 11px for 84px */
+    height: calc(var(--seat-node-size, 84px) * 0.12); /* e.g., 11px for 84px */
     transition: all 0.3s;
 }
 

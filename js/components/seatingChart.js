@@ -28,15 +28,15 @@ export function renderSeatingChart() {
     const refHeight = 480;
     const scale = Math.min(1.0, Math.max(0.65, Math.min(width / refWidth, height / refHeight)));
     
-    // Set dynamic CSS custom property for seat node scaling
-    const nodeSize = Math.round(92 * scale);
+    // Set dynamic CSS custom property for seat node scaling (84px base size is the perfect visual sweet spot)
+    const nodeSize = Math.round(84 * scale);
     if (wrapper) {
         wrapper.style.setProperty('--seat-node-size', `${nodeSize}px`);
     }
     
-    // Calculate adaptive margins based on the scaled node size to ensure no clipping
-    const paddingX = Math.round(Math.max(42, 56 * scale));
-    const paddingY = Math.round(Math.max(42, 56 * scale));
+    // Calculate adaptive margins based on the scaled node size to ensure comfortable breathing room
+    const paddingX = Math.round(Math.max(48, 64 * scale));
+    const paddingY = Math.round(Math.max(48, 64 * scale));
     
     let rx = Math.max(80, (width / 2) - paddingX);
     let ry = Math.max(80, (height / 2) - paddingY);
@@ -52,9 +52,9 @@ export function renderSeatingChart() {
     }
     
     // Calculate dynamic superellipse exponent n (Lamé curve parameter)
-    // When circular, n=2.0 (ellipse). When stretched, n increases up to 2.8 (rounded rectangle) to fill the corners.
+    // Capped at 2.45 to ensure a highly aesthetic organic rounded squircle rather than a harsh rectangle
     const ratioVal = Math.max(rx / ry, ry / rx);
-    const n = 2.0 + Math.min(1.0, (ratioVal - 1.0) / 1.5) * 0.8;
+    const n = 2.0 + Math.min(1.0, (ratioVal - 1.0) / 1.5) * 0.45;
     const power = 2 / n;
     
     const count = gameState.playerCount;
