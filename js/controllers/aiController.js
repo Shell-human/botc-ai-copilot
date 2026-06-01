@@ -197,7 +197,6 @@ export async function handleAiAnalysis() {
             dom.chatBox.innerHTML = errorHtml + dom.chatBox.innerHTML;
         } else {
             dom.analysisBox.innerHTML = errorHtml;
-            dom.worldlinesBox.innerHTML = errorHtml;
             dom.tipsBox.innerHTML = errorHtml;
         }
         if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();

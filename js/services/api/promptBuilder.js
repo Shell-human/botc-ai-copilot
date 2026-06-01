@@ -113,13 +113,13 @@ export function constructPrompt(consoleText, isChat = false) {
             systemRolePrompt = `You are an extremely experienced Blood on the Clocktower logician and strategic mastermind. You are acting as the "AI Tactical Copilot" for Player ${gameState.mySeat} (real role: ${myRoleEn}, alignment: ${isEvil ? 'Evil' : 'Good'}).
 【Chat Mode】IMPORTANT:
 The user is asking you a direct question / chatting with you.
-Please reply directly and conversationally in a professional strategy advisor style. **DO NOT** include the '=== ANALYSIS ===', '=== WORLDLINES ===', or '=== TIPS ===' tags in your response. Just write a comprehensive, highly strategic reply directly in Markdown.`;
+Please reply directly and conversationally in a professional strategy advisor style. **DO NOT** include the '=== ANALYSIS ===' or '=== TIPS ===' tags in your response. Just write a comprehensive, highly strategic reply directly in Markdown.`;
             setupPrompt = `- My Real Role: ${myRoleEn} (${isEvil ? 'Evil Team' : 'Good Team'})\n- Standard Character Distribution: ${baseDistStrEn}\n- Active Mode: Direct Chat / Q&A\n- User Query: ${consoleText}`;
         } else {
             systemRolePrompt = `你是一名极其资深的《血染钟楼》逻辑学家、顶尖博弈大宗师。你正在作为一名玩家（即玩家 ${gameState.mySeat} 号，实际身份为【${isEvil ? '邪恶阵营' : '善良阵营'}】的 ${gameState.myRole}）的"AI战术副驾驶"帮助他解答规则问题，或者提供实时的个人角色打法与策略选择。
 【对话模式】重要限制：
 当前用户是以【对话交流/提问模式】在向你发起提问。
-请直接、自然、亲切地用第一人称对话形式来回答他的问题，**绝对不要**在回复中包含 \`=== ANALYSIS ===\`、\`=== WORLDLINES ===\`、\`=== TIPS ===\` 这三个分类标签！直接在 Markdown 中给出一份详实、深入且充满战术智慧的直接回答即可！`;
+请直接、自然、亲切地用第一人称对话形式来回答他的问题，**绝对不要**在回复中包含 \`=== ANALYSIS ===\`、\`=== TIPS ===\` 这两个分类标签！直接在 Markdown 中给出一份详实、深入且充满战术智慧的直接回答即可！`;
             setupPrompt = `- 我的真实身份：${gameState.myRole}（${isEvil ? '【邪恶阵营】' : '善良阵营'}）\n- 游戏人数角色标准分布：${baseDistStrZh}\n- 当前处于：与 AI 自由提问对话模式\n- 用户对话问题：${consoleText}`;
         }
     } else if (isEvil) {
@@ -241,7 +241,7 @@ Please answer my question directly and conversationally in Markdown. Feel free t
     } else {
         footer = isEn
             ? `Please provide depth analysis based on the latest update: "${consoleText}".
-For an optimal user experience, you MUST strictly format your response using these four exact tags:
+For an optimal user experience, you MUST strictly format your response using these three exact tags:
 
 === MEMO ===
 Provide exactly 3 highly condensed bullet points summarizing the tactical situation:
@@ -256,12 +256,6 @@ Guidelines:
 2. Consider spatial layout (neighbor changes due to death, Empath's new neighbors, Tea Lady protection network, etc.).
 3. Identify any logical anomalies.
 
-=== WORLDLINES ===
-Perform parallel worldline deductions. Explore at least three scenarios:
-1. [Normal Worldline]: No Vortox, no poisoning/drunkenness. If all info is true, who is the most likely Demon? Who is Evil claiming a fake role?
-2. [Vortox Worldline]: If the Demon is a Vortox, all Townsfolk information MUST be FALSE. What does this reveal? Who is most likely Vortox? (Highlight that if no one is executed by day, Vortox wins automatically).
-3. [Poisoned/Drunk Worldline]: Is a No-Dashi poisoning neighbors? Is a Poisoner/Ceranovus/Puzzlemaster active? If someone is drunk/poisoned, who is the most likely target and what info is compromised?
-
 === TIPS ===
 Provide tactical suggestions and survival tips.
 Guidelines:
@@ -270,7 +264,7 @@ Guidelines:
 3. Conclude with a concise one-line tactical takeaway.
 
 [CRITICAL FORMATTING REQUIREMENT]
-Do NOT merge or omit these tags. Each section must start with the exact tag (=== MEMO ===, === ANALYSIS ===, === WORLDLINES ===, === TIPS ===) on a new line!
+Do NOT merge or omit these tags. Each section must start with the exact tag (=== MEMO ===, === ANALYSIS ===, === TIPS ===) on a new line!
 Render all content in premium, clean English Markdown. Use bolding and lists appropriately for readability.
 
 === STATE_SYNC ===
@@ -295,8 +289,8 @@ Rules:
 - If the user says someone "healthy" / "恢复" / "正常", set "poisoned": false。
 - If nothing explicit was stated about a player, omit them entirely from the events array (output {"events": []}).
 - Output ONLY the JSON code block, nothing else after it.`
-            : `请帮我根据最新的变化"${consoleText}"，输出四个模块的分析。
-为了让我极高体验地使用，请严格按照以下四个标签标记划分你的输出：
+            : `请帮我根据最新的变化"${consoleText}"，输出三个模块的分析。
+为了让我极高体验地使用，请严格按照以下三个标签标记划分你的输出：
 
 === MEMO ===
 用极其精炼的语言提供刚好 3 行（加粗前缀）的战局核心备忘录：
@@ -311,12 +305,6 @@ Rules:
 2. 结合座位图相对位置，指出今天白天座位收缩后发生的物理邻座关系改变（如：共情者的新验人范围，茶艺师的实际保护网变化）。
 3. 解析是否有异常的信息产生。
 
-=== WORLDLINES ===
-这里进行【平行世界线推演】。请至少拆分为以下3种世界线：
-1. 【正常世界线】：假设没有"涡流"，没有中毒。若大家的信息皆为真，最可能的恶魔是几号？谁是穿衣服的坏人？
-2. 【涡流世界线（Vortox World）】：若恶魔是"涡流"，所有村民的信息必须是**假的**！在这个前提下，哪些信息反向变成了线索？谁最可能是涡流恶魔？（注意：如果白天没人被处决，涡流直接获胜，请提示我防止猝死）。
-3. 【中毒/下毒世界线】：是否存在诺达鲺下毒？或者熊孩子、洗脑师在场导致某玩家的宣称产生错误信息？如果某人中毒，最可能的是谁？
-
 === TIPS ===
 这里提供【行动建议与防猝死提示】。
 分析要点：
@@ -325,7 +313,7 @@ Rules:
 3. 给出一个简洁的一句话战术行动总结建议。
 
 【重要格式要求】
-不要合并或者漏掉以上标签。每一块内容必须以 === MEMO ===, === ANALYSIS ===, === WORLDLINES ===, === TIPS === 这四个大写标签单独占一行开启！
+不要合并或者漏掉以上标签。每一块内容必须以 === MEMO ===, === ANALYSIS ===, === TIPS === 这三个大写标签单独占一行开启！
 所有的内容请采用精美的中文 Markdown 语法呈现，包含加粗、列表，请适当使用加粗和图标让重点内容极度清晰。
 
 === STATE_SYNC ===

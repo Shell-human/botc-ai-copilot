@@ -24,7 +24,6 @@ export const dom = {
     tabButtons: document.querySelectorAll(".tab-btn"),
     tabContents: document.querySelectorAll(".tab-content"),
     analysisBox: document.getElementById("analysisBox"),
-    worldlinesBox: document.getElementById("worldlinesBox"),
     tipsBox: document.getElementById("tipsBox"),
     chatBox: document.getElementById("chatBox"),
     // Popover Modal

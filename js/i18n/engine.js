@@ -112,12 +112,8 @@ export function resetAnalysisBoxes() {
     
     const welcomeTitle = isEn ? "Hello, Clocktower Explorer" : "你好，钟楼探索者";
     const welcomeDesc = isEn 
-        ? "Game successfully initialized! Please enter the first round of night or day updates in the console on the right, and I will analyze the match for you using our logical solver and parallel world algorithms."
-        : "对局已成功初始化！请在右侧控制台输入第一轮夜晚或白天的信息，我将通过逻辑求解器与平行世界算法为您演算战局。";
-        
-    const worldlinesDesc = isEn
-        ? "Waiting for data. Later, this section will calculate the logic probabilities of <b>Normal Worldline</b>, <b>Vortox Worldline</b>, and <b>Drunk/Poisoned Worldline</b>."
-        : "等待局势录入中。稍后这里会推演 <b>正常世界线</b>、<b>涡流世界线</b> 以及 <b>中毒世界线</b> 的逻辑概率。";
+        ? "Game successfully initialized! Please enter the first round of night or day updates in the console on the right, and I will analyze the match for you using our logical solver."
+        : "对局已成功初始化！请在右侧控制台输入第一轮夜晚或白天的信息，我将通过逻辑求解器为您演算战局。";
         
     const tipsDesc = isEn
         ? "Waiting for data. Later, this section will generate recommended players to chat with and emergency warnings."
@@ -128,11 +124,6 @@ export function resetAnalysisBoxes() {
             <i data-lucide="bot" class="welcome-icon"></i>
             <h3>${welcomeTitle}</h3>
             <p>${welcomeDesc}</p>
-        </div>
-    `;
-    dom.worldlinesBox.innerHTML = `
-        <div class="empty-tab-state">
-            <p>${worldlinesDesc}</p>
         </div>
     `;
     dom.tipsBox.innerHTML = `

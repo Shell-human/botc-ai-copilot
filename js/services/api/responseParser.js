@@ -108,24 +108,19 @@ export function distributeResponse(text, thoughtHtml = "") {
     }
 
     let analysisPart = "";
-    let worldlinesPart = "";
     let tipsPart = "";
 
-    const worldlinesRegex = /(?:###\s*)?(?:\*\*)?===\s*WORLDLINES\s*===(?:\*\*)?/i;
     const tipsRegex = /(?:###\s*)?(?:\*\*)?===\s*TIPS\s*===(?:\*\*)?/i;
 
     const analysisMatch2 = cleanText.match(analysisRegex);
-    const worldlinesMatch = cleanText.match(worldlinesRegex);
     const tipsMatch = cleanText.match(tipsRegex);
 
-    if (analysisMatch2 && worldlinesMatch && tipsMatch) {
+    if (analysisMatch2 && tipsMatch) {
         const analysisIdx = analysisMatch2.index;
-        const worldlinesIdx = worldlinesMatch.index;
         const tipsIdx = tipsMatch.index;
 
         const sections = [
             { name: "analysis", start: analysisIdx, end: analysisIdx + analysisMatch2[0].length },
-            { name: "worldlines", start: worldlinesIdx, end: worldlinesIdx + worldlinesMatch[0].length },
             { name: "tips", start: tipsIdx, end: tipsIdx + tipsMatch[0].length }
         ];
         
@@ -142,34 +137,27 @@ export function distributeResponse(text, thoughtHtml = "") {
         };
 
         analysisPart = getSectionContent("analysis");
-        worldlinesPart = getSectionContent("worldlines");
         tipsPart = getSectionContent("tips");
     } else {
         const parts = cleanText.split(/===\s*[a-zA-Z]+\s*===/i);
         
-        if (parts.length < 4) {
+        if (parts.length < 3) {
             analysisPart = cleanText;
             const activeTab = document.querySelector('.tab-btn.active');
             const isChatMode = activeTab ? activeTab.getAttribute('data-tab') === 'tab-chat' : false;
             if (isChatMode) {
-                worldlinesPart = `<div class="empty-tab-state"><p>💬 您正处于与 AI 的<b>【对话交流模式】</b>中。<br>此模式下只进行直接对话问答，如需对局局势推理，请关闭对话开关并输入局势进展。</p></div>`;
                 tipsPart = `<div class="empty-tab-state"><p>💬 您正处于与 AI 的<b>【对话交流模式】</b>中。<br>常规战术行动建议未触发。如需对局局势推理，请关闭对话开关并输入局势进展。</p></div>`;
             } else {
-                worldlinesPart = `<div class="empty-tab-state"><p>AI 未能完全按照标签格式输出。完整的局势推演与分析已全部渲染在第一页中，您可以直接前往通读。</p></div>`;
                 tipsPart = `<div class="empty-tab-state"><p>请在【即时分析】页面中查看包含全部战术提示在内的完整推演信息。</p></div>`;
             }
         } else {
             analysisPart = parts[1] || "";
-            worldlinesPart = parts[2] || "";
-            tipsPart = parts[3] || "";
+            tipsPart = parts[2] || "";
         }
     }
 
     if (!analysisPart.trim()) {
         analysisPart = `<div class="empty-tab-state"><p>AI 未能正常生成本轮即时局势分析。</p></div>`;
-    }
-    if (!worldlinesPart.trim()) {
-        worldlinesPart = `<div class="empty-tab-state"><p>AI 未能正常生成本轮平行世界线分析。</p></div>`;
     }
     if (!tipsPart.trim()) {
         tipsPart = `<div class="empty-tab-state"><p>AI 未能生成本轮的具体行动建议。建议您阅读【即时分析】页面的全局逻辑推演。</p></div>`;
@@ -197,7 +185,6 @@ export function distributeResponse(text, thoughtHtml = "") {
     }
 
     dom.analysisBox.innerHTML = sanitizeHtml(thoughtHtml + memoHtml + parseMarkdown(analysisPart.trim()));
-    dom.worldlinesBox.innerHTML = sanitizeHtml(parseMarkdown(worldlinesPart.trim()));
     dom.tipsBox.innerHTML = sanitizeHtml(parseMarkdown(tipsPart.trim()));
 
     if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();

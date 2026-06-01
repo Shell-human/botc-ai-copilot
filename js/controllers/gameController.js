@@ -34,7 +34,6 @@ export function saveToLocalStorage() {
         chatMessages: gameState.chatMessages || [],
         consoleInputDraft: dom.consoleInput ? dom.consoleInput.value : "",
         analysisBoxHtml: dom.analysisBox ? dom.analysisBox.innerHTML : "",
-        worldlinesBoxHtml: dom.worldlinesBox ? dom.worldlinesBox.innerHTML : "",
         tipsBoxHtml: dom.tipsBox ? dom.tipsBox.innerHTML : "",
         chatBoxHtml: dom.chatBox ? dom.chatBox.innerHTML : "",
         lang: gameState.lang
@@ -104,10 +103,6 @@ export function loadFromLocalStorage() {
             dom.analysisBox.innerHTML = data.analysisBoxHtml;
         } else {
             resetAnalysisBoxes();
-        }
-        if (dom.worldlinesBox && data.worldlinesBoxHtml && data.worldlinesBoxHtml.trim()) {
-            dom.worldlinesBox.innerHTML = data.worldlinesBoxHtml;
-        }
         if (dom.tipsBox && data.tipsBoxHtml && data.tipsBoxHtml.trim()) {
             dom.tipsBox.innerHTML = data.tipsBoxHtml;
         }
