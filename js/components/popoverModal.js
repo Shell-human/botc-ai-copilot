@@ -48,6 +48,7 @@ export function savePopoverData() {
     const newAlignment = dom.popoverAlignmentSelect.value;
     const oldPoison = player.poisoned;
     const newPoison = dom.popoverPoisonCheckbox.checked;
+    const oldNote = player.note || "";
     const newNote = dom.popoverNoteInput.value.trim();
 
     // 更新状态
@@ -67,7 +68,7 @@ export function savePopoverData() {
             changes.push(`Suspected alignment changed to <strong>${alignMap[newAlignment] || newAlignment}</strong>`);
         }
         if (oldPoison !== newPoison) changes.push(`Status marked as <strong>${newPoison ? 'Drunk/Poisoned' : 'Normal'}</strong>`);
-        if (newNote && newNote !== player.note) changes.push(`Notes: "${newNote}"`);
+        if (newNote !== oldNote) changes.push(`Notes: "${newNote}"`);
         
         if (changes.length > 0) {
             gameState.logs.push(`Manually updated <strong>${player.name}</strong> status: ${changes.join(', ')}`);
@@ -77,7 +78,7 @@ export function savePopoverData() {
         if (oldAlive !== newAlive) changes.push(`生命状态变更为 <strong>${newAlive ? '存活' : '死亡'}</strong>`);
         if (oldAlignment !== newAlignment) changes.push(`推测阵营变更为 <strong>${newAlignment === 'good' ? '善良' : newAlignment === 'evil' ? '邪恶' : '未知'}</strong>`);
         if (oldPoison !== newPoison) changes.push(`状态标记为 <strong>${newPoison ? '中毒/醉酒' : '正常'}</strong>`);
-        if (newNote && newNote !== player.note) changes.push(`备注："${newNote}"`);
+        if (newNote !== oldNote) changes.push(`备注："${newNote}"`);
         
         if (changes.length > 0) {
             gameState.logs.push(`手动更新了 <strong>${player.name}</strong> 的状态：${changes.join('，')}`);
