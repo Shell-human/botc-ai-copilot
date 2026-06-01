@@ -10,7 +10,7 @@ import { renderTimelineLogs } from './components/timelineLogs.js';
 import { renderDeductiveValidator } from './components/deductiveValidator.js';
 import { SCRIPTS_DATA, SCRIPTS_DATA_EN } from './data/rules.js';
 import { ROLE_TRANSLATIONS, TRANSLATIONS } from './data/translations.js';
-import { saveGameState, loadGameState, hasSavedGame } from './services/storage.js';
+import { saveGameState, loadGameState, hasSavedGame, loadApiKey } from './services/storage.js';
 
 export const gameState = {
     apiKey: "",
@@ -94,9 +94,18 @@ export function loadFromLocalStorage() {
         dom.apiProviderSelect.value = gameState.apiProvider;
         dom.apiBaseUrlInput.value = gameState.apiBaseUrl;
 
+        // 载入该厂商已保存的密钥
+        const savedKey = loadApiKey(gameState.apiProvider);
+        dom.apiKeyInput.value = savedKey;
+        gameState.apiKey = savedKey;
+
         // 重新填充下拉框
         updateMyRoleOptions();
         updateApiModelOptions();
+
+        if (window.updateApiStatusIndicator) {
+            window.updateApiStatusIndicator();
+        }
 
         // 恢复邪恶伪装面板及状态值
         if (gameState.myAlignment === "evil") {
@@ -234,6 +243,10 @@ export function initGame() {
 
     // 保存状态到本地
     saveToLocalStorage();
+
+    if (window.updateApiStatusIndicator) {
+        window.updateApiStatusIndicator();
+    }
 }
 
 // --- 状态变动辅助函数 ---

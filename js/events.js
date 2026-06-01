@@ -9,7 +9,7 @@ import { showToast } from './utils.js';
 import { populateScriptPreview } from './components/scriptPreview.js';
 import { handleAiAnalysis } from './api.js';
 import { TRANSLATIONS } from './data/translations.js';
-import { clearGameState } from './services/storage.js';
+import { clearGameState, loadApiKey, saveApiKey } from './services/storage.js';
 
 export function initCoreEvents() {
     // 1. 剧本更换监听
@@ -23,16 +23,10 @@ export function initCoreEvents() {
     dom.apiProviderSelect.addEventListener("change", (e) => {
         gameState.apiProvider = e.target.value;
         
-        // 切换厂商时，防止不同平台密钥混用或无意泄露
-        if (gameState.apiProvider === "gemini") {
-            if (dom.apiKeyInput.value.startsWith("sk-") || dom.apiKeyInput.value.startsWith("sk-or-")) {
-                dom.apiKeyInput.value = "";
-            }
-        } else if (gameState.apiProvider === "chatgpt" || gameState.apiProvider === "deepseek" || gameState.apiProvider === "qwen" || gameState.apiProvider === "claude") {
-            if (dom.apiKeyInput.value.startsWith("AIzaSy")) {
-                dom.apiKeyInput.value = "";
-            }
-        }
+        // 自动载入该厂商已保存的密钥
+        const savedKey = loadApiKey(gameState.apiProvider);
+        dom.apiKeyInput.value = savedKey;
+        gameState.apiKey = savedKey;
         
         updateApiModelOptions();
         
@@ -61,6 +55,10 @@ export function initCoreEvents() {
         
         gameState.apiBaseUrl = dom.apiBaseUrlInput.value;
         gameState.aiModel = dom.aiModelSelect.value;
+        
+        if (window.updateApiStatusIndicator) {
+            window.updateApiStatusIndicator();
+        }
         
         saveToLocalStorage();
     });
@@ -105,6 +103,16 @@ export function initCoreEvents() {
         gameState.aiModel = val || "custom";
         gameState.apiModelCustom = val;
         saveToLocalStorage();
+    });
+
+    // 4.5 API 密钥输入自动保存与大盘就绪状态联动
+    dom.apiKeyInput.addEventListener("input", (e) => {
+        const key = e.target.value.trim();
+        gameState.apiKey = key;
+        saveApiKey(gameState.apiProvider, key);
+        if (window.updateApiStatusIndicator) {
+            window.updateApiStatusIndicator();
+        }
     });
 
     // 5. 接口基地址输入监听

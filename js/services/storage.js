@@ -83,3 +83,33 @@ export function loadLanguage() {
         return "zh";
     }
 }
+
+const API_KEY_PREFIX = "botc_api_key_";
+
+/**
+ * 根据厂商保存 API Key 到本地缓存中
+ * @param {string} provider 
+ * @param {string} key 
+ */
+export function saveApiKey(provider, key) {
+    try {
+        localStorage.setItem(API_KEY_PREFIX + provider, key);
+        return true;
+    } catch (e) {
+        console.error("保存 API 密钥失败:", e);
+        return false;
+    }
+}
+
+/**
+ * 从本地缓存加载对应厂商的 API Key
+ * @param {string} provider 
+ * @returns {string}
+ */
+export function loadApiKey(provider) {
+    try {
+        return localStorage.getItem(API_KEY_PREFIX + provider) || "";
+    } catch (e) {
+        return "";
+    }
+}
