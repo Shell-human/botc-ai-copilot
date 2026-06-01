@@ -61,7 +61,7 @@ export const SCRIPTS_DATA = deepFreeze({
         minion: ["教父", "麻脸巫婆", "洗脑师", "寡妇"],
         demon: ["小恶魔", "亡骨魔", "方吉"]
     }
-};
+});
 
 // --- 板子角色详细技能定义 ---
 export const CHARACTER_DETAILS = deepFreeze({
