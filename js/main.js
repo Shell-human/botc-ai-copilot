@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 3.5 载入对应厂商保存的 API Key，防止刷新丢失
     const savedKey = loadApiKey(gameState.apiProvider);
     if (savedKey) {
-        dom.apiKeyInput.value = savedKey;
+        if (dom.apiKeyInput) dom.apiKeyInput.value = savedKey;
         gameState.apiKey = savedKey;
     }
     

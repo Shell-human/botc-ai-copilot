@@ -127,8 +127,6 @@ export function renderSeatingChart() {
 
 // --- 动态绘制存活物理邻座连线 (Adjacency SVG Curves) ---
 export function drawAdjacencyLines(coords) {
-    const count = gameState.players.length;
-    
     // 找出所有存活玩家
     const alivePlayers = gameState.players.filter(p => p.alive);
     if (alivePlayers.length < 2) return;

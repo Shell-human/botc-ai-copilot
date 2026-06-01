@@ -57,7 +57,7 @@ export function renderDeductiveValidator() {
     console.log("📊 [DeductiveValidator] Calculated collisions:", collisions);
 
     // 2. 计算外来者数量校验 (Outsider Validator)
-    const standardDist = GAME_DISTRIBUTIONS[gameState.playerCount] || { Townsfolk: 0, outsider: 0, minion: 0, demon: 0 };
+    const standardDist = GAME_DISTRIBUTIONS[gameState.playerCount] || { townsfolk: 0, outsider: 0, minion: 0, demon: 0 };
     const standardOutsiders = standardDist.outsider || 0;
     
     // 找出当前宣称为外来者的玩家
@@ -83,7 +83,7 @@ export function renderDeductiveValidator() {
     // 2.1 对跳冲突列表 HTML
     let collisionListHtml = "";
     if (collisions.length === 0) {
-        collisionListHtml = `<p class="validator-empty-text">${isEn ? "No claim conflicts detected" : "暂无角色对跳冲突"}</p>`;
+        collisionListHtml = `<p class="validator-empty-text" style="font-size: 10px; opacity: 0.75; line-height: 1.4; text-align: left; padding: 4px 8px;">${isEn ? "No claim conflicts detected. Assign identical claims to two players to trigger a conflict alarm." : "暂无对跳冲突。为多名玩家选择相同角色将在此触发冲突警报。"}</p>`;
     } else {
         collisionListHtml = collisions.map(c => {
             const seatsStr = isEn ? `Seats ${c.seats.join(" & ")}` : `${c.seats.join(" 号 & ")} 号`;
@@ -125,18 +125,31 @@ export function renderDeductiveValidator() {
     // 2.3 幽灵票校验 HTML
     let ghostVoteStatusClass = "alert-neutral";
     let ghostVoteBadgeClass = "neutral";
-    if (remainingGhostVotes > 0) {
-        ghostVoteStatusClass = "alert-warning";
-        ghostVoteBadgeClass = "warning";
+    let ghostVoteStatusText = isEn ? "0 Active" : "存余 0 张";
+    let ghostVoteDesc = "";
+
+    if (totalDeadCount === 0) {
+        ghostVoteStatusClass = "alert-success";
+        ghostVoteBadgeClass = "success";
+        ghostVoteStatusText = isEn ? "All Alive" : "全员存活";
+        ghostVoteDesc = isEn 
+            ? "No players are dead. Dead players' voting tokens will be tracked here dynamically."
+            : "当前无阵亡玩家。出局玩家的幽灵票状态将在此动态追踪。";
+    } else {
+        if (remainingGhostVotes > 0) {
+            ghostVoteStatusClass = "alert-warning";
+            ghostVoteBadgeClass = "warning";
+        }
+        ghostVoteStatusText = isEn ? `${remainingGhostVotes} Active` : `存余 ${remainingGhostVotes} 张`;
+        ghostVoteDesc = isEn 
+            ? `Available Votes: <strong>${remainingGhostVotes}</strong> / <strong>${totalDeadCount}</strong> Dead`
+            : `存余死票: <strong>${remainingGhostVotes}</strong> 张 / 共 <strong>${totalDeadCount}</strong> 位阵亡`;
     }
-    const ghostVoteDesc = isEn 
-        ? `Available Votes: <strong>${remainingGhostVotes}</strong> / <strong>${totalDeadCount}</strong> Dead`
-        : `存余死票: <strong>${remainingGhostVotes}</strong> 张 / 共 <strong>${totalDeadCount}</strong> 位阵亡`;
 
     const ghostVoteValidatorHtml = `
         <div class="validator-item ${ghostVoteStatusClass}" style="flex-direction: column; align-items: flex-start; gap: 4px;">
             <div style="display: flex; width: 100%; justify-content: space-between; align-items: center;">
-                <span class="validator-badge ${ghostVoteBadgeClass}">${isEn ? `${remainingGhostVotes} Active` : `存余 ${remainingGhostVotes} 张`}</span>
+                <span class="validator-badge ${ghostVoteBadgeClass}">${ghostVoteStatusText}</span>
             </div>
             <p style="margin: 0; font-size: 11px; line-height: 1.4;">${ghostVoteDesc}</p>
         </div>

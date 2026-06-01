@@ -216,8 +216,9 @@ export function initGame() {
             gameState.logs.push(`3 Demon Bluffs given by Storyteller: <strong>${bluffsText}</strong>.`);
         }
     } else {
+        const scriptNameCn = SCRIPTS_DATA[gameState.scriptName]?.name || gameState.scriptName;
         gameState.logs = [
-            `对局初始化：${gameState.playerCount} 人本，板子《${SCRIPTS_DATA[gameState.scriptName].name}》。`,
+            `对局初始化：${gameState.playerCount} 人本，板子《${scriptNameCn}》。`,
             `我的位置是 <strong>${gameState.mySeat} 号</strong>，角色是 <strong>${gameState.myRole}</strong> (${gameState.myAlignment === "good" ? "善良阵营" : "邪恶阵营"})。`
         ];
         if (gameState.myAlignment === "evil") {

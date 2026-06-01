@@ -2,6 +2,17 @@
    utils.js - 静态 UI 工具库 (包含 Toast 气泡框与 Markdown 解析器)
    ========================================================================== */
 
+// --- 全局 HTML 实体转义辅助 (防范 XSS 注入) ---
+export function escapeHtml(unsafe) {
+    if (!unsafe) return "";
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 // --- 全局 Toast 提示辅助 ---
 export function showToast(message) {
     const toast = document.createElement("div");
@@ -37,7 +48,7 @@ export function showToast(message) {
 // --- 简易高效的 Markdown 解析器 ---
 export function parseMarkdown(md) {
     if (!md) return "";
-    let html = md;
+    let html = escapeHtml(md);
     
     // GitHub Alert 警示框处理
     html = html.replace(/^\>\s*\[!NOTE\]\s*(.*$)/gim, '<blockquote class="alert note"><i data-lucide="info" class="icon-sm"></i> $1</blockquote>');

@@ -24,7 +24,7 @@ import {
 
 import { dom } from './dom.js';
 import { getLocalizedLog, resetAnalysisBoxes } from './i18n.js';
-import { parseMarkdown } from './utils.js';
+import { parseMarkdown, escapeHtml } from './utils.js';
 import { renderTimelineLogs } from './components/timelineLogs.js';
 
 export async function handleAiAnalysis() {
@@ -342,7 +342,7 @@ export async function handleAiAnalysis() {
             <div class="ai-welcome" style="color: var(--color-evil);">
                 <i data-lucide="alert-triangle" style="width: 32px; height: 32px; color: var(--color-evil);"></i>
                 <h3>API 调用发生错误</h3>
-                <p>${error.message}</p>
+                <p>${escapeHtml(error.message)}</p>
                 <p style="font-size: 11px; color: var(--text-muted);">提示：请检查网络连接、API 密钥以及接口基地址 (Base URL) 是否正确。</p>
             </div>
         `;
@@ -361,7 +361,7 @@ export function buildThoughtHtml(thoughtText, modelName) {
                 <i data-lucide="brain-circuit" style="width: 14px; height: 14px; color: var(--color-poison);"></i>
                 查看 ${modelName} 深度逻辑推演思考链 (Reasoning Thought Process)
             </summary>
-            <div style="padding: 12px; font-size: 11px; color: var(--text-secondary); line-height: 1.6; background: rgba(0, 0, 0, 0.2); font-family: monospace; white-space: pre-wrap; border-top: 1px solid rgba(160, 66, 255, 0.1); max-height: 200px; overflow-y: auto;">${thoughtText}</div>
+            <div style="padding: 12px; font-size: 11px; color: var(--text-secondary); line-height: 1.6; background: rgba(0, 0, 0, 0.2); font-family: monospace; white-space: pre-wrap; border-top: 1px solid rgba(160, 66, 255, 0.1); max-height: 200px; overflow-y: auto;">${escapeHtml(thoughtText)}</div>
         </details>
     `;
 }
