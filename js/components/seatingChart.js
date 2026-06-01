@@ -18,8 +18,8 @@ export function renderSeatingChart() {
     const height = 520;
     const centerX = width / 2;
     const centerY = height / 2;
-    const rx = 310; // 横向椭圆长半轴
-    const ry = 175; // 纵向椭圆短半轴
+    const rx = 300; // 横向椭圆长半轴
+    const ry = 190; // 纵向椭圆短半轴
     const count = gameState.playerCount;
 
     // 动态更新圆桌中心的剧本背景水印与高贵霓虹呼吸灯效果

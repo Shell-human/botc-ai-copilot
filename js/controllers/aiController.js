@@ -18,6 +18,7 @@ import { appendChatMessage, showChatTyping, hideChatTyping } from '../components
 
 export async function handleAiAnalysis() {
     const rawText = dom.consoleInput.value.trim();
+    if (!rawText) return;
     // v3.0: 根据活跃 Tab 判断聊天模式（第4个Tab "tab-chat" = 对话模式）
     const activeTab = document.querySelector('.tab-btn.active');
     const isChatMode = activeTab ? activeTab.getAttribute('data-tab') === 'tab-chat' : false;
@@ -90,8 +91,20 @@ export async function handleAiAnalysis() {
 
     const prompt = constructPrompt(rawText, isChatMode);
 
-    // v3.0: 聊天模式下显示打字指示器
+    // v3.0: 聊天模式下立即追加用户气泡并显示打字指示器
     if (isChatMode) {
+        if (!gameState.chatMessages) {
+            gameState.chatMessages = [];
+        }
+        const userMsg = {
+            role: 'user',
+            content: rawText,
+            timestamp: Date.now()
+        };
+        gameState.chatMessages.push(userMsg);
+        if (dom.chatBox) {
+            appendChatMessage(userMsg);
+        }
         showChatTyping();
     }
 
@@ -107,53 +120,35 @@ export async function handleAiAnalysis() {
             apiModelCustom: gameState.apiModelCustom
         });
         
-        // v2.0: API 调用成功后才写入日志 and 持久化
-        if (rawText && !isChatMode) {
-            gameState.logs.push(`白天进展陈述："${rawText}"`);
-            renderTimelineLogs();
-        }
-        
-        // v3.0: 聊天模式下隐藏打字指示器
-        if (isChatMode) {
-            hideChatTyping();
-        }
-        
-        // AI-driven state sync: extract structured events from AI response
-        const { cleanText, hasChanges } = extractAndApplyStateSync(reply);
-        
-        distributeResponse(cleanText, thoughtHtml);
-
         document.querySelectorAll(".ai-loading-overlay, .ai-progress-bar, .ai-floating-status-badge").forEach(el => el.remove());
 
-        if (!gameState.aiOutputs) {
-            gameState.aiOutputs = [];
-        }
-
         if (isChatMode) {
-            // v3.0: 聊天模式 → 存入 chatMessages 并渲染气泡
-            if (!gameState.chatMessages) {
-                gameState.chatMessages = [];
-            }
-            // 存储用户消息
-            gameState.chatMessages.push({
-                role: 'user',
-                content: rawText,
-                timestamp: Date.now()
-            });
-            // 存储 AI 回复
-            gameState.chatMessages.push({
+            hideChatTyping();
+            
+            const aiMsg = {
                 role: 'assistant',
                 content: reply,
                 timestamp: Date.now()
-            });
-            // 渲染气泡（如果当前在聊天 Tab）
+            };
+            gameState.chatMessages.push(aiMsg);
             if (dom.chatBox) {
-                // 追加最后两条消息
-                const msgs = gameState.chatMessages;
-                appendChatMessage(msgs[msgs.length - 2]); // user
-                appendChatMessage(msgs[msgs.length - 1]); // assistant
+                appendChatMessage(aiMsg);
             }
         } else {
+            // v2.0: API 调用成功后才写入日志 and 持久化
+            if (rawText) {
+                gameState.logs.push(`白天进展陈述："${rawText}"`);
+                renderTimelineLogs();
+            }
+
+            // AI-driven state sync: extract structured events from AI response
+            const { cleanText, hasChanges } = extractAndApplyStateSync(reply);
+            
+            distributeResponse(cleanText, thoughtHtml);
+
+            if (!gameState.aiOutputs) {
+                gameState.aiOutputs = [];
+            }
             // 分析模式 → 存入 aiOutputs
             gameState.aiOutputs.push({
                 type: "analysis",
@@ -161,10 +156,10 @@ export async function handleAiAnalysis() {
                 output: reply,
                 timestamp: Date.now()
             });
-        }
 
-        if (hasChanges) {
-            notifyStateChange();
+            if (hasChanges) {
+                notifyStateChange();
+            }
         }
 
         dom.apiStatusIndicator.className = "status-indicator online";
