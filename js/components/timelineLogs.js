@@ -4,7 +4,12 @@
 
 import { gameState } from '../state.js';
 import { dom } from '../dom.js';
-import { getLocalizedLog } from '../i18n.js';
+function getLocalizedLog(log, lang) {
+    if (window.getLocalizedLog) {
+        return window.getLocalizedLog(log, lang);
+    }
+    return log;
+}
 
 // --- 渲染局势流向日志 ---
 export function renderTimelineLogs() {

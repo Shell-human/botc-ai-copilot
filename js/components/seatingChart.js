@@ -5,8 +5,14 @@
 import { SCRIPTS_DATA, SCRIPTS_DATA_EN } from '../data/rules.js';
 import { gameState, saveToLocalStorage } from '../state.js';
 import { dom } from '../dom.js';
-import { getLocalizedRole } from '../i18n.js';
 import { openPopover } from './popoverModal.js';
+
+function getLocalizedRole(roleName) {
+    if (window.getLocalizedRole) {
+        return window.getLocalizedRole(roleName);
+    }
+    return roleName;
+}
 
 // --- 渲染环形座位轨迹图 ---
 export function renderSeatingChart() {

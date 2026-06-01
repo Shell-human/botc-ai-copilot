@@ -4,8 +4,14 @@
 
 import { gameState, togglePlayerAlive, togglePlayerPoison } from '../state.js';
 import { dom } from '../dom.js';
-import { getLocalizedClaim } from '../i18n.js';
 import { openPopover } from './popoverModal.js';
+
+function getLocalizedClaim(claim) {
+    if (window.getLocalizedClaim) {
+        return window.getLocalizedClaim(claim);
+    }
+    return claim;
+}
 
 // --- 渲染左下角玩家列表控制面板 ---
 export function renderPlayerList() {

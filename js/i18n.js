@@ -522,3 +522,8 @@ export function updateConsoleUI() {
         lucide.createIcons();
     }
 }
+
+// 绑定核心本地化辅助工具至 window 全局，完美化解 ES 模块循环依赖死锁
+window.getLocalizedRole = getLocalizedRole;
+window.getLocalizedClaim = getLocalizedClaim;
+window.getLocalizedLog = getLocalizedLog;
