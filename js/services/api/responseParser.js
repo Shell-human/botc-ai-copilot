@@ -9,7 +9,7 @@ import { parseMarkdown, escapeHtml } from '../../utils.js';
 
 // --- 从 AI 响应中提取 STATE_SYNC JSON 并应用到 gameState ---
 export function extractAndApplyStateSync(text) {
-    const syncRegex = /=== STATE_SYNC ===\s*([\s\S]*?)$/i;
+    const syncRegex = /=== STATE_SYNC ===\s*([\s\S]*?)(?=\n\n===|\n===|$)/i;
     const match = text.match(syncRegex);
     if (!match) return { cleanText: text, hasChanges: false };
     

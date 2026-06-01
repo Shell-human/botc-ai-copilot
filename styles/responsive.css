@@ -39,7 +39,7 @@
     .panel {
         grid-column: span 1 !important;
         width: 100% !important;
-        height: 540px !important;
+        height: 620px !important;
     }
     
     /* Input and Select Mobile touch enhancement */
@@ -97,7 +97,7 @@
     
     /* Dynamically downscale the seating chart to fit small screens */
     .seating-chart-wrapper {
-        transform: scale(0.78) !important;
+        transform: scale(0.60) !important;
         transform-origin: center center !important;
     }
     
@@ -145,7 +145,7 @@
 
 @media (max-width: 360px) {
     .seating-chart-wrapper {
-        transform: scale(0.60) !important;
+        transform: scale(0.46) !important;
     }
     
     .player-name-text {
@@ -165,7 +165,7 @@
         padding: 10px 24px !important;
     }
     .seating-chart-wrapper {
-        transform: scale(0.82) !important;
+        transform: scale(0.63) !important;
         transform-origin: center center !important;
         transition: transform 0.3s ease !important;
     }
@@ -184,7 +184,7 @@
         padding: 6px 20px !important;
     }
     .seating-chart-wrapper {
-        transform: scale(0.75) !important;
+        transform: scale(0.58) !important;
         transform-origin: center center !important;
     }
     .validator-dashboard-container {
@@ -206,7 +206,7 @@
         padding: 4px 16px !important;
     }
     .seating-chart-wrapper {
-        transform: scale(0.66) !important;
+        transform: scale(0.51) !important;
         transform-origin: center center !important;
     }
     .validator-dashboard-container {
@@ -221,7 +221,7 @@
 
 @media (max-height: 650px) {
     .seating-chart-wrapper {
-        transform: scale(0.58) !important;
+        transform: scale(0.45) !important;
         transform-origin: center center !important;
     }
     .timeline-container {

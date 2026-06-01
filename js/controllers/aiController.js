@@ -65,14 +65,9 @@ export async function handleAiAnalysis() {
         return;
     }
 
-    if (rawText && !isChatMode) {
-        gameState.logs.push(`白天进展陈述："${rawText}"`);
-        renderTimelineLogs();
+    // v2.0: 立即清空输入框（UX），但日志写入和saveToLocalStorage延迟到API调用成功后
+    if (rawText) {
         dom.consoleInput.value = "";
-        saveToLocalStorage();
-    } else if (rawText && isChatMode) {
-        dom.consoleInput.value = "";
-        saveToLocalStorage();
     }
 
     const friendlyModelName = MODEL_FRIENDLY_NAMES[model] || model;
@@ -116,6 +111,12 @@ export async function handleAiAnalysis() {
             model,
             apiModelCustom: gameState.apiModelCustom
         });
+        
+        // v2.0: API 调用成功后才写入日志和持久化
+        if (rawText && !isChatMode) {
+            gameState.logs.push(`白天进展陈述："${rawText}"`);
+            renderTimelineLogs();
+        }
         
         // AI-driven state sync: extract structured events from AI response
         const { cleanText, hasChanges } = extractAndApplyStateSync(reply);
