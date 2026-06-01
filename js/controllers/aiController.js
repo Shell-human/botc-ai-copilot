@@ -10,11 +10,10 @@ import { TRANSLATIONS } from '../data/translations.js';
 import { escapeHtml } from '../utils.js';
 import { renderTimelineLogs } from '../components/timelineLogs.js';
 import { resetAnalysisBoxes } from '../i18n/engine.js';
-import { parseAndApplyTextEvents } from '../services/nlpParser.js';
 import { constructPrompt } from '../services/api/promptBuilder.js';
 import { callAI } from '../services/api/gateway.js';
-import { distributeResponse } from '../services/api/responseParser.js';
-import { saveToLocalStorage } from './gameController.js';
+import { distributeResponse, extractAndApplyStateSync } from '../services/api/responseParser.js';
+import { saveToLocalStorage, notifyStateChange } from './gameController.js';
 
 export async function handleAiAnalysis() {
     console.log("🚨 [DEBUG] === handleAiAnalysis() 开始执行 ===");
@@ -67,14 +66,11 @@ export async function handleAiAnalysis() {
     }
 
     if (rawText && !isChatMode) {
-        parseAndApplyTextEvents(rawText);
-        
         gameState.logs.push(`白天进展陈述："${rawText}"`);
         renderTimelineLogs();
         dom.consoleInput.value = "";
         saveToLocalStorage();
     } else if (rawText && isChatMode) {
-        parseAndApplyTextEvents(rawText);
         dom.consoleInput.value = "";
         saveToLocalStorage();
     }
@@ -121,7 +117,10 @@ export async function handleAiAnalysis() {
             apiModelCustom: gameState.apiModelCustom
         });
         
-        distributeResponse(reply, thoughtHtml);
+        // AI-driven state sync: extract structured events from AI response
+        const { cleanText, hasChanges } = extractAndApplyStateSync(reply);
+        
+        distributeResponse(cleanText, thoughtHtml);
 
         document.querySelectorAll(".ai-loading-overlay, .ai-progress-bar, .ai-floating-status-badge").forEach(el => el.remove());
 
@@ -134,6 +133,10 @@ export async function handleAiAnalysis() {
             output: reply,
             timestamp: Date.now()
         });
+
+        if (hasChanges) {
+            notifyStateChange();
+        }
 
         dom.apiStatusIndicator.className = "status-indicator online";
         dom.apiStatusText.textContent = `${friendlyModelName} 已就绪`;

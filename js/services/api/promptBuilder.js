@@ -281,6 +281,29 @@ Guidelines:
 [CRITICAL FORMATTING REQUIREMENT]
 Do NOT merge or omit these tags. Each section must start with the exact tag (=== MEMO ===, === ANALYSIS ===, === WORLDLINES ===, === TIPS ===) on a new line!
 Render all content in premium, clean English Markdown. Use bolding and lists appropriately for readability.
+
+=== STATE_SYNC ===
+[CRITICAL] After your response above, output a final JSON block to auto-update player state. Based on the user input "${consoleText}", extract any explicit role claims, death states, or poison states. Format exactly:
+\`\`\`json
+{
+ "events": [
+   {"seat": 4, "claim": "Chef"},
+   {"seat": 2, "claim": "Empath", "alive": true},
+   {"seat": 6, "alive": false},
+   {"seat": 3, "poisoned": true}
+ ]
+}
+\`\`\`
+Rules:
+- "claim" must be an EXACT English character name from this script (one of: Townsfolk/Outsider/Minion/Demon names above).
+- Only include seats and fields that are explicitly mentioned in the user's input. Do NOT guess.
+- If the user says someone "jumped" / "claimed" / "is" / "跳" / "宣称" a role, set their "claim".
+- If the user says someone "died" / "was executed" / "死亡" / "处决", set "alive": false。
+- If the user says someone "alive" / "存活" / "复活", set "alive": true。
+- If the user says someone "poisoned" / "中毒" / "drunk", set "poisoned": true。
+- If the user says someone "healthy" / "恢复" / "正常", set "poisoned": false。
+- If nothing explicit was stated about a player, omit them entirely from the events array (output {"events": []}).
+- Output ONLY the JSON code block, nothing else after it.
 `;
     }
 
@@ -351,5 +374,28 @@ ${aiHistoryPrompt}
 【重要格式要求】
 不要合并或者漏掉以上标签。每一块内容必须以 === MEMO ===, === ANALYSIS ===, === WORLDLINES ===, === TIPS === 这四个大写标签单独占一行开启！
 所有的内容请采用精美的中文 Markdown 语法呈现，包含加粗、列表，请适当使用加粗和图标让重点内容极度清晰。
+
+=== STATE_SYNC ===
+【关键】在你的上述回复之后，请输出一个最终的 JSON 代码块，用于自动更新玩家状态。根据用户输入 "${consoleText}"，提取其中明确提到的角色宣称、死亡状态或中毒状态。格式严格要求如下：
+\`\`\`json
+{
+  "events": [
+    {"seat": 4, "claim": "厨师"},
+    {"seat": 2, "claim": "共情者", "alive": true},
+    {"seat": 6, "alive": false},
+    {"seat": 3, "poisoned": true}
+  ]
+}
+\`\`\`
+规则：
+- "claim" 必须是本剧本中角色定义里的精确中文角色名（从上面村民/外来者/爪牙/恶魔角色名中取）。
+- 仅包含用户在输入中明确提到的座位和字段。不要猜测，不要补充。
+- 如果用户说某玩家"跳了" / "宣称" / "是" / "跳的" 某个角色，设置其 "claim"。
+- 如果用户说某玩家"死了" / "死亡" / "被处决" / "出局"，设置 "alive": false。
+- 如果用户说某玩家"存活" / "复活"，设置 "alive": true。
+- 如果用户说某玩家"中毒" / "醉酒"，设置 "poisoned": true。
+- 如果用户说某玩家"恢复" / "解毒" / "正常"，设置 "poisoned": false。
+- 如果用户输入中没有明确提及任何状态变化，输出 {"events": []}。
+- 仅输出 JSON 代码块，不要在此之后附加任何其他内容。
 `;
 }

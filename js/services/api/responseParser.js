@@ -7,6 +7,73 @@ import { gameState } from '../../core/state.js';
 import { dom } from '../../core/dom.js';
 import { parseMarkdown, escapeHtml } from '../../utils.js';
 
+// --- 从 AI 响应中提取 STATE_SYNC JSON 并应用到 gameState ---
+export function extractAndApplyStateSync(text) {
+    const syncRegex = /=== STATE_SYNC ===\s*([\s\S]*?)$/i;
+    const match = text.match(syncRegex);
+    if (!match) return { cleanText: text, hasChanges: false };
+    
+    const jsonBlock = match[1].trim();
+    // Remove markdown code fences if present
+    const jsonStr = jsonBlock.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim();
+    const cleanText = text.substring(0, match.index).trim();
+    let hasChanges = false;
+    
+    try {
+        const data = JSON.parse(jsonStr);
+        if (!data.events || !Array.isArray(data.events) || data.events.length === 0) {
+            return { cleanText, hasChanges: false };
+        }
+        
+        data.events.forEach(evt => {
+            if (!evt.seat) return;
+            const player = gameState.players.find(p => p.seat === evt.seat);
+            if (!player) return;
+            
+            if (evt.claim && player.claim !== evt.claim) {
+                const oldClaim = player.claim;
+                player.claim = evt.claim;
+                hasChanges = true;
+                const logMsg = gameState.lang === "en"
+                    ? `[AI Sync] Updated Seat ${evt.seat} claim from "${oldClaim}" to "${evt.claim}"`
+                    : `[AI 同步] 根据 AI 分析自动将 ${evt.seat} 号宣称从「${oldClaim}」变更为「${evt.claim}」`;
+                gameState.logs.push(logMsg);
+                console.log(`🤖 [AI State Sync] Seat ${evt.seat} claim: "${oldClaim}" → "${evt.claim}"`);
+            }
+            
+            if (evt.alive !== undefined && player.alive !== evt.alive) {
+                player.alive = evt.alive;
+                hasChanges = true;
+                const statusStr = gameState.lang === "en"
+                    ? (evt.alive ? "Alive" : "Dead")
+                    : (evt.alive ? "存活" : "死亡");
+                const logMsg = gameState.lang === "en"
+                    ? `[AI Sync] Marked Seat ${evt.seat} as ${statusStr}`
+                    : `[AI 同步] 根据 AI 分析自动将 ${evt.seat} 号标记为${statusStr}`;
+                gameState.logs.push(logMsg);
+                console.log(`🤖 [AI State Sync] Seat ${evt.seat} alive: ${evt.alive}`);
+            }
+            
+            if (evt.poisoned !== undefined && player.poisoned !== evt.poisoned) {
+                player.poisoned = evt.poisoned;
+                hasChanges = true;
+                const statusStr = gameState.lang === "en"
+                    ? (evt.poisoned ? "Poisoned/Drunk" : "Healthy")
+                    : (evt.poisoned ? "中毒/醉酒" : "恢复正常");
+                const logMsg = gameState.lang === "en"
+                    ? `[AI Sync] Marked Seat ${evt.seat} as ${statusStr}`
+                    : `[AI 同步] 根据 AI 分析自动将 ${evt.seat} 号标记为${statusStr}`;
+                gameState.logs.push(logMsg);
+                console.log(`🤖 [AI State Sync] Seat ${evt.seat} poisoned: ${evt.poisoned}`);
+            }
+        });
+    } catch (e) {
+        console.warn('⚠️ [AI State Sync] Failed to parse STATE_SYNC JSON:', e.message, '\nRaw:', jsonStr);
+    }
+    
+    return { cleanText, hasChanges };
+}
+
 // --- 思考链 HTML 渲染辅助 ---
 export function buildThoughtHtml(thoughtText, modelName) {
     return `
