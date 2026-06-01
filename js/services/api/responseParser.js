@@ -159,7 +159,8 @@ export function distributeResponse(text, thoughtHtml = "") {
         
         if (parts.length < 4) {
             analysisPart = cleanText;
-            const isChatMode = dom.aiChatModeToggle && dom.aiChatModeToggle.checked;
+            const activeTab = document.querySelector('.tab-btn.active');
+            const isChatMode = activeTab ? activeTab.getAttribute('data-tab') === 'tab-chat' : false;
             if (isChatMode) {
                 worldlinesPart = `<div class="empty-tab-state"><p>💬 您正处于与 AI 的<b>【对话交流模式】</b>中。<br>此模式下只进行直接对话问答，如需对局局势推理，请关闭对话开关并输入局势进展。</p></div>`;
                 tipsPart = `<div class="empty-tab-state"><p>💬 您正处于与 AI 的<b>【对话交流模式】</b>中。<br>常规战术行动建议未触发。如需对局局势推理，请关闭对话开关并输入局势进展。</p></div>`;

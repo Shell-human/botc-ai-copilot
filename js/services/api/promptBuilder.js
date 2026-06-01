@@ -56,28 +56,51 @@ export function constructPrompt(consoleText, isChat = false) {
         : gameState.logs.map((log, idx) => `[第 ${idx+1} 条事件] ${getLocalizedLog(log, "zh")}`).join('\n');
 
     // ---- AI History (摘要化: 仅保留首200字) ----
+    // v3.0: 聊天模式从 chatMessages 注入对话历史，分析模式从 aiOutputs 注入
     let aiHistoryPrompt = "";
-    if (gameState.aiOutputs && gameState.aiOutputs.length > 0) {
-        const historyToInclude = gameState.aiOutputs.slice(-6);
-        const headerEn = "\n=== PREVIOUS AI ASSISTANT OUTPUTS & CONVERSATION HISTORY ===\n";
-        const headerZh = "\n=== 历史 AI 战术副驾驶推演与对话记忆 ===\n";
-        const footerEn = "\n\n(Use the above history to maintain consistency, memory, and flow. Do not contradict your previous statements unless new hard evidence disproves them.)\n";
-        const footerZh = "\n\n（请务必参考上述历史输出，保持战术建议与前序推演的一致性与连贯性。除非出现硬性的新证据或局势剧变，否则请不要否定自己之前的结论。）\n";
+    
+    if (isChat) {
+        // 聊天模式: 使用 chatMessages 作为对话上下文（最近 10 对 = 20 条）
+        if (gameState.chatMessages && gameState.chatMessages.length > 0) {
+            const historyToInclude = gameState.chatMessages.slice(-20);
+            const headerEn = "\n=== CHAT CONVERSATION HISTORY ===\n";
+            const headerZh = "\n=== 对话历史上下文 ===\n";
+            
+            aiHistoryPrompt = (isEn ? headerEn : headerZh) +
+                historyToInclude.map((msg, idx) => {
+                    const roleStr = msg.role === 'user'
+                        ? (isEn ? "User" : "用户")
+                        : (isEn ? "Assistant" : "AI 助手");
+                    const label = isEn ? `#${idx+1}` : `第${idx+1}条`;
+                    const truncatedContent = msg.content.length > MAX_HISTORY_OUTPUT_LENGTH
+                        ? msg.content.substring(0, MAX_HISTORY_OUTPUT_LENGTH) + `...[${msg.content.length - MAX_HISTORY_OUTPUT_LENGTH} more chars]`
+                        : msg.content;
+                    return `[${label}] ${roleStr}:\n${truncatedContent}`;
+                }).join('\n\n---\n\n') + '\n';
+        }
+    } else {
+        // 分析模式: 使用 aiOutputs 作为推演历史（最近 6 条）
+        if (gameState.aiOutputs && gameState.aiOutputs.length > 0) {
+            const historyToInclude = gameState.aiOutputs.slice(-6);
+            const headerEn = "\n=== PREVIOUS AI ASSISTANT OUTPUTS & DEDUCTION HISTORY ===\n";
+            const headerZh = "\n=== 历史 AI 战术副驾驶推演记忆 ===\n";
+            const footerEn = "\n\n(Use the above history to maintain consistency, memory, and flow. Do not contradict your previous statements unless new hard evidence disproves them.)\n";
+            const footerZh = "\n\n（请务必参考上述历史输出，保持战术建议与前序推演的一致性与连贯性。除非出现硬性的新证据或局势剧变，否则请不要否定自己之前的结论。）\n";
 
-        aiHistoryPrompt = (isEn ? headerEn : headerZh) +
-            historyToInclude.map((item, idx) => {
-                const typeStr = isEn
-                    ? (item.type === "chat" ? "Direct Q&A Chat" : "Round Seating Deduction")
-                    : (item.type === "chat" ? "自由提问对话" : "局势进展推演");
-                const label = isEn ? `Memory ${idx+1}` : `历史记忆 ${idx+1}`;
-                const inputLabel = isEn ? "User Input" : "用户输入";
-                const outputLabel = isEn ? "Your Previous Response" : "你当时的回复输出";
-                // 摘要化: 截断过长输出
-                const truncatedOutput = item.output.length > MAX_HISTORY_OUTPUT_LENGTH
-                    ? item.output.substring(0, MAX_HISTORY_OUTPUT_LENGTH) + `...[truncated ${item.output.length - MAX_HISTORY_OUTPUT_LENGTH} chars]`
-                    : item.output;
-                return `[${label}] Interaction Type: ${typeStr}\n- ${inputLabel}: "${item.input}"\n- ${outputLabel}:\n${truncatedOutput}\n---`;
-            }).join('\n\n') + (isEn ? footerEn : footerZh);
+            aiHistoryPrompt = (isEn ? headerEn : headerZh) +
+                historyToInclude.map((item, idx) => {
+                    const typeStr = isEn
+                        ? (item.type === "chat" ? "Direct Q&A Chat" : "Round Seating Deduction")
+                        : (item.type === "chat" ? "自由提问对话" : "局势进展推演");
+                    const label = isEn ? `Memory ${idx+1}` : `历史记忆 ${idx+1}`;
+                    const inputLabel = isEn ? "User Input" : "用户输入";
+                    const outputLabel = isEn ? "Your Previous Response" : "你当时的回复输出";
+                    const truncatedOutput = item.output.length > MAX_HISTORY_OUTPUT_LENGTH
+                        ? item.output.substring(0, MAX_HISTORY_OUTPUT_LENGTH) + `...[truncated ${item.output.length - MAX_HISTORY_OUTPUT_LENGTH} chars]`
+                        : item.output;
+                    return `[${label}] Interaction Type: ${typeStr}\n- ${inputLabel}: "${item.input}"\n- ${outputLabel}:\n${truncatedOutput}\n---`;
+                }).join('\n\n') + (isEn ? footerEn : footerZh);
+        }
     }
 
     // ---- System Role Prompt & Setup Prompt (consoleText已从systemRolePrompt移除——仅保留在setupPrompt和页脚) ----

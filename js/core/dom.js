@@ -18,8 +18,6 @@ export const dom = {
     timelineLogsContainer: document.getElementById("timelineLogsContainer"),
     logCountText: document.getElementById("logCountText"),
     consoleInputLabel: document.getElementById("consoleInputLabel"),
-    aiChatModeToggle: document.getElementById("aiChatModeToggle"),
-    chatModeLabel: document.getElementById("chatModeLabel"),
     consoleInput: document.getElementById("consoleInput"),
     clearConsoleBtn: document.getElementById("clearConsoleBtn"),
     analyzeBtn: document.getElementById("analyzeBtn"),
@@ -28,6 +26,7 @@ export const dom = {
     analysisBox: document.getElementById("analysisBox"),
     worldlinesBox: document.getElementById("worldlinesBox"),
     tipsBox: document.getElementById("tipsBox"),
+    chatBox: document.getElementById("chatBox"),
     // Popover Modal
     popoverModal: document.getElementById("seatPopoverModal"),
     popoverPlayerTitle: document.getElementById("popoverPlayerTitle"),

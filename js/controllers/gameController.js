@@ -31,10 +31,12 @@ export function saveToLocalStorage() {
         players: gameState.players,
         logs: gameState.logs,
         aiOutputs: gameState.aiOutputs || [],
+        chatMessages: gameState.chatMessages || [],
         consoleInputDraft: dom.consoleInput ? dom.consoleInput.value : "",
         analysisBoxHtml: dom.analysisBox ? dom.analysisBox.innerHTML : "",
         worldlinesBoxHtml: dom.worldlinesBox ? dom.worldlinesBox.innerHTML : "",
         tipsBoxHtml: dom.tipsBox ? dom.tipsBox.innerHTML : "",
+        chatBoxHtml: dom.chatBox ? dom.chatBox.innerHTML : "",
         lang: gameState.lang
     });
 }
@@ -64,6 +66,7 @@ export function loadFromLocalStorage() {
         gameState.players = data.players;
         gameState.logs = data.logs;
         gameState.aiOutputs = data.aiOutputs || [];
+        gameState.chatMessages = data.chatMessages || [];
         gameState.lang = data.lang || "zh";
 
         setLanguage(gameState.lang);
@@ -107,6 +110,9 @@ export function loadFromLocalStorage() {
         }
         if (dom.tipsBox && data.tipsBoxHtml && data.tipsBoxHtml.trim()) {
             dom.tipsBox.innerHTML = data.tipsBoxHtml;
+        }
+        if (dom.chatBox && data.chatBoxHtml && data.chatBoxHtml.trim()) {
+            dom.chatBox.innerHTML = data.chatBoxHtml;
         }
 
         renderSeatingChart();
@@ -170,6 +176,7 @@ export function initGame() {
     }
 
     gameState.aiOutputs = [];
+    gameState.chatMessages = [];
 
     if (gameState.lang === "en") {
         const scriptNameEn = SCRIPTS_DATA_EN[gameState.scriptName]?.name || gameState.scriptName;

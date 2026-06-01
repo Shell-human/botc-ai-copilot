@@ -17,6 +17,7 @@ import { populateScriptPreview } from '../components/scriptPreview.js';
 import { saveLanguage } from '../services/storage.js';
 import { translateDropdowns, updateMyRoleOptions, updateApiModelOptions } from './optionProviders.js';
 import { saveToLocalStorage } from '../controllers/gameController.js';
+import { resetChatBox } from '../components/chatRenderer.js';
 
 export { updateMyRoleOptions, updateApiModelOptions };
 
@@ -101,7 +102,8 @@ export function setLanguage(lang) {
         resetAnalysisBoxes();
     }
     
-    updateConsoleUI();
+    const activeTab = document.querySelector('.tab-btn.active');
+    updateConsoleUI(activeTab ? activeTab.getAttribute('data-tab') === 'tab-chat' : false);
     saveToLocalStorage();
 }
 
@@ -138,12 +140,14 @@ export function resetAnalysisBoxes() {
             <p>${tipsDesc}</p>
         </div>
     `;
+    
+    // v3.0: 同时重置聊天框
+    resetChatBox();
+    
     if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
 }
 
-export function updateConsoleUI() {
-    if (!dom.aiChatModeToggle) return;
-    const isChat = dom.aiChatModeToggle.checked;
+export function updateConsoleUI(isChat = false) {
     const lang = gameState.lang;
     
     if (isChat) {

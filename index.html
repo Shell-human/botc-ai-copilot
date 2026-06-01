@@ -246,13 +246,6 @@
             <div class="console-section">
                 <div class="console-header-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
                     <label id="consoleInputLabel" for="consoleInput" style="margin-bottom: 0;" data-i18n="consoleInputLabel">输入本轮局势进展 (支持自然语言描述)</label>
-                    <div style="display: flex; align-items: center; gap: 6px; user-select: none;">
-                        <span style="font-size: 11px; color: var(--text-muted); font-weight: 500;" id="chatModeLabel" data-i18n="chatModeLabel">💬 对话模式</span>
-                        <label class="toggle-switch" style="width: 32px; height: 18px; margin-bottom: 0;">
-                            <input type="checkbox" id="aiChatModeToggle">
-                            <span class="slider" style="border-radius: 18px;"></span>
-                        </label>
-                    </div>
                 </div>
                 <div class="textarea-wrapper">
                     <textarea id="consoleInput" data-i18n-placeholder="consoleInputPlaceholder" placeholder="输入例如：
@@ -283,6 +276,9 @@
                     <button class="tab-btn" data-tab="tab-tips">
                         <i data-lucide="compass"></i> <span data-i18n="tabTips">行动建议</span>
                     </button>
+                    <button class="tab-btn" data-tab="tab-chat">
+                        <i data-lucide="message-square"></i> <span data-i18n="tabChat">AI 对话</span>
+                    </button>
                 </div>
 
                 <div class="tab-content-container">
@@ -311,6 +307,17 @@
                         <div class="ai-box" id="tipsBox">
                             <div class="empty-tab-state">
                                 <p data-i18n="emptyTips">这里将为你生成本轮白天最推荐私聊的玩家、应该核对的身份，以及防止猝死或邪恶阵营直接获胜的紧急提示。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: AI Chat -->
+                    <div class="tab-content" id="tab-chat">
+                        <div class="chat-container" id="chatBox">
+                            <div class="chat-welcome">
+                                <i data-lucide="bot" class="chat-welcome-icon"></i>
+                                <h3 data-i18n="chatWelcomeTitle">AI 战术对话</h3>
+                                <p data-i18n="chatWelcomeDesc">与 AI 自由讨论战术、提问规则、推演策略。对话记录将自动保存，刷新页面后也不会丢失。</p>
                             </div>
                         </div>
                     </div>

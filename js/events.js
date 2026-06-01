@@ -8,7 +8,8 @@ import { PROVIDER_BASE_URLS } from './core/constants.js';
 import { updateApiStatusIndicator } from './core/statusIndicator.js';
 import { initGame, saveToLocalStorage, loadFromLocalStorage } from './controllers/gameController.js';
 import { handleAiAnalysis } from './controllers/aiController.js';
-import { updateMyRoleOptions, updateApiModelOptions, setLanguage, useEnOrZh, updateConsoleUI } from './i18n/engine.js';
+import { updateMyRoleOptions, updateApiModelOptions, setLanguage, useEnOrZh, updateConsoleUI, resetAnalysisBoxes } from './i18n/engine.js';
+import { resetChatBox } from './components/chatRenderer.js';
 import { showToast } from './utils.js';
 import { populateScriptPreview } from './components/scriptPreview.js';
 import { TRANSLATIONS } from './data/translations.js';
@@ -140,6 +141,9 @@ export function initCoreEvents() {
             btn.classList.add("active");
             const tabId = btn.getAttribute("data-tab");
             document.getElementById(tabId).classList.add("active");
+            
+            // 根据当前活跃 Tab 更新控制台 UI
+            updateConsoleUI(tabId === "tab-chat");
         });
     });
 
@@ -170,18 +174,4 @@ export function initCoreEvents() {
         });
     }
 
-    // 16. AI 对话模式切换监听
-    if (dom.aiChatModeToggle) {
-        dom.aiChatModeToggle.addEventListener("change", () => {
-            updateConsoleUI();
-            saveToLocalStorage();
-            if (dom.aiChatModeToggle.checked) {
-                // Auto switch to the "Instant Analysis" tab (where Chat is rendered) for premium interactive flow
-                const analysisTabBtn = document.querySelector('.tab-btn[data-tab="tab-analysis"]');
-                if (analysisTabBtn) {
-                    analysisTabBtn.click();
-                }
-            }
-        });
-    }
 }

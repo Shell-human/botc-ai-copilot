@@ -19,6 +19,7 @@ export const gameState = {
     players: [],
     logs: [],
     aiOutputs: [],
+    chatMessages: [],
     selectedSeatForEdit: null,
     lang: "zh"
 };

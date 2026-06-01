@@ -14,11 +14,14 @@ import { constructPrompt } from '../services/api/promptBuilder.js';
 import { callAI } from '../services/api/gateway.js';
 import { distributeResponse, extractAndApplyStateSync } from '../services/api/responseParser.js';
 import { saveToLocalStorage, notifyStateChange } from './gameController.js';
+import { appendChatMessage, showChatTyping, hideChatTyping } from '../components/chatRenderer.js';
 
 export async function handleAiAnalysis() {
     console.log("🚨 [DEBUG] === handleAiAnalysis() 开始执行 ===");
     const rawText = dom.consoleInput.value.trim();
-    const isChatMode = dom.aiChatModeToggle && dom.aiChatModeToggle.checked;
+    // v3.0: 根据活跃 Tab 判断聊天模式（第4个Tab "tab-chat" = 对话模式）
+    const activeTab = document.querySelector('.tab-btn.active');
+    const isChatMode = activeTab ? activeTab.getAttribute('data-tab') === 'tab-chat' : false;
     const apiKey = dom.apiKeyInput.value.trim() || gameState.apiKey;
     const provider = gameState.apiProvider || "gemini";
     const baseUrl = gameState.apiBaseUrl || "https://api.openai.com/v1";
@@ -99,6 +102,11 @@ export async function handleAiAnalysis() {
     const prompt = constructPrompt(rawText, isChatMode);
     console.log("🚨 [DEBUG] 提示词构建完毕，长度为:", prompt.length);
 
+    // v3.0: 聊天模式下显示打字指示器
+    if (isChatMode) {
+        showChatTyping();
+    }
+
     try {
         console.log("🚨 [DEBUG] 进入 API 请求 try 块...");
         dom.apiStatusIndicator.className = "status-indicator online animate-pulse";
@@ -118,6 +126,11 @@ export async function handleAiAnalysis() {
             renderTimelineLogs();
         }
         
+        // v3.0: 聊天模式下隐藏打字指示器
+        if (isChatMode) {
+            hideChatTyping();
+        }
+        
         // AI-driven state sync: extract structured events from AI response
         const { cleanText, hasChanges } = extractAndApplyStateSync(reply);
         
@@ -128,12 +141,40 @@ export async function handleAiAnalysis() {
         if (!gameState.aiOutputs) {
             gameState.aiOutputs = [];
         }
-        gameState.aiOutputs.push({
-            type: isChatMode ? "chat" : "analysis",
-            input: rawText,
-            output: reply,
-            timestamp: Date.now()
-        });
+
+        if (isChatMode) {
+            // v3.0: 聊天模式 → 存入 chatMessages 并渲染气泡
+            if (!gameState.chatMessages) {
+                gameState.chatMessages = [];
+            }
+            // 存储用户消息
+            gameState.chatMessages.push({
+                role: 'user',
+                content: rawText,
+                timestamp: Date.now()
+            });
+            // 存储 AI 回复
+            gameState.chatMessages.push({
+                role: 'assistant',
+                content: reply,
+                timestamp: Date.now()
+            });
+            // 渲染气泡（如果当前在聊天 Tab）
+            if (dom.chatBox) {
+                // 追加最后两条消息
+                const msgs = gameState.chatMessages;
+                appendChatMessage(msgs[msgs.length - 2]); // user
+                appendChatMessage(msgs[msgs.length - 1]); // assistant
+            }
+        } else {
+            // 分析模式 → 存入 aiOutputs
+            gameState.aiOutputs.push({
+                type: "analysis",
+                input: rawText,
+                output: reply,
+                timestamp: Date.now()
+            });
+        }
 
         if (hasChanges) {
             notifyStateChange();
@@ -147,6 +188,8 @@ export async function handleAiAnalysis() {
     } catch (error) {
         console.error("AI 分析时出错:", error);
         
+        // v3.0: 聊天模式出错时也要隐藏打字指示器
+        hideChatTyping();
         document.querySelectorAll(".ai-loading-overlay, .ai-progress-bar, .ai-floating-status-badge").forEach(el => el.remove());
         
         dom.apiStatusIndicator.className = "status-indicator error";
@@ -162,9 +205,14 @@ export async function handleAiAnalysis() {
                 <p style="font-size: 11px; color: var(--text-muted);">提示：请检查网络连接、API 密钥以及接口基地址 (Base URL) 是否正确。</p>
             </div>
         `;
-        dom.analysisBox.innerHTML = errorHtml;
-        dom.worldlinesBox.innerHTML = errorHtml;
-        dom.tipsBox.innerHTML = errorHtml;
+        
+        if (isChatMode && dom.chatBox) {
+            dom.chatBox.innerHTML = errorHtml + dom.chatBox.innerHTML;
+        } else {
+            dom.analysisBox.innerHTML = errorHtml;
+            dom.worldlinesBox.innerHTML = errorHtml;
+            dom.tipsBox.innerHTML = errorHtml;
+        }
         if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
     }
 }

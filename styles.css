@@ -26,6 +26,7 @@
 /* --- 组件层：校验器与 AI 扩展 --- */
 @import 'styles/components/validator.css';
 @import 'styles/components/ai-extras.css';
+@import 'styles/components/chat-bubbles.css';
 
 /* --- 动画定义 --- */
 @import 'styles/animations.css';
