@@ -95,9 +95,9 @@
         padding: 12px !important;
     }
     
-    /* Dynamically downscale the seating chart circle to fit small screens */
+    /* Dynamically downscale the seating chart to fit small screens */
     .seating-chart-wrapper {
-        transform: scale(0.82) !important;
+        transform: scale(0.78) !important;
         transform-origin: center center !important;
     }
     
@@ -145,7 +145,7 @@
 
 @media (max-width: 360px) {
     .seating-chart-wrapper {
-        transform: scale(0.72) !important;
+        transform: scale(0.60) !important;
     }
     
     .player-name-text {

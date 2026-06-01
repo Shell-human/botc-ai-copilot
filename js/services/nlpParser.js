@@ -80,10 +80,26 @@ export function parseAndApplyTextEvents(text) {
             const cnRole = allRolesCn[i];
             const enRole = allRolesEn[i] || "";
             
-            const regexCn = new RegExp(cnRole);
-            const regexEn = enRole ? new RegExp("\\b" + enRole + "\\b", "i") : null;
+            // Try full role name first (exact substring match)
+            let matched = new RegExp(cnRole).test(sentence);
             
-            if (regexCn.test(sentence) || (regexEn && regexEn.test(sentence))) {
+            // Fuzzy match: try progressively shorter prefixes (min 2 chars)
+            // Handles abbreviations like "共情" → "共情者", "占卜" → "占卜师"
+            if (!matched && cnRole.length >= 3) {
+                for (let len = cnRole.length - 1; len >= 2; len--) {
+                    if (new RegExp(cnRole.slice(0, len)).test(sentence)) {
+                        matched = true;
+                        break;
+                    }
+                }
+            }
+            
+            // English match
+            if (!matched && enRole) {
+                matched = new RegExp("\\b" + enRole + "\\b", "i").test(sentence);
+            }
+            
+            if (matched) {
                 if (player.claim !== cnRole) {
                     const oldClaim = player.claim;
                     player.claim = cnRole;
