@@ -7,7 +7,7 @@ import { GAME_DISTRIBUTIONS, SCRIPTS_DATA } from '../data/rules.js';
 import { getLocalizedRole } from '../i18n/engine.js';
 
 export function renderDeductiveValidator() {
-    const card = document.getElementById("deductiveValidatorCard");
+    const card = dom.deductiveValidatorCard;
     if (!card) {
         console.warn("⚠️ [DeductiveValidator] Card container element 'deductiveValidatorCard' not found in DOM.");
         return;

@@ -19,6 +19,9 @@ function localizedRole(roleName) {
     return roleName;
 }
 
+// 注意：此函数与 engine.js 中的 useEnOrZh 功能相同但刻意独立定义，
+// 避免 optionProviders.js → engine.js 的循环依赖（engine.js 会 import 本模块）。
+// 两个副本必须保持同步，修改时请同时更新 engine.js:37。
 function useEnOrZh(zh, en) {
     return gameState.lang === "en" ? en : zh;
 }

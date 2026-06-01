@@ -59,5 +59,8 @@ export const dom = {
     closeScriptPreviewBtn: document.getElementById("closeScriptPreviewBtn"),
     seatingChartWatermark: document.getElementById("seatingChartWatermark"),
     langToggleBtn: document.getElementById("langToggleBtn"),
-    langToggleText: document.getElementById("langToggleText")
+    langToggleText: document.getElementById("langToggleText"),
+
+    // 校验器卡片容器（仅 deductiveValidator.js 使用，纳入统一管理）
+    deductiveValidatorCard: null,
 };
