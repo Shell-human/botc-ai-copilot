@@ -1261,3 +1261,37 @@ textarea {
     }
 }
 
+/* ==========================================================================
+   AI Loading Non-blocking Overlay
+   ========================================================================== */
+.tab-content {
+    position: relative;
+}
+
+.ai-loading-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 15, 24, 0.45);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 10;
+    border-radius: 12px;
+    opacity: 0;
+    animation: fadeInOverlay 0.3s forwards ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes fadeInOverlay {
+    to { opacity: 1; }
+}
+
+.ai-loading-overlay .spinner-glow {
+    width: 36px;
+    height: 36px;
+}
+

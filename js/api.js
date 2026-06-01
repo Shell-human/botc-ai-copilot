@@ -109,17 +109,23 @@ export async function handleAiAnalysis() {
     };
     const friendlyModelName = modelNameMap[model] || model;
 
-    // 2. 界面切换为加载态
-    const loadingHtml = `
-        <div class="ai-loading-container">
+    // 2. 界面显示非阻塞悬浮遮罩 (保留用户可读状态)
+    console.log("🚨 [DEBUG] 正在注入非阻塞 AI 思考态遮罩...");
+    
+    // 清理已存在的旧遮罩（防重叠）
+    document.querySelectorAll(".ai-loading-overlay").forEach(el => el.remove());
+    
+    const overlayHtml = `
+        <div class="ai-loading-overlay">
             <div class="spinner-glow"></div>
-            <p class="animate-pulse">${friendlyModelName} 正在对局势做多维度世界线推演...</p>
+            <p class="animate-pulse" style="margin: 0; font-size: 13px; font-weight: 500; color: var(--text-primary); text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${friendlyModelName} 正在对局势做多维度世界线推演...</p>
         </div>
     `;
-    console.log("🚨 [DEBUG] 正在将界面切换为加载态...");
-    dom.analysisBox.innerHTML = loadingHtml;
-    dom.worldlinesBox.innerHTML = loadingHtml;
-    dom.tipsBox.innerHTML = loadingHtml;
+    
+    const tabContainer = document.querySelector(".tab-content-container");
+    if (tabContainer) {
+        tabContainer.insertAdjacentHTML("beforeend", overlayHtml);
+    }
 
     // 3. 构建 Prompt
     console.log("🚨 [DEBUG] 正在构建 AI 提示词...");
@@ -287,6 +293,9 @@ export async function handleAiAnalysis() {
         // 4. 解析 AI 回复并分发到不同选项卡
         distributeResponse(reply, thoughtHtml);
 
+        // 移除所有加载遮罩，使新内容直接显现
+        document.querySelectorAll(".ai-loading-overlay").forEach(el => el.remove());
+
         // 将 AI 本次输出存入本地缓存的历史记录中（用于掉线重连或连续轮次推演时提供前后连贯记忆）
         if (!gameState.aiOutputs) {
             gameState.aiOutputs = [];
@@ -307,6 +316,9 @@ export async function handleAiAnalysis() {
 
     } catch (error) {
         console.error("AI 分析时出错:", error);
+        
+        // 异常情况下也清理加载遮罩，恢复原始状态
+        document.querySelectorAll(".ai-loading-overlay").forEach(el => el.remove());
         
         dom.apiStatusIndicator.className = "status-indicator error";
         dom.apiStatusText.textContent = "API 调用失败";
