@@ -124,7 +124,8 @@ Please reply directly and conversationally in a professional strategy advisor st
         }
     } else if (isEvil) {
         if (isEn) {
-            const bluffsStr = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.map(b => ROLE_TRANSLATIONS[b] || b).join(', ') : "None declared";
+            const activeBluffs = (gameState.evilBluffs || []).filter(Boolean);
+            const bluffsStr = activeBluffs.length > 0 ? activeBluffs.map(b => ROLE_TRANSLATIONS[b] || b).join(', ') : "None declared";
             const teammatesStr = teammates.map(t => `Seat ${t.seat} (${t.name || 'Unnamed'}, Claimed: ${ROLE_TRANSLATIONS[t.claim] || t.claim})`).join(', ') || "No teammates marked yet in the seating chart";
             systemRolePrompt = `You are an extremely experienced Blood on the Clocktower logician and strategic mastermind. You are acting as the "AI Tactical Copilot" for Player ${gameState.mySeat} (real role: ${myRoleEn}, alignment: Evil).
 The Storyteller gave you 3 Demon Bluffs (roles definitely NOT in play): [${bluffsStr}].
@@ -144,7 +145,8 @@ Please analyze the game from the absolute perspective of the Evil team (Demons a
 - Deduce which claims from Good players are real, and highlight logical contradictions to exploit.`;
             setupPrompt = `- My Real Role: ${myRoleEn} (Evil Team)\n- Standard Character Distribution: ${baseDistStrEn}\n- 3 Demon Bluffs from Storyteller: ${bluffsStr}\n- Confirmed Evil Teammates: ${teammatesStr}`;
         } else {
-            const bluffsStr = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.join('、') : "未填报";
+            const activeBluffs = (gameState.evilBluffs || []).filter(Boolean);
+            const bluffsStr = activeBluffs.length > 0 ? activeBluffs.join('、') : "未填报";
             const teammatesStr = teammates.map(t => `${t.seat}号玩家 (${t.name || '未命名'}, 宣称: ${t.claim})`).join('、') || "暂未在座位图中标记其他邪恶队友";
             systemRolePrompt = `你是一名极其资深的《血染钟楼》逻辑学家、顶尖博弈高手。你正在作为一名玩家（即玩家 ${gameState.mySeat} 号，实际身份为【邪恶阵营】的 ${gameState.myRole}）的"AI战术副驾驶"帮助他和邪恶同伴打配合、欺骗好人阵营、混淆视听并获得最终胜利。
 说书人在首夜分配给他的 3 个【好人伪装身份 (Bluffs，场上绝对不在场的好人角色)】是：【${bluffsStr}】。

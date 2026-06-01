@@ -5,6 +5,7 @@
 
 import { gameState } from '../core/state.js';
 import { dom } from '../core/dom.js';
+import { parseMarkdown, escapeHtml } from '../utils.js';
 
 /**
  * 格式化时间戳为 HH:MM 格式
@@ -12,64 +13,6 @@ import { dom } from '../core/dom.js';
 function formatTime(timestamp) {
     const d = new Date(timestamp);
     return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-
-/**
- * 简单 Markdown → HTML 转换（处理基本格式）
- */
-function simpleMarkdownToHtml(text) {
-    let html = text;
-    
-    // Escape HTML entities (but preserve existing HTML)
-    html = html
-        .replace(/&/g, '&')
-        .replace(/</g, '<')
-        .replace(/>/g, '>');
-    
-    // Code blocks (```...```)
-    html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
-    
-    // Inline code (`...`)
-    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-    
-    // Bold (**...**)
-    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    
-    // Italic (*...*)
-    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-    
-    // Headers (### ...)
-    html = html.replace(/^### (.+)$/gm, '<h4>$1</h4>');
-    html = html.replace(/^## (.+)$/gm, '<h3>$1</h3>');
-    
-    // Blockquote (> ...)
-    html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
-    
-    // Unordered list items (- ...)
-    html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
-    
-    // Wrap consecutive <li> in <ul>
-    html = html.replace(/(<li>[\s\S]*?<\/li>)/g, (match) => {
-        // Only wrap if not already wrapped
-        if (!match.includes('<ul>')) {
-            return '<ul>' + match + '</ul>';
-        }
-        return match;
-    });
-    
-    // Paragraphs: split on double newline
-    const paragraphs = html.split(/\n\n+/);
-    html = paragraphs.map(p => {
-        const trimmed = p.trim();
-        if (!trimmed) return '';
-        if (trimmed.startsWith('<h') || trimmed.startsWith('<ul>') || 
-            trimmed.startsWith('<blockquote>') || trimmed.startsWith('<pre>')) {
-            return trimmed;
-        }
-        return '<p>' + trimmed.replace(/\n/g, '<br>') + '</p>';
-    }).join('\n');
-    
-    return html;
 }
 
 /**
@@ -81,8 +24,8 @@ function buildMessageBubble(msg) {
     const timeStr = formatTime(msg.timestamp);
     
     const contentHtml = isUser
-        ? msg.content.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/\n/g, '<br>')
-        : simpleMarkdownToHtml(msg.content);
+        ? escapeHtml(msg.content).replace(/\n/g, '<br>')
+        : parseMarkdown(msg.content);
     
     return `
         <div class="chat-message ${roleClass}">

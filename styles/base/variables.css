@@ -20,6 +20,7 @@
     --color-neutral: #8f9cae;
     --color-accent: #ffd200;
     --color-accent-glow: rgba(255, 210, 0, 0.25);
+    --color-accent-dark: #b89a00;
     
     /* 文本色与阴影 */
     --text-primary: #f0f4f9;

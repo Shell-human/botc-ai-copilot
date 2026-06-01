@@ -48,7 +48,15 @@ export function showToast(message) {
 // --- 简易高效的 Markdown 解析器 ---
 export function parseMarkdown(md) {
     if (!md) return "";
-    let html = md;
+    
+    // First, escape HTML to prevent XSS
+    let html = escapeHtml(md);
+    
+    // Code blocks (```...```)
+    html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+    
+    // Inline code (`...`)
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
     
     // GitHub Alert 警示框处理
     html = html.replace(/^\>\s*\[!NOTE\]\s*(.*$)/gim, '<blockquote class="alert note"><i data-lucide="info" class="icon-sm"></i> $1</blockquote>');
@@ -57,6 +65,9 @@ export function parseMarkdown(md) {
     
     // 粗体
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // 斜体 (Italic: *...*)
+    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
     
     // 标题
     html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
@@ -72,14 +83,14 @@ export function parseMarkdown(md) {
     html = html.replace(/<\/ul>\s*<ul>/g, ''); 
 
     // 换行替换为段落
-    html = html.split('\n\n').map(p => {
+    html = html.split(/\n\n+/).map(p => {
         const trimmed = p.trim();
         if (!trimmed) return '';
-        if (trimmed.startsWith('<h') || trimmed.startsWith('<ul') || trimmed.startsWith('<block') || trimmed.startsWith('<div')) {
+        if (trimmed.startsWith('<h') || trimmed.startsWith('<ul') || trimmed.startsWith('<block') || trimmed.startsWith('<div') || trimmed.startsWith('<pre>')) {
             return trimmed;
         }
         return `<p>${trimmed.replace(/\n/g, '<br>')}</p>`;
-    }).join('');
+    }).join('\n');
 
     return html;
 }

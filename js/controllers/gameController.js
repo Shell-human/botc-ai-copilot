@@ -158,7 +158,7 @@ export function initGame() {
         dom.evilBluff1.value,
         dom.evilBluff2.value,
         dom.evilBluff3.value
-    ].filter(b => b !== "");
+    ];
 
     gameState.players = [];
     for (let i = 1; i <= gameState.playerCount; i++) {
@@ -187,7 +187,8 @@ export function initGame() {
             `My seat is <strong>Seat ${gameState.mySeat}</strong>, Role: <strong>${myRoleEn}</strong> (${myAlignEn}).`
         ];
         if (gameState.myAlignment === "evil") {
-            const bluffsText = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.map(b => ROLE_TRANSLATIONS[b] || b).join(', ') : "None declared";
+            const activeBluffs = gameState.evilBluffs.filter(Boolean);
+            const bluffsText = activeBluffs.length > 0 ? activeBluffs.map(b => ROLE_TRANSLATIONS[b] || b).join(', ') : "None declared";
             gameState.logs.push(`3 Demon Bluffs given by Storyteller: <strong>${bluffsText}</strong>.`);
         }
     } else {
@@ -197,7 +198,8 @@ export function initGame() {
             `我的位置是 <strong>${gameState.mySeat} 号</strong>，角色是 <strong>${gameState.myRole}</strong> (${gameState.myAlignment === "good" ? "善良阵营" : "邪恶阵营"})。`
         ];
         if (gameState.myAlignment === "evil") {
-            const bluffsText = gameState.evilBluffs.length > 0 ? gameState.evilBluffs.join('、') : "未填报";
+            const activeBluffs = gameState.evilBluffs.filter(Boolean);
+            const bluffsText = activeBluffs.length > 0 ? activeBluffs.join('、') : "未填报";
             gameState.logs.push(`说书人给的 3 个好人伪装身份：<strong>${bluffsText}</strong>。`);
         }
     }
