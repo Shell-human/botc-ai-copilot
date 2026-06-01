@@ -1,0 +1,251 @@
+/* ==========================================================================
+   seating-chart.css - 中间面板座位图与流水日志
+   环形座位节点、SVG 连线、日志条目、空态
+   ========================================================================== */
+
+.map-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.map-legend {
+    margin-left: auto;
+    display: flex;
+    gap: 12px;
+}
+.legend-item {
+    font-size: 11px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.legend-item .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot.good { background-color: var(--color-good); }
+.dot.evil { background-color: var(--color-evil); }
+.dot.dead { background-color: #3f4e62; }
+.dot.poisoned { background-color: var(--color-poison); }
+
+.seating-chart-container {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.seating-chart-wrapper {
+    position: relative;
+    width: 480px;
+    height: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* SVG 连线画布 */
+.seating-svg-connections {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.seating-nodes-container {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+/* 环形座位节点 */
+.seat-node {
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.seat-node-circle {
+    width: 100%;
+    height: 100%;
+    background: rgba(13, 18, 27, 0.9);
+    border: 2px solid var(--color-neutral);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+}
+
+/* 角色属性视觉 */
+.seat-node.good .seat-node-circle {
+    border-color: var(--color-good);
+    box-shadow: 0 0 10px var(--color-good-glow);
+}
+.seat-node.evil .seat-node-circle {
+    border-color: var(--color-evil);
+    box-shadow: 0 0 10px var(--color-evil-glow);
+}
+.seat-node.poisoned .seat-node-circle {
+    border-color: var(--color-poison);
+    box-shadow: 0 0 10px var(--color-poison-glow);
+}
+.seat-node.dead {
+    opacity: 0.5;
+}
+.seat-node.dead .seat-node-circle {
+    border-color: #3f4e62;
+    background: rgba(20, 24, 30, 0.9);
+    box-shadow: none;
+}
+.seat-node.dead::after {
+    content: "❌";
+    position: absolute;
+    font-size: 16px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 12;
+}
+
+.seat-node:hover .seat-node-circle {
+    transform: scale(1.1);
+    background: rgba(20, 28, 42, 0.95);
+    z-index: 20;
+}
+
+.seat-node-num {
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--text-muted);
+}
+.seat-node.me .seat-node-num {
+    color: var(--color-good);
+}
+
+.seat-node-name {
+    font-size: 10px;
+    font-weight: 500;
+    max-width: 44px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.seat-node-role {
+    font-size: 8px;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1px 4px;
+    border-radius: 4px;
+    margin-top: 2px;
+    max-width: 44px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 核心圆环中心点饰品 */
+.seating-chart-center-watermark {
+    position: absolute;
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: rgba(255, 51, 102, 0.15);
+    text-shadow: 0 0 10px rgba(255, 51, 102, 0.05);
+    pointer-events: none;
+    z-index: 0;
+    transition: all 0.3s ease;
+}
+
+/* 流水志 (Activity Logs) */
+.timeline-container {
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.timeline-header {
+    height: 36px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.timeline-header h3 {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+.log-count {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.timeline-logs {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.log-item {
+    font-size: 12px;
+    border-left: 2px solid var(--border-color);
+    padding-left: 10px;
+    margin-left: 4px;
+    color: var(--text-secondary);
+    animation: slideInLeft 0.3s ease;
+}
+.log-item strong {
+    color: var(--text-primary);
+}
+.log-item.good {
+    border-left-color: var(--color-good);
+}
+.log-item.evil {
+    border-left-color: var(--color-evil);
+}
+.log-item.system {
+    border-left-color: var(--color-accent);
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted);
+    gap: 8px;
+}
+.empty-icon {
+    width: 24px;
+    height: 24px;
+    opacity: 0.4;
+}

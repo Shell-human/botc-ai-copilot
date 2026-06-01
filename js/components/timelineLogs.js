@@ -2,14 +2,9 @@
    timelineLogs.js - 局势信息流水日志视图渲染组件
    ========================================================================== */
 
-import { gameState } from '../state.js';
-import { dom } from '../dom.js';
-function getLocalizedLog(log, lang) {
-    if (window.getLocalizedLog) {
-        return window.getLocalizedLog(log, lang);
-    }
-    return log;
-}
+import { gameState } from '../core/state.js';
+import { dom } from '../core/dom.js';
+import { getLocalizedLog } from '../i18n/logTranslator.js';
 
 // --- 渲染局势流向日志 ---
 export function renderTimelineLogs() {
@@ -27,7 +22,7 @@ export function renderTimelineLogs() {
                 <p>${isEn ? "No game logs yet. Enter the first turn event or whisper in the console on the right." : "暂无游戏记录，在右侧控制台输入第一条局势变动吧"}</p>
             </div>
         `;
-        lucide.createIcons();
+        if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
         return;
     }
 

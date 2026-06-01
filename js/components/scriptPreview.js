@@ -9,8 +9,8 @@ import {
     CHARACTER_DETAILS_EN
 } from '../data/rules.js';
 
-import { gameState } from '../state.js';
-import { dom } from '../dom.js';
+import { gameState } from '../core/state.js';
+import { dom } from '../core/dom.js';
 
 export function populateScriptPreview() {
     const selectedScriptKey = dom.scriptSelect ? dom.scriptSelect.value : "wushang";

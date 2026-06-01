@@ -3,16 +3,11 @@
    ========================================================================== */
 
 import { SCRIPTS_DATA, SCRIPTS_DATA_EN } from '../data/rules.js';
-import { gameState, saveToLocalStorage } from '../state.js';
-import { dom } from '../dom.js';
+import { gameState } from '../core/state.js';
+import { dom } from '../core/dom.js';
+import { notifyStateChange } from '../controllers/gameController.js';
+import { getLocalizedRole } from '../i18n/engine.js';
 import { openPopover } from './popoverModal.js';
-
-function getLocalizedRole(roleName) {
-    if (window.getLocalizedRole) {
-        return window.getLocalizedRole(roleName);
-    }
-    return roleName;
-}
 
 // --- 渲染环形座位轨迹图 ---
 export function renderSeatingChart() {
@@ -107,13 +102,7 @@ export function renderSeatingChart() {
                 token.addEventListener("click", (e) => {
                     e.stopPropagation(); // 阻止冒泡，避免触发 openPopover
                     player.ghostVoteUsed = !player.ghostVoteUsed;
-                    saveToLocalStorage();
-                    renderSeatingChart();
-                    
-                    // 触发大盘逻辑校验器重新渲染
-                    if (window.renderDeductiveValidator) {
-                        window.renderDeductiveValidator();
-                    }
+                    notifyStateChange();
                 });
             }
         }
