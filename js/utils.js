@@ -83,3 +83,29 @@ export function parseMarkdown(md) {
 
     return html;
 }
+
+/**
+ * 使用 DOMPurify 对富文本 HTML 进行深度 XSS 消毒，确保 innerHTML 注入安全。
+ * @param {string} dirtyHtml 
+ * @returns {string} 消毒后的安全 HTML
+ */
+export function sanitizeHtml(dirtyHtml) {
+    if (!dirtyHtml) return "";
+    if (typeof DOMPurify !== "undefined" && DOMPurify.sanitize) {
+        return DOMPurify.sanitize(dirtyHtml, {
+            ALLOWED_TAGS: [
+                'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'ul', 'ol', 'li', 
+                'strong', 'em', 'code', 'pre', 'blockquote', 'div', 'span', 
+                'details', 'summary', 'i', 'svg', 'path', 'circle', 'line'
+            ],
+            ALLOWED_ATTR: [
+                'class', 'style', 'id', 'data-tab', 'data-i18n', 'data-i18n-placeholder',
+                'title', 'viewBox', 'width', 'height', 'fill', 'stroke', 'stroke-width',
+                'x1', 'y1', 'x2', 'y2', 'cx', 'cy', 'r', 'stroke-dasharray'
+            ]
+        });
+    }
+    console.warn("⚠️ [XSS Protection] DOMPurify 未加载，采用降级放行模式。请检查网络。");
+    return dirtyHtml;
+}
+

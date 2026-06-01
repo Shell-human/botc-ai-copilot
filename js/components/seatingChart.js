@@ -8,6 +8,8 @@ import { dom } from '../core/dom.js';
 import { notifyStateChange } from '../controllers/gameController.js';
 import { getLocalizedRole } from '../i18n/engine.js';
 import { openPopover } from './popoverModal.js';
+import { escapeHtml } from '../utils.js';
+
 
 // --- 渲染环形座位轨迹图 ---
 export function renderSeatingChart() {
@@ -85,17 +87,19 @@ export function renderSeatingChart() {
             `;
         }
         
+        const rawName = (player.name === "我" || player.name === "Me") ? (gameState.lang === "en" ? "Me" : "我") : player.name;
         node.innerHTML = `
             <div class="seat-node-circle">
                 <span class="seat-node-num">${player.seat}</span>
-                <span class="seat-node-name">${(player.name === "我" || player.name === "Me") ? (gameState.lang === "en" ? "Me" : "我") : player.name}</span>
-                ${player.claim !== "未知" ? `<span class="seat-node-role">${getLocalizedRole(player.claim)}</span>` : ""}
+                <span class="seat-node-name">${escapeHtml(rawName)}</span>
+                ${player.claim !== "未知" ? `<span class="seat-node-role">${escapeHtml(getLocalizedRole(player.claim))}</span>` : ""}
             </div>
             ${ghostVoteHtml}
         `;
 
         // 绑定点击事件，点击在地图上弹窗修改
         node.addEventListener("click", () => openPopover(player.seat));
+
         
         // 绑定幽灵票点击切换
         if (!player.alive) {

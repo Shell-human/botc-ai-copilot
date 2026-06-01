@@ -11,9 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Stylesheet -->
     <link rel="stylesheet" href="styles.css">
-    <!-- Icons (Lucide Icons via CDN) -->
-    <script src="https://unpkg.com/lucide@0.462.0"></script>
+    <!-- Icons (Lucide Icons via CDN) & DOMPurify (XSS Sanitizer via CDN) -->
+    <script src="https://unpkg.com/lucide@0.462.0" integrity="sha384-8nT3SpButyvenpAdKYPJzXdSz3zidMGduMoaMvwjKnAWVv238n6P1mhveiJJQWrV" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/dompurify@3.1.5/dist/purify.min.js" integrity="sha384-nszIONF2FGC59kn+pPFaRa6WUNGwsZgXZiJxJwQbym+TzcH7smolUviLgpPbNx7V" crossorigin="anonymous"></script>
 </head>
+
 <body>
     <header class="main-header">
         <div class="header-logo">

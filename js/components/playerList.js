@@ -7,6 +7,8 @@ import { dom } from '../core/dom.js';
 import { togglePlayerAlive, togglePlayerPoison } from '../controllers/gameController.js';
 import { getLocalizedClaim } from '../i18n/engine.js';
 import { openPopover } from './popoverModal.js';
+import { escapeHtml } from '../utils.js';
+
 
 // --- 渲染左下角玩家列表控制面板 ---
 export function renderPlayerList() {
@@ -18,11 +20,12 @@ export function renderPlayerList() {
         row.className = `player-item-row ${!player.alive ? 'dead' : ''}`;
         if (isMe) row.classList.add("me");
 
+        const rawName = (player.name === "我" || player.name === "Me") ? (gameState.lang === "en" ? "Me" : "我") : player.name;
         row.innerHTML = `
             <div class="player-info-meta">
                 <span class="seat-badge">${player.seat}</span>
-                <span class="player-name-text">${(player.name === "我" || player.name === "Me") ? (gameState.lang === "en" ? "Me" : "我") : player.name}</span>
-                <span class="player-claim-badge">${getLocalizedClaim(player.claim)}</span>
+                <span class="player-name-text">${escapeHtml(rawName)}</span>
+                <span class="player-claim-badge">${escapeHtml(getLocalizedClaim(player.claim))}</span>
             </div>
             <div class="player-actions-toggles">
                 <label class="toggle-switch" title="存活/死亡">
@@ -36,6 +39,7 @@ export function renderPlayerList() {
                 <button class="btn-text edit-player-btn" data-seat="${player.seat}"><i data-lucide="edit-3" style="width:12px;height:12px;"></i></button>
             </div>
         `;
+
 
         // 绑定列表内的快速切换事件
         row.querySelector(".alive-toggle").addEventListener("change", (e) => {

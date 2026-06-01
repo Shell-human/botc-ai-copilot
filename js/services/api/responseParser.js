@@ -5,7 +5,8 @@
 
 import { gameState } from '../../core/state.js';
 import { dom } from '../../core/dom.js';
-import { parseMarkdown, escapeHtml } from '../../utils.js';
+import { parseMarkdown, escapeHtml, sanitizeHtml } from '../../utils.js';
+
 
 // --- 从 AI 响应中提取 STATE_SYNC JSON 并应用到 gameState ---
 export function extractAndApplyStateSync(text) {
@@ -89,9 +90,6 @@ export function buildThoughtHtml(thoughtText, modelName) {
 
 // --- 解析并分发 API 响应 ---
 export function distributeResponse(text, thoughtHtml = "") {
-    console.log("🚨 [DEBUG] === distributeResponse() 开始执行 ===");
-    console.log("🚨 [DEBUG] 原始返回文本长度:", text ? text.length : 0);
-    
     let memoPart = "";
     let cleanText = text || "";
     
@@ -120,12 +118,6 @@ export function distributeResponse(text, thoughtHtml = "") {
     const worldlinesMatch = cleanText.match(worldlinesRegex);
     const tipsMatch = cleanText.match(tipsRegex);
 
-    console.log("🚨 [DEBUG] 正则强匹配结果：", {
-        analysisMatched: !!analysisMatch2,
-        worldlinesMatched: !!worldlinesMatch,
-        tipsMatched: !!tipsMatch
-    });
-
     if (analysisMatch2 && worldlinesMatch && tipsMatch) {
         const analysisIdx = analysisMatch2.index;
         const worldlinesIdx = worldlinesMatch.index;
@@ -153,9 +145,7 @@ export function distributeResponse(text, thoughtHtml = "") {
         worldlinesPart = getSectionContent("worldlines");
         tipsPart = getSectionContent("tips");
     } else {
-        console.log("🚨 [DEBUG] 正则强匹配失败，进入 split 兼容模式分割...");
         const parts = cleanText.split(/===\s*[a-zA-Z]+\s*===/i);
-        console.log("🚨 [DEBUG] split 拆分出的 parts.length =", parts.length);
         
         if (parts.length < 4) {
             analysisPart = cleanText;
@@ -174,12 +164,6 @@ export function distributeResponse(text, thoughtHtml = "") {
             tipsPart = parts[3] || "";
         }
     }
-
-    console.log("🚨 [DEBUG] 最终段落字符长度：", {
-        analysisPartLength: analysisPart.length,
-        worldlinesPartLength: worldlinesPart.length,
-        tipsPartLength: tipsPart.length
-    });
 
     if (!analysisPart.trim()) {
         analysisPart = `<div class="empty-tab-state"><p>AI 未能正常生成本轮即时局势分析。</p></div>`;
@@ -212,10 +196,10 @@ export function distributeResponse(text, thoughtHtml = "") {
         `;
     }
 
-    console.log("🚨 [DEBUG] 正在将解析出的 HTML 渲染写入 DOM 元素中...");
-    dom.analysisBox.innerHTML = thoughtHtml + memoHtml + parseMarkdown(analysisPart.trim());
-    dom.worldlinesBox.innerHTML = parseMarkdown(worldlinesPart.trim());
-    dom.tipsBox.innerHTML = parseMarkdown(tipsPart.trim());
+    dom.analysisBox.innerHTML = sanitizeHtml(thoughtHtml + memoHtml + parseMarkdown(analysisPart.trim()));
+    dom.worldlinesBox.innerHTML = sanitizeHtml(parseMarkdown(worldlinesPart.trim()));
+    dom.tipsBox.innerHTML = sanitizeHtml(parseMarkdown(tipsPart.trim()));
 
     if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
 }
+

@@ -1,6 +1,9 @@
 /* ==========================================================================
    nlpParser.js - 智能语义化分析与自动状态追踪提取器 (NLP Smart Command Parser)
-   职责：从自然语言文本中提取游戏事件并更新 gameState
+   🚨 [DEPRECATED / 已弃用]
+   理由：该模块的原生 RegExp 语义解析能力已由底层的 LLM 提示词工程中的 STATE_SYNC 机制
+         完全替代（参见 promptBuilder.js 及 responseParser.js 中的 extractAndApplyStateSync）。
+         当前不再作为核心推演流程的依赖，仅保留作为代码历史资产。
    ========================================================================== */
 
 import { gameState } from '../core/state.js';

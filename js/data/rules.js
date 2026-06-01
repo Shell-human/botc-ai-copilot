@@ -2,8 +2,21 @@
    rules.js - 剧本与角色技能具体规则配置数据库 (Rules Domain)
    ========================================================================== */
 
+// --- 递归深冻结辅助函数 ---
+function deepFreeze(obj) {
+    if (obj && typeof obj === "object") {
+        Object.freeze(obj);
+        Object.keys(obj).forEach(key => {
+            if (typeof obj[key] === "object") {
+                deepFreeze(obj[key]);
+            }
+        });
+    }
+    return obj;
+}
+
 // --- 游戏人数角色分布配置 ---
-export const GAME_DISTRIBUTIONS = {
+export const GAME_DISTRIBUTIONS = deepFreeze({
     5: { townsfolk: 3, outsider: 0, minion: 1, demon: 1 },
     6: { townsfolk: 3, outsider: 1, minion: 1, demon: 1 },
     7: { townsfolk: 5, outsider: 0, minion: 1, demon: 1 },
@@ -15,10 +28,10 @@ export const GAME_DISTRIBUTIONS = {
     13: { townsfolk: 9, outsider: 0, minion: 3, demon: 1 },
     14: { townsfolk: 9, outsider: 1, minion: 3, demon: 1 },
     15: { townsfolk: 9, outsider: 2, minion: 3, demon: 1 },
-};
+});
 
 // --- 剧本/板子数据配置 ---
-export const SCRIPTS_DATA = {
+export const SCRIPTS_DATA = deepFreeze({
     wushang: {
         name: "无上杀戮",
         townsfolk: ["贵族", "厨师", "共情者", "罂粟种植者", "博学者", "茶艺师", "城镇公告员", "舞蛇人", "送葬者", "熊孩子", "传教士", "水手", "赏金猎人", "炼金术士", "气球驾驶员"],
@@ -26,6 +39,7 @@ export const SCRIPTS_DATA = {
         minion: ["精神病患者", "皮克希", "洗脑师", "召唤师", "教父"],
         demon: ["涡流", "卡扎力", "诺·达鲺", "哈迪寂亚"]
     },
+
     anliu: {
         name: "暗流涌动",
         townsfolk: ["洗衣妇", "图书管理员", "调查员", "厨师", "共情者", "占卜师", "送葬者", "僧侣", "守鸦人", "贞洁者", "猎手", "士兵", "镇长"],
@@ -50,7 +64,7 @@ export const SCRIPTS_DATA = {
 };
 
 // --- 板子角色详细技能定义 ---
-export const CHARACTER_DETAILS = {
+export const CHARACTER_DETAILS = deepFreeze({
     wushang: {
         "贵族": "首夜知3人中恰1邪恶。",
         "厨师": "首夜知邻座邪恶对数。",
@@ -160,10 +174,10 @@ export const CHARACTER_DETAILS = {
         "方吉": "每夜*杀1人。首外来者被杀变邪恶方吉代死。[+1外来者]",
         "亡骨魔": "每夜*杀1人。被杀爪牙保留能力，其1邻座镇民中毒。[-1外来者]"
     }
-};
+});
 
 // --- English Scripts and Character Details Data ---
-export const SCRIPTS_DATA_EN = {
+export const SCRIPTS_DATA_EN = deepFreeze({
     wushang: {
         name: "Supreme Slaughter",
         townsfolk: ["Noble", "Chef", "Empath", "Poppy Grower", "Savant", "Tea Lady", "Town Crier", "Snake Charmer", "Undertaker", "Rascal", "Preacher", "Sailor", "Bounty Hunter", "Alchemist", "Balloonist"],
@@ -192,9 +206,9 @@ export const SCRIPTS_DATA_EN = {
         minion: ["Godfather", "Pit-Hag", "Cerenovus", "Widow"],
         demon: ["Imp", "Vigormortis", "Fang Gu"]
     }
-};
+});
 
-export const CHARACTER_DETAILS_EN = {
+export const CHARACTER_DETAILS_EN = deepFreeze({
     wushang: {
         "Noble": "1st night: learn 3 players, exactly 1 evil.",
         "Chef": "1st night: learn # of adjacent evil pairs.",
@@ -304,7 +318,7 @@ export const CHARACTER_DETAILS_EN = {
         "Vigormortis": "Each night*: kill 1. Killed Minions keep ability, 1 neighbor Townsfolk poisoned. [-1 Outsider]",
         "Fang Gu": "Each night*: kill 1. 1st Outsider killed becomes evil Fang Gu instead. [+1 Outsider]"
     }
-};
+});
 
 export const CORE_LOGIC_RULES = `
 === 血染钟楼核心推理公理 (Deduction Axioms v4.0) ===

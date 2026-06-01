@@ -17,7 +17,6 @@ import { saveToLocalStorage, notifyStateChange } from './gameController.js';
 import { appendChatMessage, showChatTyping, hideChatTyping } from '../components/chatRenderer.js';
 
 export async function handleAiAnalysis() {
-    console.log("🚨 [DEBUG] === handleAiAnalysis() 开始执行 ===");
     const rawText = dom.consoleInput.value.trim();
     // v3.0: 根据活跃 Tab 判断聊天模式（第4个Tab "tab-chat" = 对话模式）
     const activeTab = document.querySelector('.tab-btn.active');
@@ -27,21 +26,11 @@ export async function handleAiAnalysis() {
     const baseUrl = gameState.apiBaseUrl || "https://api.openai.com/v1";
     let model = gameState.aiModel || "gemini-flash-latest";
 
-    console.log("🚨 [DEBUG] 采集到的基本参数：", {
-        rawText,
-        apiKeyExists: !!apiKey,
-        apiKeyStart: apiKey ? apiKey.substring(0, 6) : "None",
-        provider,
-        baseUrl,
-        model
-    });
-
     if (model === "gemini-flash-lastest") {
         model = "gemini-flash-latest";
     }
 
     if (!navigator.onLine) {
-        console.log("🚨 [DEBUG] 检测到处于离线状态！数据暂存。");
         if (rawText) {
             const tempLog = gameState.lang === "en" ? `Day progress updates (cached): "${rawText}"` : `白天进展陈述(暂存)："${rawText}"`;
             gameState.logs.push(tempLog);
@@ -56,10 +45,8 @@ export async function handleAiAnalysis() {
     }
 
     const isLocalhost = baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1");
-    console.log("🚨 [DEBUG] 本地服务器判定 isLocalhost =", isLocalhost);
     
     if (!apiKey && !isLocalhost) {
-        console.log("🚨 [DEBUG] 缺失 API Key，拦截。");
         const missingKeyMsg = TRANSLATIONS[gameState.lang]?.apiKeyMissingAlert || "请输入有效的 API Key 以启用分析！";
         alert(missingKeyMsg);
         const apiKeyDetails = document.getElementById("apiKeyDetails");
@@ -68,14 +55,17 @@ export async function handleAiAnalysis() {
         return;
     }
 
+    // Disable the analyze button to prevent concurrent/rapid submissions
+    if (dom.analyzeBtn) {
+        dom.analyzeBtn.disabled = true;
+    }
+
     // v2.0: 立即清空输入框（UX），但日志写入和saveToLocalStorage延迟到API调用成功后
     if (rawText) {
         dom.consoleInput.value = "";
     }
 
     const friendlyModelName = MODEL_FRIENDLY_NAMES[model] || model;
-
-    console.log("🚨 [DEBUG] 正在注入流光进度条与悬浮状态指示器...");
     
     document.querySelectorAll(".ai-loading-overlay, .ai-progress-bar, .ai-floating-status-badge").forEach(el => el.remove());
     
@@ -98,9 +88,7 @@ export async function handleAiAnalysis() {
         tabContainer.insertAdjacentHTML("beforeend", floatingBadgeHtml);
     }
 
-    console.log("🚨 [DEBUG] 正在构建 AI 提示词...");
     const prompt = constructPrompt(rawText, isChatMode);
-    console.log("🚨 [DEBUG] 提示词构建完毕，长度为:", prompt.length);
 
     // v3.0: 聊天模式下显示打字指示器
     if (isChatMode) {
@@ -108,7 +96,6 @@ export async function handleAiAnalysis() {
     }
 
     try {
-        console.log("🚨 [DEBUG] 进入 API 请求 try 块...");
         dom.apiStatusIndicator.className = "status-indicator online animate-pulse";
         dom.apiStatusText.textContent = `正在调用 ${friendlyModelName}...`;
 
@@ -120,7 +107,7 @@ export async function handleAiAnalysis() {
             apiModelCustom: gameState.apiModelCustom
         });
         
-        // v2.0: API 调用成功后才写入日志和持久化
+        // v2.0: API 调用成功后才写入日志 and 持久化
         if (rawText && !isChatMode) {
             gameState.logs.push(`白天进展陈述："${rawText}"`);
             renderTimelineLogs();
@@ -214,5 +201,10 @@ export async function handleAiAnalysis() {
             dom.tipsBox.innerHTML = errorHtml;
         }
         if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+    } finally {
+        // Always re-enable the analyze button
+        if (dom.analyzeBtn) {
+            dom.analyzeBtn.disabled = false;
+        }
     }
 }

@@ -3,7 +3,7 @@
    ========================================================================== */
 
 // Provider → 默认 Base URL 映射
-export const PROVIDER_BASE_URLS = {
+export const PROVIDER_BASE_URLS = Object.freeze({
     gemini: "",
     chatgpt: "https://api.openai.com/v1",
     claude: "https://api.anthropic.com/v1",
@@ -14,10 +14,10 @@ export const PROVIDER_BASE_URLS = {
     kimi: "https://api.moonshot.cn/v1",
     baidu: "https://aistudio.baidu.com/llm/lmapi/v3",
     custom: "http://localhost:11434/v1"
-};
+});
 
 // Provider 名称映射（用于 UI 展示，不依赖 i18n）
-export const PROVIDER_TITLES = {
+export const PROVIDER_TITLES = Object.freeze({
     gemini: "Google Gemini",
     chatgpt: "OpenAI ChatGPT",
     claude: "Anthropic Claude",
@@ -28,10 +28,10 @@ export const PROVIDER_TITLES = {
     kimi: "Moonshot Kimi / 月之暗面",
     baidu: "Baidu ERNIE / 百度文心一言",
     custom: "Custom / 自定义兼容协议"
-};
+});
 
 // 模型友好名称映射（用于加载文案与状态指示灯）
-export const MODEL_FRIENDLY_NAMES = {
+export const MODEL_FRIENDLY_NAMES = Object.freeze({
     "gemini-flash-latest": "Gemini Flash (最新动态版)",
     "gemini-3.5-flash": "Gemini 3.5 Flash (闪电旗舰)",
     "gemini-3.1-pro-preview": "Gemini 3.1 Pro (推理旗舰)",
@@ -47,19 +47,20 @@ export const MODEL_FRIENDLY_NAMES = {
     "doubao-seed-2-0-pro-260215": "火山引擎 Doubao Seed 2.0 Pro",
     "kimi-k2.6": "月之暗面 Kimi K2.6 (高并发Swarm)",
     "ernie-5.1": "百度文心一言 ERNIE 5.1 (中文搜索推理旗舰)"
-};
+});
 
 // 剧本名中英对照表（用于日志翻译中的反向映射）
-export const SCRIPT_NAME_MAP = {
+export const SCRIPT_NAME_MAP = Object.freeze({
     "Supreme Slaughter": "无上杀戮",
     "Trouble Brewing": "暗流涌动",
     "Sects & Violets": "梦殒春宵",
     "Laissez un Faire": "瓦釜雷鸣"
-};
+});
 
-export const SCRIPT_NAME_MAP_REVERSE = {
+export const SCRIPT_NAME_MAP_REVERSE = Object.freeze({
     "无上杀戮": "Supreme Slaughter",
     "暗流涌动": "Trouble Brewing",
     "梦殒春宵": "Sects & Violets",
     "瓦釜雷鸣": "Laissez un Faire"
-};
+});
+

@@ -94,8 +94,6 @@ export async function callAI(prompt, { provider, apiKey, baseUrl, model, apiMode
             targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
         }
 
-        console.log("🚨 [DEBUG] 正在请求 Gemini 接口，URL:", targetUrl.substring(0, 100) + "...[Key Hidden]");
-        
         await withRetry(async () => {
             const response = await fetchWithTimeout(targetUrl, {
                 method: 'POST',
@@ -105,27 +103,22 @@ export async function callAI(prompt, { provider, apiKey, baseUrl, model, apiMode
 
             if (!response.ok) {
                 const errText = await response.text();
-                console.log("🚨 [DEBUG] Gemini 响应非 OK:", response.status, errText);
                 throw new Error(`Gemini API 错误 (${response.status}): ${errText}`);
             }
 
             const data = await response.json();
-            console.log("🚨 [DEBUG] Gemini 成功返回数据:", data);
             
             if (!data.candidates || data.candidates.length === 0) {
                 throw new Error("Gemini API 未能返回候选内容，请核对 API 密钥是否有效。");
             }
 
             const parts = data.candidates[0].content.parts;
-            console.log("🚨 [DEBUG] Gemini 候选正文部件 parts count:", parts.length);
             
             const finalParts = parts.filter(p => !p.thought);
             reply = finalParts.map(p => p.text).join('\n');
-            console.log("🚨 [DEBUG] 拼接后最终 reply 长度为:", reply.length);
 
             const thoughtPart = parts.find(p => p.thought);
             if (thoughtPart && thoughtPart.text.trim()) {
-                console.log("🚨 [DEBUG] 发现思考链 thoughtPart 长度:", thoughtPart.text.trim().length);
                 thoughtHtml = buildThoughtHtml(thoughtPart.text.trim(), friendlyModelName);
             }
         });
