@@ -62,5 +62,5 @@ export const dom = {
     langToggleText: document.getElementById("langToggleText"),
 
     // 校验器卡片容器（仅 deductiveValidator.js 使用，纳入统一管理）
-    deductiveValidatorCard: null,
+    deductiveValidatorCard: document.getElementById("deductiveValidatorCard"),
 };
