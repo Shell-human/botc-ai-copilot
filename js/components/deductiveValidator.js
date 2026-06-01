@@ -4,17 +4,31 @@
 
 import { gameState } from '../state.js';
 import { GAME_DISTRIBUTIONS, SCRIPTS_DATA } from '../data/rules.js';
+import { getLocalizedRole } from '../i18n.js';
 
 export function renderDeductiveValidator() {
     const card = document.getElementById("deductiveValidatorCard");
-    if (!card) return;
+    if (!card) {
+        console.warn("⚠️ [DeductiveValidator] Card container element 'deductiveValidatorCard' not found in DOM.");
+        return;
+    }
 
     const isEn = gameState.lang === "en";
     const currentScript = SCRIPTS_DATA[gameState.scriptName];
     if (!currentScript) {
+        console.warn("⚠️ [DeductiveValidator] Script data not found for:", gameState.scriptName);
         card.innerHTML = "";
         return;
     }
+
+    console.log("📊 [DeductiveValidator] Running validator checks...");
+    console.log("📊 [DeductiveValidator] Player count:", gameState.playerCount, "Script:", gameState.scriptName);
+    console.log("📊 [DeductiveValidator] Players state:", gameState.players.map(p => ({
+        seat: p.seat,
+        claim: p.claim,
+        alive: p.alive,
+        ghostVoteUsed: p.ghostVoteUsed
+    })));
 
     // 1. 计算对跳冲突 (Claim Collisions)
     const claimGroups = {};
@@ -33,6 +47,7 @@ export function renderDeductiveValidator() {
             collisions.push({ role, seats });
         }
     });
+    console.log("📊 [DeductiveValidator] Calculated collisions:", collisions);
 
     // 2. 计算外来者数量校验 (Outsider Validator)
     const standardDist = GAME_DISTRIBUTIONS[gameState.playerCount] || { Townsfolk: 0, outsider: 0, minion: 0, demon: 0 };
@@ -43,6 +58,7 @@ export function renderDeductiveValidator() {
         return currentScript.outsider.includes(p.claim);
     });
     const claimedOutsidersCount = claimedOutsiders.length;
+    console.log("📊 [DeductiveValidator] Outsiders: Standard =", standardOutsiders, "Claimed =", claimedOutsidersCount, claimedOutsiders.map(p => p.seat));
 
     // 3. 计算幽灵票存余统计 (Ghost Votes)
     const deadPlayers = gameState.players.filter(p => !p.alive);
@@ -66,7 +82,7 @@ export function renderDeductiveValidator() {
             const seatsStr = isEn ? `Seats ${c.seats.join(" & ")}` : `${c.seats.join(" 号 & ")} 号`;
             return `
                 <div class="validator-item alert-danger">
-                    <span><strong>${c.role}</strong> (${seatsStr})</span>
+                    <span><strong>${getLocalizedRole(c.role)}</strong> (${seatsStr})</span>
                     <span class="validator-badge danger">${isEn ? "Collision" : "对跳"}</span>
                 </div>
             `;

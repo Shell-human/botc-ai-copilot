@@ -21,6 +21,7 @@ import { dom } from './dom.js';
 import { renderSeatingChart } from './components/seatingChart.js';
 import { renderPlayerList } from './components/playerList.js';
 import { renderTimelineLogs } from './components/timelineLogs.js';
+import { renderDeductiveValidator } from './components/deductiveValidator.js';
 import { populateScriptPreview } from './components/scriptPreview.js';
 import { saveLanguage } from './services/storage.js';
 
@@ -225,6 +226,10 @@ export function setLanguage(lang) {
         renderPlayerList();
         renderSeatingChart();
         renderTimelineLogs();
+        renderDeductiveValidator();
+    }
+    else {
+        renderDeductiveValidator();
     }
     
     populateScriptPreview();

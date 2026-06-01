@@ -18,7 +18,8 @@ import {
 
 import {
     gameState,
-    saveToLocalStorage
+    saveToLocalStorage,
+    parseAndApplyTextEvents
 } from './state.js';
 
 import { dom } from './dom.js';
@@ -80,11 +81,15 @@ export async function handleAiAnalysis() {
 
     // 1. 如果有输入输入框，且不是对话模式，才追加到日志中
     if (rawText && !isChatMode) {
+        // 先触发智能语义提取与自动状态追踪同步
+        parseAndApplyTextEvents(rawText);
+        
         gameState.logs.push(`白天进展陈述："${rawText}"`);
         renderTimelineLogs();
         dom.consoleInput.value = ""; // 清空
         saveToLocalStorage();
     } else if (rawText && isChatMode) {
+        parseAndApplyTextEvents(rawText);
         dom.consoleInput.value = ""; // 对话模式直接清空输入框，但不加进事件日志
         saveToLocalStorage();
     }

@@ -33,28 +33,37 @@ This is a pure client-side, single-page gaming visualizer and logical deduction 
 
 ---
 
-#### 2. 🗺️ 中间面板：环形座位轨迹图与流水志 (Visual Board & Log)
-中间面板是游戏的物理局势沙盘，负责图形化还原圆桌对局状态并按时间线记录事件。
+#### 2. 🗺️ 中间面板：座位图、逻辑校验器与流水志 (Visual Board & Deductive Center)
+中间面板是整个游戏的物理局势沙盘与逻辑校验中心，负责图形化还原圆桌对局状态，实时校验逻辑冲突，并记录完整事件流水。
 
 * **环形座位轨迹图 (Circular Seating Chart)**：
   * **功能**：直观展示玩家之间的物理相对位置及实时状态。
   * **视角旋转机制**：输入您自身的座位号（“我”），圆桌会自动旋转，将您的物理座位锁定在圆桌的**正下方（6点钟方向）**，其余玩家节点按顺时针依次排布。此设计能帮助玩家从自身真实第一视角观测左邻右舍。
   * **状态图示**：
     * 蓝色外圈代表善良阵营，红色外圈代表邪恶阵营（由左侧面板判定设定）。
-    * 节点半透明且带暗灰边框表示该玩家已死亡。
+    * 节点半透明且带暗灰边框表示该玩家已死亡。死亡节点内部会自动渲染一枚 **幽灵票存余指示灯（Dead Vote Token）**，展示死票存余情况，点击可标记使用。
     * 节点带有紫色呼吸光晕代表该玩家当前被标记为中毒或醉酒。
-    * 玩家节点之间的带箭头保护线实时动态渲染。
+    * 玩家节点之间的物理邻座连线与茶艺师等技能保护线实时动态渲染。
+* **大盘逻辑校验与冲突追踪器 (Deductive Validator Dashboard)**：
+  * **功能**：系统核心的高级逻辑演算引擎，支持中英双语，负责实时进行全局逻辑校验，包括：
+    * **角色对跳冲突 (Claim Collisions)**：自动检测并追踪多名玩家宣称同一唯一角色（如对跳共情者、对跳占卜师）的冲突，在追踪面板中以高亮红色警报显示冲突座位号。
+    * **外来者数量校验 (Outsider Count)**：根据当前游戏人数读取对应的标准角色配置，与当前场上已起跳的外来者数量进行实时对比。当已起跳外来者数量溢出时自动发出警报，提示玩家关注“男爵、教父改配置”或“酒鬼、坏人穿衣服”的逻辑切入点。
+    * **幽灵票存余统计 (Dead Ghost Votes)**：实时汇总所有阵亡玩家的幽灵死票存余状态，清晰展示 “存余死票 / 总死亡人数”，帮助好人团队精确规划处决轮次与死票防守线。
 * **局势信息流水志 (Game Events Log)**：
   * **功能**：按时间顺序（Chronological Order）自动记录对局中发生的所有逻辑变更、玩家状态更新以及白天输入框提交的进展描述。
   * **使用方法**：此部分为系统自动维护。该日志链会直接作为 AI 提示词（Prompt）的结构化输入上下文，确保 AI 能够基于完整的历史对局脉络进行演算。当系统语言为英文时，AI 也会根据该上下文用英文做深度演算与输出。
 
 ---
 
-#### 3. 👉 右侧面板：AI 战术副驾驶 (Tactical Copilot)
+#### 3. 👉 右侧面板：AI 战术副驾驶与智能同步终端 (Tactical Copilot)
 右侧面板为基于大语言模型（LLM）的博弈推理输出终端，协助玩家分析逻辑漏洞。
 
 * **输入本轮局势进展 (Daytime Input)**：
   * **功能**：支持自然语言描述本轮发生的新信息（例如：*“5号夜里死了。8号白天跳厨师，说信息是1”*）。
+  * **智能语义提取与自动状态追踪同步 (NLP Smart Command Parser) [极客级功能]**：
+    * 当您在右侧文本框录入白天局势进展并发送给 AI 时，系统会在后台运行一套高效的**自然语言分析提取引擎**。
+    * 该引擎支持**中英双语**，能够智能识别句中的“玩家座位 + 事件行为”（如：*“5号夜里死了”* 自动将5号玩家设为死亡状态；*“8号白天跳厨师”* 自动将8号宣称更新为“厨师”；*“3号中毒了”* 自动给3号打上中毒高亮；*“1号和2号对跳共情者”* 自动更新两人的宣称并瞬间触发大盘冲突警报）。
+    * 这极大简化了玩家的手动点击操作，让您只用专注记录发言，物理座位图和大盘逻辑校验器将实时与您的文字描述同步！
   * **使用方法**：在文本域中录入最新的进展陈述，点击黄色 **【发送给AI分析局势】** 按钮。系统会清空输入框，将该进展归档至流水志，并向 AI 网关发起请求。
 * **推理输出选项卡 (Analysis Tabs)**：
   * 当页面切换为英文状态时，系统发送给 Gemini 等 API 的系统提示词 payload 会自动转换为高度结构化的英文，使 AI 即使面对中文的输入，也会全程以纯英文输出专业的世界线推演与战术对策。
@@ -118,28 +127,37 @@ This panel manages system initialization, AI gateway configs, and player state u
 
 ---
 
-#### 2. 🗺️ Center Panel: Seating Circle & Action Logs
-The sandtable visualizes the physical circular layout of players and traces events chronologically.
+#### 2. 🗺️ Center Panel: Visual Board, Logic Validator & Action Logs
+The sandtable visualizes the physical circular layout of players, dynamically calculates logical contradictions, and traces events chronologically.
 
 * **Interactive Seating Circle**:
   * **Feature**: Graphic representation of players' physical seating arrangement and live markers.
   * **First-Person View Rotation**: Input your active seat number in the "My Seat Number" field, and the circular visualizer automatically rotates to lock your seat node at the **bottom-center (6 o'clock direction)**. All other seats are arranged clockwise. This visual perspective replicates your real view of the circular table.
   * **Status Diagrams**:
     * Cyan rings signify a Good alignment; crimson rings signify Evil (configured via the Popover details).
-    * Semi-transparent nodes with gray borders indicate dead players.
+    * Semi-transparent nodes with gray borders indicate dead players. A glowing **Dead Vote Token** is automatically rendered inside dead players' nodes. Click it to mark their final ghost vote as used/active.
     * A purple neon glow ring represents that a player is currently Drunk or Poisoned.
-    * Dynamic, arrowed protection lines between nodes are rendered on the fly.
+    * Dynamic, arrowed protection lines between nodes (e.g. Tea Lady bounds) are rendered on the fly.
+* **Deductive Validator Dashboard**:
+  * **Feature**: A real-time, bilingual constraint-solving engine that runs underneath the seating chart to flag logical anomalies instantly:
+    * **Claim Collisions**: Detects when multiple players claim the same unique role (e.g., two players claiming "Savant" or "Undertaker") and highlights them in high-contrast red warnings.
+    * **Outsider Count**: Compares the standard Outsider configuration for the current player size with the claimed/suspected Outsiders. Highlights anomalies in orange if claims exceed standards, hinting at "Baron bluffing" or "evil players claiming fake roles."
+    * **Dead Ghost Votes**: Automatically aggregates the active ghost votes remaining among all dead players (e.g., "Active Dead Votes: 3 / 4") in a sleek neon badge, allowing perfect planning of execution rounds.
 * **Game Action & Interaction Logs (Timeline)**:
   * **Feature**: Chronologically records all logical changes, state shifts, and daytime statements submitted from the console.
   * **Usage**: Completely automated. This log is directly injected as structured context payload into the AI reasoning prompt, ensuring logically grounded worldline deductions.
 
 ---
 
-#### 3. 👉 Right Panel: AI Tactical Copilot
+#### 3. 👉 Right Panel: AI Tactical Copilot & Smart Sync Terminal
 A specialized large language model (LLM) terminal designed to calculate contradictions, locate logical holes, and frame strategies.
 
 * **Enter Current Turn Updates (Daytime Input)**:
   * **Feature**: Supports natural language entry of events (e.g., *"Seat 5 died tonight. Seat 8 claimed Chef with a '1' in the morning"*).
+  * **NLP Smart Command Parser (Auto-Sync) [Premium Feature]**:
+    * When you type daytime turn updates and send them to the AI, a background **Natural Language Processing (NLP) Parser** automatically intercepts the text.
+    * Supporting both English and Chinese, it extracts player states (e.g. *"Seat 5 died"* sets Seat 5 to Dead; *"Seat 8 claimed Chef"* sets Seat 8's claim to "Chef"; *"Seat 3 is poisoned"* highlights Seat 3 in purple; *"Seat 1 and 2 claim Empath"* triggers a claim collision alert).
+    * This bridges the gap between text entry and the visual board, letting you take notes naturally while the visual circle and Deductive Validator sync in real time!
   * **Usage**: Enter your statements, and click the yellow **【Send to AI for Analysis】** button. The input clears, logs the event, and queries the LLM gateway.
 * **Analysis & Deduction Tabs**:
   * When the active language is English, the prompt payload transmitted to the Gemini API is automatically translated into structured English. This instructs the AI to reason and return all analyses strictly in English, despite the Chinese input labels.

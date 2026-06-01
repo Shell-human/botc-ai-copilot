@@ -10,12 +10,15 @@ import { populateScriptPreview } from './components/scriptPreview.js';
 import { handleAiAnalysis } from './api.js';
 import { TRANSLATIONS } from './data/translations.js';
 import { clearGameState, loadApiKey, saveApiKey } from './services/storage.js';
+import { renderDeductiveValidator } from './components/deductiveValidator.js';
 
 export function initCoreEvents() {
     // 1. 剧本更换监听
     dom.scriptSelect.addEventListener("change", () => {
+        gameState.scriptName = dom.scriptSelect.value;
         updateMyRoleOptions();
         populateScriptPreview();
+        renderDeductiveValidator();
         saveToLocalStorage();
     });
     
