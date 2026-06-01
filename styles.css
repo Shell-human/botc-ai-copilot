@@ -1262,39 +1262,97 @@ textarea {
         transform: translateY(20px) scale(0.95);
     }
 }
-
 /* ==========================================================================
-   AI Loading Non-blocking Overlay
+   AI Loading Non-blocking Progress Bar & Floating Pill Badge
    ========================================================================== */
+.tab-content-container {
+    position: relative;
+}
+
 .tab-content {
     position: relative;
 }
 
-.ai-loading-overlay {
+/* Progress Bar running at the top of the container */
+.ai-progress-bar {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(10, 15, 24, 0.45);
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.05);
+    z-index: 100;
+    overflow: hidden;
+    border-radius: 3px 3px 0 0;
+}
+
+.ai-progress-bar-fill {
+    height: 100%;
+    width: 30%;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-poison), var(--color-good));
+    border-radius: 3px;
+    animation: progressMoving 1.5s infinite linear;
+}
+
+@keyframes progressMoving {
+    0% {
+        left: -30%;
+        position: absolute;
+    }
+    50% {
+        width: 40%;
+    }
+    100% {
+        left: 100%;
+        position: absolute;
+    }
+}
+
+/* Mini Floating Corner Status Badge */
+.ai-floating-status-badge {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    padding: 8px 14px;
+    background: rgba(10, 15, 24, 0.88);
+    border: 1px solid rgba(0, 210, 255, 0.4);
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0, 210, 255, 0.15);
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 16px;
-    z-index: 10;
-    border-radius: 12px;
-    opacity: 0;
-    animation: fadeInOverlay 0.3s forwards ease-in-out;
-    pointer-events: none;
+    gap: 8px;
+    z-index: 100;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-primary);
+    animation: pulseGlowBadge 2s infinite ease-in-out;
+    pointer-events: none; /* Let clicks pass through */
 }
 
-@keyframes fadeInOverlay {
-    to { opacity: 1; }
+.spinner-glow-mini {
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(0, 210, 255, 0.2);
+    border-top: 2px solid var(--color-accent);
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
 }
 
-.ai-loading-overlay .spinner-glow {
-    width: 36px;
-    height: 36px;
+@keyframes pulseGlowBadge {
+    0%, 100% {
+        box-shadow: 0 4px 16px rgba(0, 210, 255, 0.15);
+        border-color: rgba(0, 210, 255, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 24px rgba(0, 210, 255, 0.35);
+        border-color: rgba(0, 210, 255, 0.75);
+    }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
 /* ==========================================================================

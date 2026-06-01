@@ -109,22 +109,29 @@ export async function handleAiAnalysis() {
     };
     const friendlyModelName = modelNameMap[model] || model;
 
-    // 2. 界面显示非阻塞悬浮遮罩 (保留用户可读状态)
-    console.log("🚨 [DEBUG] 正在注入非阻塞 AI 思考态遮罩...");
+    // 2. 界面显示非阻塞且完全不阻挡文字阅读与滚动的双重进度状态 (头部流光进度条 + 角部悬浮小药丸)
+    console.log("🚨 [DEBUG] 正在注入流光进度条与悬浮状态指示器...");
     
     // 清理已存在的旧遮罩（防重叠）
-    document.querySelectorAll(".ai-loading-overlay").forEach(el => el.remove());
+    document.querySelectorAll(".ai-loading-overlay, .ai-progress-bar, .ai-floating-status-badge").forEach(el => el.remove());
     
-    const overlayHtml = `
-        <div class="ai-loading-overlay">
-            <div class="spinner-glow"></div>
-            <p class="animate-pulse" style="margin: 0; font-size: 13px; font-weight: 500; color: var(--text-primary); text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${friendlyModelName} 正在对局势做多维度世界线推演...</p>
+    const progressBarHtml = `
+        <div class="ai-progress-bar">
+            <div class="ai-progress-bar-fill"></div>
+        </div>
+    `;
+    
+    const floatingBadgeHtml = `
+        <div class="ai-floating-status-badge">
+            <div class="spinner-glow-mini"></div>
+            <span>${friendlyModelName} 正在推演局势...</span>
         </div>
     `;
     
     const tabContainer = document.querySelector(".tab-content-container");
     if (tabContainer) {
-        tabContainer.insertAdjacentHTML("beforeend", overlayHtml);
+        tabContainer.insertAdjacentHTML("afterbegin", progressBarHtml);
+        tabContainer.insertAdjacentHTML("beforeend", floatingBadgeHtml);
     }
 
     // 3. 构建 Prompt
@@ -293,8 +300,8 @@ export async function handleAiAnalysis() {
         // 4. 解析 AI 回复并分发到不同选项卡
         distributeResponse(reply, thoughtHtml);
 
-        // 移除所有加载遮罩，使新内容直接显现
-        document.querySelectorAll(".ai-loading-overlay").forEach(el => el.remove());
+        // 移除所有加载遮罩与进度指示，使新内容直接显现
+        document.querySelectorAll(".ai-loading-overlay, .ai-progress-bar, .ai-floating-status-badge").forEach(el => el.remove());
 
         // 将 AI 本次输出存入本地缓存的历史记录中（用于掉线重连或连续轮次推演时提供前后连贯记忆）
         if (!gameState.aiOutputs) {
@@ -317,8 +324,8 @@ export async function handleAiAnalysis() {
     } catch (error) {
         console.error("AI 分析时出错:", error);
         
-        // 异常情况下也清理加载遮罩，恢复原始状态
-        document.querySelectorAll(".ai-loading-overlay").forEach(el => el.remove());
+        // 异常情况下也清理加载遮罩与进度状态，恢复原始状态
+        document.querySelectorAll(".ai-loading-overlay, .ai-progress-bar, .ai-floating-status-badge").forEach(el => el.remove());
         
         dom.apiStatusIndicator.className = "status-indicator error";
         dom.apiStatusText.textContent = "API 调用失败";
