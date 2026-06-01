@@ -74,6 +74,13 @@ export function setLanguage(lang) {
     
     updateMyRoleOptions();
     
+    // updateMyRoleOptions() 会清空并重建说书人伪装下拉框，需在此恢复已保存的选项
+    if (gameState.evilBluffs) {
+        if (gameState.evilBluffs[0] && dom.evilBluff1) dom.evilBluff1.value = gameState.evilBluffs[0];
+        if (gameState.evilBluffs[1] && dom.evilBluff2) dom.evilBluff2.value = gameState.evilBluffs[1];
+        if (gameState.evilBluffs[2] && dom.evilBluff3) dom.evilBluff3.value = gameState.evilBluffs[2];
+    }
+    
     if (gameState.players && gameState.players.length > 0) {
         gameState.players.forEach(p => {
             const isMe = (p.seat === gameState.mySeat);
