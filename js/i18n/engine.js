@@ -34,9 +34,7 @@ export function getLocalizedClaim(claim) {
     return getLocalizedRole(claim);
 }
 
-export function useEnOrZh(zh, en) {
-    return gameState.lang === "en" ? en : zh;
-}
+export { useEnOrZh } from '../core/lang.js';
 
 export function setLanguage(lang) {
     gameState.lang = lang;
@@ -48,7 +46,8 @@ export function setLanguage(lang) {
     
     translateDropdowns(lang);
     
-    const elements = document.querySelectorAll("[data-i18n]");
+    // 跳过带 data-i18n-dynamic 属性的元素——它们由其他模块动态管理内容
+    const elements = document.querySelectorAll("[data-i18n]:not([data-i18n-dynamic])");
     elements.forEach(el => {
         const key = el.getAttribute("data-i18n");
         if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
@@ -73,13 +72,6 @@ export function setLanguage(lang) {
     });
     
     updateMyRoleOptions();
-    
-    // updateMyRoleOptions() 会清空并重建说书人伪装下拉框，需在此恢复已保存的选项
-    if (gameState.evilBluffs) {
-        if (gameState.evilBluffs[0] && dom.evilBluff1) dom.evilBluff1.value = gameState.evilBluffs[0];
-        if (gameState.evilBluffs[1] && dom.evilBluff2) dom.evilBluff2.value = gameState.evilBluffs[1];
-        if (gameState.evilBluffs[2] && dom.evilBluff3) dom.evilBluff3.value = gameState.evilBluffs[2];
-    }
     
     if (gameState.players && gameState.players.length > 0) {
         gameState.players.forEach(p => {

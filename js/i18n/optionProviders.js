@@ -19,12 +19,7 @@ function localizedRole(roleName) {
     return roleName;
 }
 
-// 注意：此函数与 engine.js 中的 useEnOrZh 功能相同但刻意独立定义，
-// 避免 optionProviders.js → engine.js 的循环依赖（engine.js 会 import 本模块）。
-// 两个副本必须保持同步，修改时请同时更新 engine.js:37。
-function useEnOrZh(zh, en) {
-    return gameState.lang === "en" ? en : zh;
-}
+import { useEnOrZh } from '../core/lang.js';
 
 export function updateMyRoleOptions() {
     const isEn = gameState.lang === "en";
@@ -64,6 +59,13 @@ export function updateMyRoleOptions() {
             select.appendChild(option);
         });
     });
+
+    // 下拉框重建后恢复已保存的 evilBluffs 选中值（剧本切换或 setLanguage 都会触发重建）
+    if (gameState.evilBluffs) {
+        if (gameState.evilBluffs[0] && dom.evilBluff1) dom.evilBluff1.value = gameState.evilBluffs[0];
+        if (gameState.evilBluffs[1] && dom.evilBluff2) dom.evilBluff2.value = gameState.evilBluffs[1];
+        if (gameState.evilBluffs[2] && dom.evilBluff3) dom.evilBluff3.value = gameState.evilBluffs[2];
+    }
 }
 
 export function updateApiModelOptions() {

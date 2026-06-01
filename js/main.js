@@ -64,12 +64,4 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedLang = loadLanguage();
     setLanguage(savedLang);
     
-    // 8. setLanguage() 会通过 updateMyRoleOptions() 清空下拉框，也会通过 [data-i18n]
-    //    覆盖 apiStatusText 的动态内容，此处重新同步状态以修正。
-    updateApiStatusIndicator();
-    if (gameState.evilBluffs) {
-        if (gameState.evilBluffs[0] && dom.evilBluff1) dom.evilBluff1.value = gameState.evilBluffs[0];
-        if (gameState.evilBluffs[1] && dom.evilBluff2) dom.evilBluff2.value = gameState.evilBluffs[1];
-        if (gameState.evilBluffs[2] && dom.evilBluff3) dom.evilBluff3.value = gameState.evilBluffs[2];
-    }
 });
