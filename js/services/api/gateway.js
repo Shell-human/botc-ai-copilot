@@ -77,7 +77,7 @@ export async function callAI(prompt, { provider, apiKey, baseUrl, model, apiMode
             generationConfig: {}
         };
 
-        const supportsThinkingConfig = model.includes("3.5") || model.includes("3.1") || model.includes("2.5") || model === "gemini-flash-latest";
+        const supportsThinkingConfig = model === "gemini-3.5-flash" || model === "gemini-3.1-pro-preview" || model === "gemini-flash-latest";
         if (supportsThinkingConfig) {
             reqBody.generationConfig.thinkingConfig = {
                 thinkingBudget: 2048
