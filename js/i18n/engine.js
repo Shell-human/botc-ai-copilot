@@ -81,7 +81,7 @@ export function setLanguage(lang) {
                 p.name = lang === "en" ? "Me" : "我";
             } else if (p.name === "我" || p.name === "Me") {
                 p.name = lang === "en" ? "Me" : "我";
-            } else if (p.name.startsWith("玩家") || p.name.startsWith("Player")) {
+            } else if (p.name === `玩家 ${p.seat}` || p.name === `Player ${p.seat}`) {
                 p.name = lang === "en" ? `Player ${p.seat}` : `玩家 ${p.seat}`;
             }
         });

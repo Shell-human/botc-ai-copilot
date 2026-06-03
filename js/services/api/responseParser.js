@@ -17,7 +17,7 @@ export function extractAndApplyStateSync(text) {
     const jsonBlock = match[1].trim();
     // Remove markdown code fences if present
     const jsonStr = jsonBlock.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim();
-    const cleanText = text.substring(0, match.index).trim();
+    const cleanText = (text.substring(0, match.index) + text.substring(match.index + match[0].length)).trim();
     let hasChanges = false;
     
     try {
@@ -139,9 +139,29 @@ export function distributeResponse(text, thoughtHtml = "") {
         analysisPart = getSectionContent("analysis");
         tipsPart = getSectionContent("tips");
     } else {
-        const parts = cleanText.split(/===\s*[a-zA-Z]+\s*===/i);
+        const sections = {};
+        const sectionRegex = /===\s*([a-zA-Z]+)\s*===/gi;
+        let matches = [];
+        let match;
+        while ((match = sectionRegex.exec(cleanText)) !== null) {
+            matches.push({
+                name: match[1].toLowerCase(),
+                index: match.index,
+                contentStart: match.index + match[0].length
+            });
+        }
         
-        if (parts.length < 3) {
+        if (matches.length > 0) {
+            for (let i = 0; i < matches.length; i++) {
+                const start = matches[i].contentStart;
+                const end = (i + 1 < matches.length) ? matches[i + 1].index : cleanText.length;
+                sections[matches[i].name] = cleanText.substring(start, end).trim();
+            }
+            analysisPart = sections["analysis"] || sections["memo"] || "";
+            tipsPart = sections["tips"] || "";
+        }
+        
+        if (!analysisPart.trim() && !tipsPart.trim()) {
             analysisPart = cleanText;
             const activeTab = document.querySelector('.tab-btn.active');
             const isChatMode = activeTab ? activeTab.getAttribute('data-tab') === 'tab-chat' : false;
@@ -150,9 +170,6 @@ export function distributeResponse(text, thoughtHtml = "") {
             } else {
                 tipsPart = `<div class="empty-tab-state"><p>请在【即时分析】页面中查看包含全部战术提示在内的完整推演信息。</p></div>`;
             }
-        } else {
-            analysisPart = parts[1] || "";
-            tipsPart = parts[2] || "";
         }
     }
 

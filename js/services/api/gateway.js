@@ -31,7 +31,10 @@ function fetchWithTimeout(url, options, timeoutMs) {
 function isRetryableError(error) {
     if (error.name === 'AbortError') return true;          // 超时
     if (error.message && error.message.includes('Failed to fetch')) return true; // 网络错误
-    if (error.message && /5\d\d/.test(error.message)) return true; // 5xx
+    if (error.statusCode) {
+        return error.statusCode >= 500 && error.statusCode < 600; // 仅 5xx 服务器错误重试
+    }
+    if (error.message && /5\d\d/.test(error.message)) return true; // 降级兼容
     return false;
 }
 
@@ -83,27 +86,31 @@ export async function callAI(prompt, { provider, apiKey, baseUrl, model, apiMode
             reqBody.generationConfig.temperature = 0.2;
         }
 
-        // v2.0: Gemini 也支持自定义 baseUrl（非官方代理场景）
+        // v2.0: Gemini 也支持自定义 baseUrl（使用 header 认证，避开 URL 泄露 Key 隐患）
         let targetUrl;
         if (baseUrl && baseUrl !== "https://generativelanguage.googleapis.com") {
-            // 自定义代理基地址，兼容 OpenAI-compatible 格式（如 /v1/chat/completions）
             let cleanBaseUrl = baseUrl.trim();
             if (cleanBaseUrl.endsWith("/")) cleanBaseUrl = cleanBaseUrl.slice(0, -1);
-            targetUrl = `${cleanBaseUrl}/v1beta/models/${model}:generateContent?key=${apiKey}`;
+            targetUrl = `${cleanBaseUrl}/v1beta/models/${model}:generateContent`;
         } else {
-            targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+            targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
         }
 
         await withRetry(async () => {
             const response = await fetchWithTimeout(targetUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': apiKey
+                },
                 body: JSON.stringify(reqBody)
             }, REQUEST_TIMEOUT_MS);
 
             if (!response.ok) {
                 const errText = await response.text();
-                throw new Error(`Gemini API 错误 (${response.status}): ${errText}`);
+                const err = new Error(`Gemini API 错误 (${response.status}): ${errText}`);
+                err.statusCode = response.status;
+                throw err;
             }
 
             const data = await response.json();
@@ -147,7 +154,9 @@ export async function callAI(prompt, { provider, apiKey, baseUrl, model, apiMode
 
             if (!response.ok) {
                 const errText = await response.text();
-                throw new Error(`Claude API 错误 (${response.status}): ${errText}`);
+                const err = new Error(`Claude API 错误 (${response.status}): ${errText}`);
+                err.statusCode = response.status;
+                throw err;
             }
 
             const data = await response.json();
@@ -185,7 +194,9 @@ export async function callAI(prompt, { provider, apiKey, baseUrl, model, apiMode
 
             if (!response.ok) {
                 const errText = await response.text();
-                throw new Error(`API 兼容网关错误 (${response.status}): ${errText}`);
+                const err = new Error(`API 兼容网关错误 (${response.status}): ${errText}`);
+                err.statusCode = response.status;
+                throw err;
             }
 
             const data = await response.json();
