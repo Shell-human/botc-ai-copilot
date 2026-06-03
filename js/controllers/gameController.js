@@ -52,21 +52,16 @@ export function loadFromLocalStorage() {
     const data = loadGameState();
     if (!data) return false;
     try {
-        gameState.playerCount = data.playerCount;
-        gameState.scriptName = data.scriptName;
-        gameState.mySeat = data.mySeat;
-        gameState.myRole = data.myRole;
-        gameState.myAlignment = data.myAlignment;
-        gameState.evilBluffs = data.evilBluffs || [];
-        gameState.apiProvider = data.apiProvider || "gemini";
-        gameState.apiBaseUrl = data.apiBaseUrl || "https://api.openai.com/v1";
-        gameState.aiModel = data.aiModel || "gemini-flash-latest";
-        gameState.apiModelCustom = data.apiModelCustom || "";
-        gameState.players = data.players;
-        gameState.logs = data.logs;
-        gameState.aiOutputs = data.aiOutputs || [];
-        gameState.chatMessages = data.chatMessages || [];
-        gameState.lang = data.lang || "zh";
+        // 使用 Object.assign 保证将来新增字段而用户缓存缺少时，新增字段不会被覆盖为 undefined，提供向后兼容迁移安全性
+        Object.assign(gameState, data);
+        
+        // 关键数组与引用类型字段进行防 crash 兜底
+        gameState.evilBluffs = gameState.evilBluffs || ["", "", ""];
+        gameState.players = gameState.players || [];
+        gameState.logs = gameState.logs || [];
+        gameState.aiOutputs = gameState.aiOutputs || [];
+        gameState.chatMessages = gameState.chatMessages || [];
+        gameState.lang = gameState.lang || "zh";
 
         setLanguage(gameState.lang);
 

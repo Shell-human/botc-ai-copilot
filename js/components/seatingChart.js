@@ -27,19 +27,35 @@ export function renderSeatingChart() {
     const refWidth = 720;
     const refHeight = 480;
     const scale = Math.min(1.0, Math.max(0.65, Math.min(width / refWidth, height / refHeight)));
+    const count = gameState.playerCount;
+    const isPortrait = width < height;
     
     // Set dynamic CSS custom property for seat node scaling (84px base size is the perfect visual sweet spot)
-    const nodeSize = Math.round(84 * scale);
+    let nodeSize = Math.round(84 * scale);
+    if (isPortrait && count > 9) {
+        // 手机竖屏且人数较多时，适度缩小节点以防止环形折叠堆叠
+        nodeSize = Math.round(nodeSize * 0.88);
+    }
     if (wrapper) {
         wrapper.style.setProperty('--seat-node-size', `${nodeSize}px`);
     }
     
     // Calculate adaptive margins based on the scaled node size to ensure comfortable breathing room
-    const paddingX = Math.round(Math.max(48, 64 * scale));
-    const paddingY = Math.round(Math.max(48, 64 * scale));
+    let paddingX = Math.round(Math.max(48, 64 * scale));
+    let paddingY = Math.round(Math.max(48, 64 * scale));
     
-    let rx = Math.max(80, (width / 2) - paddingX);
-    let ry = Math.max(80, (height / 2) - paddingY);
+    let rx, ry;
+    if (isPortrait) {
+        // 手机竖屏布局：显式缩拢横向半径以防左右边缘裁切，拉长垂直半径以形成美观的竖型椭圆
+        const portraitPaddingX = paddingX + 16;
+        rx = Math.max(70, (width / 2) - portraitPaddingX);
+        const targetRy = Math.round(rx * 1.45);
+        const maxRy = (height / 2) - paddingY;
+        ry = Math.min(maxRy, Math.max(80, targetRy));
+    } else {
+        rx = Math.max(80, (width / 2) - paddingX);
+        ry = Math.max(80, (height / 2) - paddingY);
+    }
     
     // Generous aspect ratio limits: dynamic vertical ellipse for mobile and stretched landscape for desktop
     const maxLandscapeRatio = 2.3;
@@ -56,8 +72,7 @@ export function renderSeatingChart() {
     const ratioVal = Math.max(rx / ry, ry / rx);
     const n = 2.0 + Math.min(1.0, (ratioVal - 1.0) / 1.5) * 0.45;
     const power = 2 / n;
-    
-    const count = gameState.playerCount;
+
 
     // 动态更新圆桌中心的剧本背景水印与高贵霓虹呼吸灯效果
     if (dom.seatingChartWatermark) {

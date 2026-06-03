@@ -21,7 +21,7 @@ This is a pure client-side, single-page visualizer and logical deduction assista
   * 点击主页顶栏的按钮，可以在中文与英文页面之间实时进行无缝切换。系统会自动将您的语言选择偏好记录到本地缓存中。
 * **接口与模型配置**：
   * **功能**：用于选择大模型供应厂商（支持谷歌、微软、阿里等九大主流平台），并配置对应的推理模型名称、密钥及接口代理地址。
-  * **使用方法**：折叠面板内默认已填入测试用谷歌密钥，开箱即用。若需使用其他厂商模型，请在下拉菜单中切换并填入对应密钥与代理地址。
+  * **使用方法**：出于安全和隐私考虑，本系统不提供内置默认密钥。请在折叠面板内输入您个人的 API 密钥和接口代理地址。密钥将且仅安全地保存在您本地浏览器的缓存中。
 * **新对局初始化**：
   * **功能**：配置本局对局的基础规则。
   * **使用方法**：设置本局游戏的总人数（支持 7 至 15 人本），并选择当前正在进行的剧本板子（支持《无上杀戮》、《暗流涌动》、《梦殒春宵》和《瓦釜雷鸣》），点击初始化按钮即可生效。
@@ -145,7 +145,7 @@ This panel manages system initialization, AI gateway configs, and player state u
   * Click the language toggle button in the top header to seamlessly switch the entire layout and controls in real time. The system automatically persists your active language selection in local storage.
 * **AI Engine Configuration**:
   * **Feature**: Select your API provider (supports 9 mainstream platforms, including Gemini, ChatGPT, Claude, DeepSeek, etc.) and configure your model ID, API Key, and Base URL.
-  * **Usage**: A Google Gemini API test key is pre-filled by default for instant, out-of-the-box reasoning. If using another provider, select it from the dropdown and insert your endpoint details.
+  * **Usage**: For security and privacy reasons, the system does not include any default pre-filled credentials. Please input your personal API key and endpoint details in the configuration panel. All entered credentials are saved locally in your browser's cache.
 * **Initialize New Game**:
   * **Feature**: Establishes active board rules.
   * **Usage**: Set player count (supports 7 to 15 players) and select your current script (supports *Supreme Slaughter*, *Trouble Brewing*, *Sects & Violets*, and *Bad Moon Rising*), then click the initialization button.

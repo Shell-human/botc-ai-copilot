@@ -27,10 +27,6 @@ export async function handleAiAnalysis() {
     const baseUrl = gameState.apiBaseUrl || "https://api.openai.com/v1";
     let model = gameState.aiModel || "gemini-flash-latest";
 
-    if (model === "gemini-flash-lastest") {
-        model = "gemini-flash-latest";
-    }
-
     if (!navigator.onLine) {
         if (rawText) {
             const tempLog = gameState.lang === "en" ? `Day progress updates (cached): "${rawText}"` : `白天进展陈述(暂存)："${rawText}"`;

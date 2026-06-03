@@ -85,8 +85,8 @@ export function updateApiModelOptions() {
         dom.apiBaseUrlContainer.classList.add("hidden");
         dom.apiKeyLabel.textContent = useEnOrZh("Gemini API Key (密钥)", "Gemini API Key");
         dom.apiConfigTip.textContent = useEnOrZh(
-            "已自动填充 Google Gemini 原生密钥，支持最新的 3.5 Flash 极速推理模型以及 3.1 Pro 深度推理模型，无需配置直接使用！",
-            "Google Gemini key pre-filled by default. Supports latest Gemini 3.5 Flash and Gemini 3.1 Pro models instantly!"
+            "请输入您的 Google Gemini API 密钥。支持最新的 3.5 Flash 极速推理模型以及 3.1 Pro 深度推理模型。",
+            "Please enter your Google Gemini API key. Supports the latest Gemini 3.5 Flash and Gemini 3.1 Pro models."
         );
     } else if (provider === "chatgpt") {
         presets = [

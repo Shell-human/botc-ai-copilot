@@ -43,12 +43,12 @@
     }
     
     .map-panel {
-        height: 720px !important;
+        height: 840px !important;
     }
     
     .seating-chart-wrapper {
         min-height: 280px !important;
-        max-height: 480px !important;
+        max-height: 560px !important;
     }
     
     /* Input and Select Mobile touch enhancement */
@@ -105,12 +105,12 @@
     }
     
     .map-panel {
-        height: 680px !important;
+        height: 800px !important;
     }
     
     .seating-chart-wrapper {
         min-height: 240px !important;
-        max-height: 440px !important;
+        max-height: 520px !important;
     }
     
     /* Player list optimization to prevent overflows */
@@ -157,12 +157,12 @@
 
 @media (max-width: 360px) {
     .map-panel {
-        height: 620px !important;
+        height: 760px !important;
     }
     
     .seating-chart-wrapper {
         min-height: 200px !important;
-        max-height: 380px !important;
+        max-height: 480px !important;
     }
     
     .player-name-text {

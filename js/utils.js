@@ -116,7 +116,13 @@ export function sanitizeHtml(dirtyHtml) {
             ]
         });
     }
-    console.warn("⚠️ [XSS Protection] DOMPurify 未加载，采用降级放行模式。请检查网络。");
-    return dirtyHtml;
+    console.warn("⚠️ [XSS Protection] DOMPurify 未加载，采用降级防护模式清理危险标签。");
+    // 降级清理逻辑：移除所有 <script>/<iframe> 标签以及可能导致 XSS 的 javascript 协议和内联 onxxx 属性
+    return dirtyHtml
+        .replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, "")
+        .replace(/<iframe[^>]*>([\s\S]*?)<\/iframe>/gi, "")
+        .replace(/href\s*=\s*["']\s*javascript:[^"']*["']/gi, 'href="#"')
+        .replace(/src\s*=\s*["']\s*javascript:[^"']*["']/gi, 'src=""')
+        .replace(/\son\w+\s*=\s*["'][^"']*["']/gi, "");
 }
 

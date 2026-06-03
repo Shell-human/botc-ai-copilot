@@ -63,6 +63,7 @@
     height: 100%;
     pointer-events: none;
     z-index: 1;
+    shape-rendering: geometricPrecision;
 }
 
 .seating-nodes-container {
