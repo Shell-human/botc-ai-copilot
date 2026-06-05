@@ -5,10 +5,10 @@
 import { SCRIPTS_DATA, SCRIPTS_DATA_EN } from '../data/rules.js';
 import { gameState } from '../core/state.js';
 import { dom } from '../core/dom.js';
-import { notifyStateChange } from '../controllers/gameController.js';
 import { getLocalizedRole } from '../i18n/engine.js';
 import { openPopover } from './popoverModal.js';
 import { escapeHtml } from '../utils.js';
+
 
 
 // --- 渲染环形座位轨迹图 ---
@@ -119,6 +119,7 @@ export function renderSeatingChart() {
 
     // 动态生成座位节点坐标，并保存到节点中，方便画线
     const nodeCoords = [];
+    const fragment = document.createDocumentFragment();
 
     for (let i = 0; i < count; i++) {
         const player = gameState.players[i];
@@ -176,13 +177,15 @@ export function renderSeatingChart() {
                 token.addEventListener("click", (e) => {
                     e.stopPropagation(); // 阻止冒泡，避免触发 openPopover
                     player.ghostVoteUsed = !player.ghostVoteUsed;
-                    notifyStateChange();
                 });
             }
         }
         
-        dom.seatingNodesContainer.appendChild(node);
+        fragment.appendChild(node);
     }
+
+    dom.seatingNodesContainer.appendChild(fragment);
+
 
     // 针对相邻存活玩家，绘制物理邻座连线
     drawAdjacencyLines(nodeCoords);

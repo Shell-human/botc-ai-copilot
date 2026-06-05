@@ -8,8 +8,6 @@ import { getLocalizedLog } from '../i18n/logTranslator.js';
 
 // --- 渲染局势流向日志 ---
 export function renderTimelineLogs() {
-    dom.timelineLogsContainer.innerHTML = "";
-    
     const isEn = gameState.lang === "en";
     dom.logCountText.textContent = isEn 
         ? `${gameState.logs.length} Log Entries` 
@@ -25,6 +23,8 @@ export function renderTimelineLogs() {
         if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
         return;
     }
+
+    const fragment = document.createDocumentFragment();
 
     gameState.logs.forEach((log, index) => {
         const item = document.createElement("div");
@@ -42,9 +42,13 @@ export function renderTimelineLogs() {
         }
 
         item.innerHTML = isEn ? `[Event ${index + 1}] ${displayLog}` : `[事件 ${index + 1}] ${displayLog}`;
-        dom.timelineLogsContainer.appendChild(item);
+        fragment.appendChild(item);
     });
+    
+    dom.timelineLogsContainer.innerHTML = "";
+    dom.timelineLogsContainer.appendChild(fragment);
     
     // 自动滚动到底部
     dom.timelineLogsContainer.scrollTop = dom.timelineLogsContainer.scrollHeight;
 }
+

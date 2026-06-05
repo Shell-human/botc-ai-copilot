@@ -6,7 +6,7 @@ import { ROLE_TRANSLATIONS, TRANSLATIONS } from '../data/translations.js';
 import { gameState } from '../core/state.js';
 import { dom } from '../core/dom.js';
 import { escapeHtml } from '../utils.js';
-import { notifyStateChange } from '../controllers/gameController.js';
+
 
 // --- 弹窗 Modal 管理 ---
 export function openPopover(seat) {
@@ -84,7 +84,6 @@ export function savePopoverData() {
     }
 
     closePopover();
-    notifyStateChange();
 }
 
 // 自我初始化事件绑定，高内聚低耦合

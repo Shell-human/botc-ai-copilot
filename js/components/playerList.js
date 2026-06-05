@@ -12,7 +12,7 @@ import { escapeHtml } from '../utils.js';
 
 // --- 渲染左下角玩家列表控制面板 ---
 export function renderPlayerList() {
-    dom.playerListContainer.innerHTML = "";
+    const fragment = document.createDocumentFragment();
     
     gameState.players.forEach(player => {
         const isMe = (player.seat === gameState.mySeat);
@@ -54,8 +54,12 @@ export function renderPlayerList() {
             openPopover(player.seat);
         });
 
-        dom.playerListContainer.appendChild(row);
+        fragment.appendChild(row);
     });
+
+    dom.playerListContainer.innerHTML = "";
+    dom.playerListContainer.appendChild(fragment);
 
     if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
 }
+

@@ -13,8 +13,9 @@ import { resetAnalysisBoxes } from '../i18n/engine.js';
 import { constructPrompt } from '../services/api/promptBuilder.js';
 import { callAI } from '../services/api/gateway.js';
 import { distributeResponse, extractAndApplyStateSync } from '../services/api/responseParser.js';
-import { saveToLocalStorage, notifyStateChange } from './gameController.js';
+import { saveToLocalStorage } from './gameController.js';
 import { appendChatMessage, showChatTyping, hideChatTyping } from '../components/chatRenderer.js';
+
 
 export async function handleAiAnalysis() {
     const rawText = dom.consoleInput.value.trim();
@@ -153,9 +154,8 @@ export async function handleAiAnalysis() {
                 timestamp: Date.now()
             });
 
-            if (hasChanges) {
-                notifyStateChange();
-            }
+            // 状态变更将由 Proxy 自动拦截触发同步，无需手动调用 notifyStateChange()
+
         }
 
         dom.apiStatusIndicator.className = "status-indicator online";

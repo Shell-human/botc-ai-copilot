@@ -3,7 +3,7 @@
    职责：游戏初始化、存档加载、玩家操作、视图同步
    ========================================================================== */
 
-import { gameState } from '../core/state.js';
+import { gameState, subscribeStateChange } from '../core/state.js';
 import { dom } from '../core/dom.js';
 import { renderSeatingChart } from '../components/seatingChart.js';
 import { renderPlayerList } from '../components/playerList.js';
@@ -14,6 +14,7 @@ import { ROLE_TRANSLATIONS } from '../data/translations.js';
 import { saveGameState, loadGameState, hasSavedGame, loadApiKey } from '../services/storage.js';
 import { setLanguage, updateMyRoleOptions, updateApiModelOptions, resetAnalysisBoxes } from '../i18n/engine.js';
 import { updateApiStatusIndicator } from '../core/statusIndicator.js';
+
 
 // --- 对局本地自动持久化存储代理 ---
 export function saveToLocalStorage() {
@@ -221,7 +222,6 @@ export function togglePlayerAlive(seat, isAlive) {
         } else {
             gameState.logs.push(`<strong>${player.name}</strong> 状态更新为：${isAlive ? '存活' : '❌ 死亡'}`);
         }
-        notifyStateChange();
     }
 }
 
@@ -234,7 +234,6 @@ export function togglePlayerPoison(seat, isPoisoned) {
         } else {
             gameState.logs.push(`<strong>${player.name}</strong> 标记为：${isPoisoned ? '🟣 中毒/醉酒状态' : '已恢复健康状态'}`);
         }
-        notifyStateChange();
     }
 }
 
@@ -250,3 +249,7 @@ export function notifyStateChange() {
     renderDeductiveValidator();
     saveToLocalStorage();
 }
+
+// 注册为 Proxy 状态变更回调
+subscribeStateChange(notifyStateChange);
+
