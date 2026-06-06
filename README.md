@@ -1,5 +1,6 @@
 # Blood on the Clocktower AI Copilot | 无上杀戮 - 《血染钟楼》 AI 战术助手
 
+**[👉 在线访问 / Live Demo](https://shell-human.github.io/botc-ai-copilot/)**
 这是一个专为《血染钟楼》游戏玩家量身定制的纯前端单页面记录与逻辑推理辅助工具。系统通过高精度的超椭圆（Squircle）座位轨迹图、大盘约束校验器以及自然语言语义分析，实时同步并验证对局数据，并能接入前沿的大语言模型，为您提供深度的世界线分析、行动建议与私聊对抗策略。
 
 This is a pure client-side, single-page visualizer and logical deduction assistant designed specifically for players of *Blood on the Clocktower*. Integrating a high-precision superellipse (squircle) seating chart, constraint-based logic validator, and natural language NLP parsing, it synchronizes live board states and leverages advanced LLMs to provide real-time tactical analyses, action advice, and chat strategies.
